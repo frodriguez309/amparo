@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amparo · Lenguaje</title>
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-title" content="Estudio">
+<meta name="theme-color" content="#FBF7F0">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<style>
+
+:root{
+  --bg:#FBF7F0; --card:#FFFFFF; --ink:#1F2A37; --muted:#5B6675; --line:#E6DFD3;
+  --blue:#3A86D6; --blue-soft:#DCEBFA; --blue-ink:#1D5FA8;
+  --orange:#F0A43C; --orange-soft:#FDEBD1; --orange-ink:#A4610A;
+  --fig:#C9CDD2; --fig-ink:#3A3F45;
+  --green:#23915F; --green-soft:#DFF3E9; --red:#D64545; --red-soft:#FBE3E3;
+  --gold:#E9B325; --gold-soft:#FFF4D3;
+  --radius:16px; --shadow:0 1px 2px rgba(31,42,55,.06),0 4px 14px rgba(31,42,55,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+button,.opt,.slot,.chip,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em}
+h1{font-size:1.9rem} h2{font-size:1.45rem} h3{font-size:1.15rem} h4{font-size:1rem}
+p{margin:.4em 0 .8em}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+a{color:var(--blue-ink)}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+.hide{display:none!important}
+
+/* ---------- barra superior ---------- */
+header.top{position:sticky;top:0;z-index:20;background:rgba(251,247,240,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:800;font-size:1.05rem;margin-right:auto;white-space:nowrap}
+.brand span{color:var(--blue)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap}
+nav.tabs button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:.92rem;font-weight:600}
+nav.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media (max-width:900px){.top-in{gap:8px}.brand{font-size:.95rem}nav.tabs{gap:4px}nav.tabs button{padding:5px 10px;font-size:.84rem}}
+
+main{max-width:960px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px;margin:0 0 18px}
+@media (max-width:560px){.card{padding:18px 16px}}
+
+/* ---------- inicio ---------- */
+.hero{padding:28px 26px}
+.hero h1 span{color:var(--blue)}
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:10px}
+@media (max-width:760px){.paths{grid-template-columns:1fr}}
+.path{border:1px solid var(--line);border-radius:14px;padding:16px;background:#FFFDF9;display:flex;flex-direction:column;gap:6px}
+.path .step{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.path h3{margin:0}
+.path p{margin:0 0 6px;font-size:.95rem;color:var(--muted);flex:1}
+.path .state{font-size:.85rem;font-weight:700}
+
+/* ---------- botones ---------- */
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;background:var(--ink);color:#fff}
+.btn.blue{background:var(--blue)} .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:6px 12px;font-size:.9rem;border-radius:10px}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- fracciones ---------- */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .12em;line-height:1.08;font-variant-numeric:tabular-nums;font-weight:700}
+.fr>span{padding:0 .18em;min-width:.9em;text-align:center}
+.fr>.n{border-bottom:2px solid currentColor}
+.mx{display:inline-flex;align-items:center;vertical-align:middle;font-weight:700}
+.mx>.w{margin-right:.02em}
+.big{font-size:1.35em}
+.fin{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;gap:3px;margin:0 .15em}
+.fin .bar{width:100%;height:2px;background:var(--ink);border-radius:2px}
+.inp{font-size:max(16px,1em);width:3.1em;height:2.1em;text-align:center;border:1.5px solid #CFC6B8;border-radius:9px;background:#FFFDF9;font-weight:700;padding:0 2px}
+.inp.w{width:2.4em}
+.inp:focus{outline:3px solid var(--blue-soft);border-color:var(--blue)}
+.inp.ok{border-color:var(--green);background:var(--green-soft)}
+.inp.bad{border-color:var(--red);background:var(--red-soft)}
+.inp.wide{width:12em;text-align:left;padding:0 10px}
+
+/* ---------- módulo ---------- */
+.lesson-nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+.lesson-nav button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 11px;font-size:.88rem;font-weight:600}
+.lesson-nav button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.lesson-nav button.done::after{content:" ✓";color:var(--green)}
+.lesson-nav button.on.done::after{color:#fff}
+.book{display:inline-block;font-size:.85rem;font-weight:700;color:var(--blue-ink);background:var(--blue-soft);border-radius:999px;padding:3px 12px;margin-bottom:10px}
+.sec-num{display:inline-block;background:var(--blue-soft);color:var(--blue-ink);font-weight:800;border-radius:8px;padding:1px 9px;margin-right:6px}
+.box{border-radius:12px;padding:12px 16px;margin:12px 0}
+.box.tip{background:var(--blue-soft)}
+.box.warn{background:var(--red-soft)}
+.box.gold{background:var(--gold-soft)}
+.box.green{background:var(--green-soft)}
+.box h4{margin:0 0 4px}
+.lab{border:1px dashed #CFC6B8;border-radius:14px;padding:14px;margin:14px 0;background:#FFFDF9}
+.lab-title{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--orange-ink);margin-bottom:8px}
+.ctrl{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px 6px}
+.ctrl button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;font-weight:800;font-size:1.1rem}
+.ctrl .v{min-width:1.6em;text-align:center;font-weight:800}
+.eq{font-size:1.3em;margin:8px 0;display:flex;align-items:center;gap:.35em;flex-wrap:wrap}
+table.t{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95rem}
+table.t th,table.t td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.t th{background:#F4EFE6}
+.tablewrap{overflow-x:auto}
+.check{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.check-title{font-weight:800;margin-bottom:6px}
+.pager{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+svg{max-width:100%;height:auto;display:block}
+.fig{margin:10px 0}
+ul.clean{list-style:none;padding:0;margin:0}
+.tick{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.tick input{width:22px;height:22px;margin-top:3px;flex:none}
+
+/* ---------- preguntas ---------- */
+.part-h{margin:26px 0 10px;font-size:1.2rem}
+.q{position:relative}
+.q-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.q-num{flex:none;min-width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;padding:0 6px}
+.q-text{flex:1;padding-top:3px}
+.q-pts{flex:none;font-size:.82rem;color:var(--muted);font-weight:700;padding-top:6px;white-space:nowrap}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.opts.tall{grid-template-columns:1fr 1fr}
+@media (max-width:640px){.opts{grid-template-columns:1fr 1fr}.opts.tall{grid-template-columns:1fr}}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;text-align:left;min-height:58px}
+.opt .l{flex:none;width:28px;height:28px;border-radius:8px;background:#F1ECE3;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .l{background:var(--blue);color:#fff}
+.opt.ok{border-color:var(--green);background:var(--green-soft)}
+.opt.ok .l{background:var(--green);color:#fff}
+.opt.bad{border-color:var(--red);background:var(--red-soft)}
+.opt.bad .l{background:var(--red);color:#fff}
+.locked .opt{cursor:default}
+.sub{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.sub:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.sub-h{font-weight:700;margin-bottom:6px}
+.line{display:flex;align-items:center;gap:.45em;flex-wrap:wrap;margin:8px 0;font-size:1.1em}
+.calc{font-size:.9em;color:var(--muted);display:inline-flex;align-items:center;gap:.35em;flex-wrap:wrap;margin-left:.6em}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:8px 14px;font-weight:800;min-width:44px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.sel{background:var(--blue);color:#fff}
+.seg.ok{border-color:var(--green)} .seg.bad{border-color:var(--red)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:6px 12px;font-size:1.1em}
+.chip.used{opacity:.3}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0;font-size:1.1em}
+.slot{min-width:56px;min-height:58px;border:2px dashed #CFC6B8;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#FFFDF9;cursor:pointer}
+.slot.filled{border-style:solid;border-color:var(--blue);background:var(--blue-soft)}
+.fb{border-radius:12px;padding:10px 14px;margin-top:12px;font-size:.95rem}
+.fb.ok{background:var(--green-soft)} .fb.bad{background:var(--red-soft)} .fb.part{background:var(--gold-soft)}
+.fb b.tag{display:inline-block;margin-right:6px}
+.fb a{font-weight:700}
+.q-actions{margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.score-chip{font-weight:800;font-size:.9rem;border-radius:999px;padding:3px 10px;background:#F1ECE3}
+.score-chip.ok{background:var(--green-soft);color:var(--green)}
+.score-chip.bad{background:var(--red-soft);color:var(--red)}
+.score-chip.part{background:var(--gold-soft);color:#8A6A0A}
+.gridwrap{touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tools button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:6px 12px;font-weight:700}
+.tools button.sel{border-color:var(--orange);background:var(--orange-soft)}
+.fig3{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.fig3 .seg{display:grid;grid-template-columns:repeat(3,1fr);width:100%}
+.fig3 .seg button{min-width:0;padding:9px 4px;font-size:.88rem}
+.fig3 .cell{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+
+/* ---------- barra del ensayo ---------- */
+.testbar{position:sticky;top:calc(var(--hdr,58px) + 8px);z-index:10;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:14px;padding:10px 16px;margin-bottom:16px}
+.testbar .grow{flex:1}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.2rem}
+.timer.late{color:#FF9A9A}
+.progress{height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;min-width:120px;flex:1}
+.progress i{display:block;height:100%;background:var(--gold);width:0}
+
+/* ---------- resultados ---------- */
+.result-top{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.nota{font-size:3rem;font-weight:900;line-height:1}
+.nota.ok{color:var(--green)} .nota.bad{color:var(--red)}
+.meter{height:12px;background:#F1ECE3;border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%}
+.focos{display:grid;gap:10px;margin-top:10px}
+.foco{display:grid;grid-template-columns:1fr 150px 64px;gap:12px;align-items:center;font-size:.95rem}
+@media (max-width:640px){.foco{grid-template-columns:1fr 70px}.foco .meter{grid-column:1/-1}}
+.foco b{font-variant-numeric:tabular-nums;text-align:right}
+.hist td,.hist th{font-size:.92rem}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+/* ================= Lenguaje: color propio ================= */
+:root{ --blue:#7B5CC4; --blue-soft:#ECE6FA; --blue-ink:#553A9E; --orange:#E88AAE; --orange-soft:#FBE3EC; --orange-ink:#A83A67; }
+.brand span{color:var(--blue)}
+
+/* etiqueta de fuente */
+.src{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:3px 11px;margin:0 6px 10px 0}
+.src.miss{background:#FDEBD1;color:#8A5210}
+.src.libro{background:var(--blue-soft);color:var(--blue-ink)}
+
+/* ================= carta ================= */
+.letter{background:#FFFDF6;border:1px solid #E7DDC7;border-radius:6px;box-shadow:0 2px 10px rgba(80,60,20,.08);padding:18px 20px;font-family:Georgia,"Times New Roman",serif;font-size:1rem;line-height:1.55;max-width:620px}
+.letter .pt{border-radius:8px;padding:3px 6px;margin:2px -6px;transition:background .2s,outline .2s}
+.letter .pt.enc,.letter .pt.fir{text-align:right}
+.letter .pt.cie{margin-top:8px}
+.letter .pt p{margin:0 0 .6em}
+.letter .pt p:last-child{margin:0}
+.letter.tap .pt{cursor:pointer;outline:2px dashed transparent}
+.letter.tap .pt:hover{outline-color:#D8CFF0}
+.pt.hl{background:#FFF1A8;outline:2px solid #E9B325!important}
+.pt.ok{background:var(--green-soft);outline:2px solid var(--green)!important}
+.pt.bad{background:var(--red-soft);outline:2px solid var(--red)!important}
+.pt .tag{display:inline-block;font:700 .72rem/1.2 ui-rounded,system-ui,sans-serif;background:var(--ink);color:#fff;border-radius:6px;padding:2px 7px;margin-right:6px;vertical-align:middle}
+
+/* ================= noticia ================= */
+.news{background:#fff;border:1px solid #DAD6CF;border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:16px 18px;max-width:660px;font-family:Georgia,"Times New Roman",serif}
+.news .meta{display:flex;justify-content:space-between;font:600 .78rem/1.2 ui-rounded,system-ui,sans-serif;color:var(--muted);border-bottom:1px solid #eee;padding-bottom:6px;margin-bottom:8px}
+.news .pt{border-radius:8px;padding:3px 6px;margin:2px -6px}
+.news .pt.tit{font-size:1.45rem;font-weight:800;line-height:1.2}
+.news .pt.baj{font-size:1.02rem;color:#444;font-style:italic}
+.news .pt p{margin:0 0 .55em}
+.news .pt p:last-child{margin:0}
+.news.tap .pt{cursor:pointer;outline:2px dashed transparent}
+
+/* ================= figuras de la profesora ================= */
+.missfig{margin:14px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;cursor:zoom-in}
+.missfig img{display:block;width:100%;height:auto}
+.missfig figcaption{font-size:.82rem;color:var(--muted);padding:7px 12px;border-top:1px solid var(--line);background:#FFFDF9}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.gallery button{border:1px solid var(--line);border-radius:12px;background:#fff;padding:0;overflow:hidden;text-align:left}
+.gallery img{display:block;width:100%;height:150px;object-fit:cover;object-position:top}
+.gallery span{display:block;font-size:.85rem;font-weight:700;padding:7px 10px}
+.lightbox{position:fixed;inset:0;z-index:60;background:#16121E;display:flex;flex-direction:column}
+.lightbox .lb-top{display:flex;gap:10px;align-items:center;padding:10px 14px;color:#fff}
+.lightbox .lb-top b{flex:1;font-size:.95rem}
+.lightbox .lb-top button,.lightbox .lb-top a{border:0;border-radius:10px;padding:8px 14px;font-weight:700;background:#fff;color:#222;text-decoration:none;font-size:.9rem}
+.lightbox .lb-img{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 10px 14px;text-align:center}
+.lightbox .lb-img img{max-width:100%;height:auto;border-radius:8px;background:#fff}
+
+/* ================= línea de tiempo ================= */
+.timeline{position:relative;margin:12px 0;padding-left:26px}
+.timeline:before{content:"";position:absolute;left:9px;top:4px;bottom:4px;width:3px;background:var(--blue-soft);border-radius:3px}
+.timeline .ev{position:relative;margin:0 0 12px}
+.timeline .ev:before{content:"";position:absolute;left:-22px;top:5px;width:13px;height:13px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 1px var(--blue)}
+.timeline .ev b{color:var(--blue-ink)}
+.timeline .cat{display:inline-block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;background:#F1ECE3;border-radius:6px;padding:1px 7px;margin-left:6px;color:var(--muted)}
+
+/* ================= preguntas especiales ================= */
+.orderq .pool,.orderq .dest{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.orderq .it{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;text-align:left;display:flex;gap:10px;align-items:flex-start}
+.orderq .it .n{flex:none;width:26px;height:26px;border-radius:8px;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.orderq .it.used{opacity:.35}
+.orderq .dest .it{border-color:var(--blue);background:var(--blue-soft)}
+.orderq .dest .it.ok{border-color:var(--green);background:var(--green-soft)}
+.orderq .dest .it.bad{border-color:var(--red);background:var(--red-soft)}
+.orderq .dest .it.ok .n{background:var(--green)} .orderq .dest .it.bad .n{background:var(--red)}
+.clsq .crow{display:flex;gap:10px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:9px 0;flex-wrap:wrap}
+.clsq .crow .tx{flex:1;min-width:200px}
+.clsq .crow.ok .tx{color:var(--green)} .clsq .crow.bad .tx{color:var(--red)}
+.pre{margin:4px 0 12px}
+.qsrc{font-size:.78rem;color:var(--muted);font-weight:700;margin-bottom:6px}
+.big-q{font-size:1.05rem}
+.w6{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+@media (max-width:560px){.w6{grid-template-columns:repeat(2,1fr)}}
+.w6 div{border-radius:12px;padding:10px;background:var(--blue-soft);text-align:center;font-weight:800;color:var(--blue-ink)}
+.w6 div small{display:block;font-weight:600;color:var(--ink);font-size:.8rem;margin-top:4px}
+.purp{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+@media (max-width:760px){.purp{grid-template-columns:repeat(2,1fr)}}
+.purp div{border-radius:12px;padding:10px;font-size:.88rem}
+.purp div b{display:block;font-size:.98rem;margin-bottom:3px}
+.pc1{background:#DCEBFA}.pc2{background:#FBE3EC}.pc3{background:#DFF3E9}.pc4{background:#ECE6FA}.pc5{background:#FFF4D3}
+.tbl-mini td,.tbl-mini th{font-size:.9rem}
+.hl-o{background:#FBE3EC;border-radius:4px;padding:0 3px;font-weight:700}
+.hl-h{background:#DFF3E9;border-radius:4px;padding:0 3px;font-weight:700}
+.counter{font-size:.85rem;font-weight:700;color:var(--muted);margin-bottom:8px}
+.counter b{color:var(--green)}
+.picker{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.picker button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;font-weight:700;font-size:.9rem}
+.picker button.sel{border-color:var(--blue);background:var(--blue-soft)}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../" style="text-decoration:none;color:inherit">← Ramos · <span>Lenguaje 5°</span></a>
+  <nav class="tabs" id="tabs">
+    <button data-go="inicio">Inicio</button>
+    <button data-go="aprender">1 · Aprender</button>
+    <button data-go="ensayo">2 · Ensayos</button>
+    <button data-go="miss">Material de la miss</button>
+    <button data-go="resultados">Mis resultados</button>
+  </nav>
+</div></header>
+
+<main id="app">
+
+<!-- ================= INICIO ================= -->
+<section id="v-inicio" class="view">
+  <div class="card hero">
+    <p class="muted small" style="margin:0 0 6px">Prueba de Lenguaje · Unidad 3: ¿Por qué importa la paz?</p>
+    <h1>Hola, Amparo. Vamos a preparar la prueba de <span>Lenguaje</span>.</h1>
+    <p>Son dos pasos. Primero repasas cada tema: las primeras ocho lecciones son lo que tu profesora está reforzando (el propósito de los textos, la carta, la noticia, la biografía y hecho u opinión) y después vienen los temas del libro. Cuando termines, haces ensayos: cada ensayo se arma solo, con preguntas nuevas cada vez.</p>
+    <div class="paths" style="grid-template-columns:repeat(3,1fr)">
+      <div class="path"><div class="step">Paso 1</div><h3>Aprender</h3><p>Trece lecciones cortas, cada una con ejercicios que no se acaban.</p><div class="state" id="st-aprender"></div><button class="btn blue" data-go="aprender">Empezar a repasar</button></div>
+      <div class="path"><div class="step">Paso 2</div><h3>Ensayos</h3><p>24 preguntas al azar. Modo práctica (te corrige al tiro) o simulacro (con tiempo y nota).</p><div class="state" id="st-ensayo"></div><button class="btn" data-go="ensayo">Ir a los ensayos</button></div>
+      <div class="path"><div class="step">Siempre a mano</div><h3>Material de la miss</h3><p>Las láminas y las infografías que te mandó tu profesora.</p><div class="state"></div><button class="btn" data-go="miss">Verlas</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Lo que entra en la prueba</h3>
+    <p style="margin:0"><b>Lo que refuerza tu profesora:</b> el propósito de los textos (explícito o implícito) · la carta: propósitos y partes · la noticia y sus partes · hecho u opinión · la biografía. <b>Del libro (Unidad 3):</b> el ambiente de una narración · los relatos de la tradición oral · raíces y afijos · uso de s, c y z.</p>
+  </div>
+</section>
+
+<!-- ================= APRENDER ================= -->
+<section id="v-aprender" class="view hide">
+  <div class="lesson-nav" id="lessonNav"></div>
+
+  <!-- 1 -->
+  <div class="card lesson" data-sec="1" data-title="El propósito">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span><span class="src libro">📘 Libro, págs. 198 y 206</span>
+    <h2><span class="sec-num">1</span>Todo texto tiene una misión secreta: el propósito</h2>
+    <p><b>Leer es descubrir intenciones.</b> Todo lo que leemos se escribe con un objetivo principal. El <b>propósito</b> es la finalidad con la que se escribe o se dice un texto, y responde a la pregunta: <b>¿para qué se comunica este mensaje?</b></p>
+    <figure class="missfig" data-img="miss/lamina-02.jpg"><img src="miss/lamina-02.jpg" loading="lazy" alt="Lámina: el propósito explícito e implícito, como un iceberg"><figcaption>Lámina de tu profesora · toca para agrandar</figcaption></figure>
+    <p>El propósito puede ser de dos formas, como un iceberg:</p>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Explícito (lo que se ve)</th><th>Implícito (lo que hay que descubrir)</th></tr>
+      <tr><td>El propósito aparece <b>escrito directamente</b> en el texto. ¡Es fácil de ver!<br><span class="small muted">Ejemplo: «<b>Te escribo para</b> contarte que…», «<b>Les comunicamos que</b>…», «<b>Quiero agradecerte</b>…».</span></td>
+          <td>El propósito <b>no se dice</b>: la lectora debe usar su lupa de detective y buscar pistas en el texto para adivinar la verdadera intención.</td></tr>
+    </table></div>
+    <div class="box tip"><h4>Las pistas del detective 🔎</h4>Cuando el propósito es implícito, lo inferimos a partir de: <b>el tema</b> (de qué habla), <b>las palabras</b> que elige el emisor, <b>el tono</b> (cariñoso, formal, triste, entusiasta…) y <b>la actitud</b> del emisor (qué le interesa, cómo se siente).</div>
+    <div class="box gold"><h4>Cómo descubrir el propósito <span class="small muted">(tu libro lo trabaja en la pág. 198)</span></h4>
+      <b>1.</b> ¿Quién le escribe a quién, y cuándo?<br>
+      <b>2.</b> ¿De qué habla cada párrafo? Con eso descubres el tema.<br>
+      <b>3.</b> ¿Qué palabras muestran cómo se siente o qué tono usa (cariñoso, formal, agradecido, preocupado)?<br>
+      <b>4.</b> Entonces, ¿qué quiere conseguir el emisor con su destinatario? Esa es su finalidad.</div>
+    <div class="lab"><div class="lab-title">Practica · ¿explícito o implícito?</div><div data-practice="proposito" data-need="4"></div></div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card lesson" data-sec="2" data-title="La carta: propósitos">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span><span class="src libro">📘 Libro, págs. 194 a 198</span>
+    <h2><span class="sec-num">2</span>La carta: mensajes con muchas intenciones</h2>
+    <p>Una carta es un mensaje que un <b>emisor</b> (quien escribe) le dirige a un <b>destinatario</b> (a quien le escribe). Su propósito <b>cambia según a quién le escribimos</b> y en qué situación: una persona a un familiar o amigo, un estudiante a un profesor, un ciudadano a una institución, una empresa a un cliente…</p>
+    <figure class="missfig" data-img="miss/lamina-03.jpg"><img src="miss/lamina-03.jpg" loading="lazy" alt="Lámina: los cinco propósitos de una carta"><figcaption>Lámina de tu profesora · toca para agrandar</figcaption></figure>
+    <h3>Los cinco propósitos frecuentes</h3>
+    <div class="purp">
+      <div class="pc1"><b>ℹ️ Informar</b>Entregar datos o noticias sobre una situación.</div>
+      <div class="pc2"><b>❤️ Expresar sentimientos</b>Manifestar emociones, como cariño, gratitud o tristeza.</div>
+      <div class="pc3"><b>💬 Persuadir</b>Convencer al destinatario para que piense o actúe de cierta manera.</div>
+      <div class="pc4"><b>📝 Solicitar</b>Pedir algo, como un favor, información o una respuesta.</div>
+      <div class="pc5"><b>⭐ Agradecer</b>Reconocer o valorar una acción recibida.</div>
+    </div>
+    <div class="box tip"><h4>Tip de detective</h4>Para identificar el propósito, pregúntate: <b>¿para qué fue escrita esta carta?</b> y <b>¿qué quiere lograr el emisor con el destinatario?</b></div>
+    <div class="box gold"><h4>¿Persuadir o solicitar? No los confundas</h4><b>Solicitar</b> es <b>pedir</b> algo directamente: un permiso, un libro, una información («¿Podría enviarme…?», «Le pido…»). <b>Persuadir</b> es <b>convencer con razones</b> para que alguien piense o haga algo distinto: la carta da argumentos («si cada uno trae su botella, evitaríamos miles de botellas de basura»).</div>
+    <div class="box green"><h4>En tu libro: la carta de Arturo Prat <span class="small muted">(págs. 194-195)</span></h4>Arturo Prat le escribe desde <b>Iquique</b>, el <b>9 de abril de 1879</b>, a su esposa <b>Carmela Carvajal</b>, que está en <b>Valparaíso</b>, en plena Guerra del Pacífico. Le cuenta lo que está pasando en el puerto (<b>informar</b>) y le demuestra su amor y su preocupación por ella y sus hijos (<b>expresar sentimientos</b>). Una carta puede tener más de un propósito, pero siempre hay uno principal. <span class="small muted">(Esa carta es parte de una novela que recrea la vida de Prat.)</span></div>
+    <div class="lab"><div class="lab-title">Practica · ¿para qué fue escrita?</div><div data-practice="cartaProp" data-need="5"></div></div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card lesson" data-sec="3" data-title="Partes de la carta">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span><span class="src libro">📘 Libro, págs. 196 y 200</span>
+    <h2><span class="sec-num">3</span>Radiografía de una carta</h2>
+    <p>Toda carta tiene cinco partes. Toca cada parte de esta carta (es el ejemplo de tu profesora) para ver cómo se llama:</p>
+    <div id="xrayLetter"></div>
+    <div id="xrayInfo" class="box tip" style="min-height:64px"><b>Toca una parte de la carta.</b></div>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Parte</th><th>¿Qué es?</th></tr>
+      <tr><td><b>1. Encabezado</b></td><td>El <b>lugar y la fecha</b> en que se escribe. Opcionalmente, el nombre y la ciudad del destinatario.</td></tr>
+      <tr><td><b>2. Saludo</b></td><td>Palabras de inicio dirigidas al destinatario. Varía según el grado de <b>confianza</b> entre emisor y destinatario («Querida Sofía:», «Estimada profesora:»).</td></tr>
+      <tr><td><b>3. Cuerpo</b></td><td>El desarrollo de los pensamientos, hechos, peticiones o cualquier asunto que se quiera comunicar. Las ideas se organizan en <b>párrafos</b> y en un tono apropiado al propósito (formal, cariñoso, objetivo…).</td></tr>
+      <tr><td><b>4. Cierre</b></td><td>Párrafo o frase de <b>despedida</b>, con un mensaje cariñoso o de cortesía según la relación («Un abrazo grande,», «Saludos cordiales,»).</td></tr>
+      <tr><td><b>5. Firma</b></td><td>La identificación de quien escribe: el <b>emisor</b>.</td></tr>
+    </table></div>
+    <div class="box gold">Observa que cuando se introduce un <b>nuevo tema</b>, el emisor lo marca o anuncia al inicio de un <b>nuevo párrafo</b>.</div>
+    <h3>Emisor y destinatario</h3>
+    <p>El <b>emisor</b> es la persona que produce el mensaje (quien firma). El <b>destinatario</b> es la persona a quien se dirige el mensaje (la que aparece en el saludo). En la carta de Prat: el emisor es <b>Arturo Prat</b>, que está en <b>Iquique</b>; la destinataria es <b>Carmela</b>, que está en <b>Valparaíso</b>.</p>
+    <figure class="missfig" data-img="miss/info-4.jpg"><img src="miss/info-4.jpg" loading="lazy" alt="Infografía: partes de una carta"><figcaption>Infografía de tu profesora · toca para agrandar</figcaption></figure>
+    <div class="lab"><div class="lab-title">Practica · partes, emisor y destinatario</div><div data-practice="cartaPartes" data-need="5"></div></div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card lesson" data-sec="4" data-title="La noticia">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span>
+    <h2><span class="sec-num">4</span>La noticia: nuestra ventana al mundo</h2>
+    <p>La noticia es un <b>texto informativo</b> que relata un <b>hecho real, reciente y de interés público</b>. Su objetivo es <b>informar de manera clara, veraz y objetiva</b> sobre lo que ocurre en la sociedad.</p>
+    <figure class="missfig" data-img="miss/lamina-05.jpg"><img src="miss/lamina-05.jpg" loading="lazy" alt="Lámina: la noticia, nuestra ventana al mundo"><figcaption>Lámina de tu profesora · toca para agrandar</figcaption></figure>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Reglas de oro ✅</th><th>¿Para qué sirve?</th></tr>
+      <tr><td>✔ Debe ser <b>real y reciente</b>.<br>✔ Debe ser de <b>interés público</b> (le importa a mucha gente).<br>✔ La información debe ser <b>clara, veraz y objetiva</b>.</td>
+          <td>Nos mantiene <b>informadas</b>, nos ayuda a <b>formar nuestra propia opinión</b> y a <b>participar</b> activamente en la sociedad.</td></tr>
+    </table></div>
+    <div class="box tip">«Una sociedad bien informada puede tomar mejores decisiones.»</div>
+    <div class="box gold"><h4>¿Es noticia o no?</h4>Un cuento de dragones <b>no</b> es noticia (no es real). Lo que almorzaste ayer <b>no</b> es noticia (no es de interés público). Que 200 estudiantes limpiaron una playa este sábado <b>sí</b> es noticia: es real, reciente y le interesa a la comunidad.</div>
+    <div class="lab"><div class="lab-title">Practica · la noticia</div><div data-practice="noticia" data-need="4"></div></div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card lesson" data-sec="5" data-title="Partes de la noticia">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span>
+    <h2><span class="sec-num">5</span>Las piezas del rompecabezas de una noticia</h2>
+    <p>Toca cada parte de la noticia de ejemplo de tu profesora:</p>
+    <div id="xrayNews"></div>
+    <div id="xrayNewsInfo" class="box tip" style="min-height:64px"><b>Toca una parte de la noticia.</b></div>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Parte</th><th>¿Qué es?</th></tr>
+      <tr><td><b>1. Titular</b></td><td>El título de la noticia. <b>Resume lo más importante</b> y llama la atención del lector.</td></tr>
+      <tr><td><b>2. Bajada</b> (entradilla)</td><td>Va bajo el titular. <b>Complementa al titular</b>, entregando más información inicial para despertar el interés.</td></tr>
+      <tr><td><b>3. Lead</b> (o entrada)</td><td>El <b>primer párrafo</b>. Responde las preguntas básicas: ¿qué?, ¿quiénes?, ¿cuándo?, ¿dónde?, ¿cómo? y ¿por qué?</td></tr>
+      <tr><td><b>4. Cuerpo</b></td><td>El desarrollo: la información más <b>detallada</b>, explicaciones, antecedentes, opiniones de <b>expertos o testigos</b>.</td></tr>
+      <tr><td><b>5. Cierre</b></td><td>La última parte: un <b>dato final</b>, una conclusión o una proyección (lo que pasará después).</td></tr>
+    </table></div>
+    <div class="box warn"><h4>¡Ojo con la palabra «entradilla»!</h4>En la lámina de la presentación aparece «entradilla» dos veces: una para la bajada y otra para el lead. En la <b>infografía</b> de tu profesora está así: <b>bajada = entradilla</b> y <b>lead = entrada</b>. Lo seguro para la prueba: la <b>bajada</b> va bajo el titular y lo complementa; el <b>lead</b> es el primer párrafo y responde las seis preguntas.</div>
+    <h3>El misterio del lead: las seis preguntas</h3>
+    <div class="w6"><div>¿Qué?<small>lo que pasó</small></div><div>¿Quiénes?<small>las personas</small></div><div>¿Cuándo?<small>el momento</small></div><div>¿Dónde?<small>el lugar</small></div><div>¿Cómo?<small>la forma</small></div><div>¿Por qué?<small>la causa o finalidad</small></div></div>
+    <figure class="missfig" data-img="miss/info-1.jpg"><img src="miss/info-1.jpg" loading="lazy" alt="Infografía: la noticia"><figcaption>Infografía de tu profesora · toca para agrandar</figcaption></figure>
+    <div class="lab"><div class="lab-title">Practica · partes y lead</div><div data-practice="noticiaPartes,lead" data-need="5"></div></div>
+  </div>
+
+  <!-- 6 -->
+  <div class="card lesson" data-sec="6" data-title="Hecho u opinión">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span>
+    <h2><span class="sec-num">6</span>Filtro de detective: ¿es un hecho o una opinión?</h2>
+    <div class="tablewrap"><table class="t">
+      <tr><th style="background:#DFF3E9">HECHO · lo que ocurre 🔎</th><th style="background:#FBE3EC">OPINIÓN · lo que alguien piensa 💭</th></tr>
+      <tr><td>Algo que <b>realmente ocurrió</b> y <b>se puede comprobar</b>.</td><td>Lo que alguien <b>piensa o siente</b> sobre algo. <b>No siempre es igual</b> para todas las personas.</td></tr>
+      <tr><td>Se basa en <b>datos reales</b> y puede demostrarse.</td><td>Expresa <b>gustos, creencias o puntos de vista</b>.</td></tr>
+      <tr><td>Hoy llovió en la mañana.<br>La temperatura fue de 18 °C.<br>Chile es un país de América del Sur.</td><td>Creo que la lluvia es relajante.<br>Para mí, 18 °C es una temperatura agradable.<br>Opino que Chile es un país maravilloso.</td></tr>
+    </table></div>
+    <div class="box tip"><h4>Pistas que delatan una opinión</h4>Frases como <span class="hl-o">creo que</span>, <span class="hl-o">pienso que</span>, <span class="hl-o">opino que</span>, <span class="hl-o">para mí</span>, <span class="hl-o">me parece</span>, <span class="hl-o">en mi opinión</span>, <span class="hl-o">ojalá</span>, <span class="hl-o">deberían</span>; y palabras que valoran, como <span class="hl-o">maravilloso</span>, <span class="hl-o">aburrido</span>, <span class="hl-o">el mejor</span>, <span class="hl-o">precioso</span>. Un hecho, en cambio, trae <span class="hl-h">datos</span>: fechas, números, lugares, cosas que se pueden comprobar.</div>
+    <div class="box gold">¡Las noticias tienen ambos! Los <b>hechos</b> nos informan y las <b>opiniones</b> (por ejemplo, lo que dice un testigo o un experto) nos ayudan a entender distintos puntos de vista.</div>
+    <figure class="missfig" data-img="miss/lamina-09.jpg"><img src="miss/lamina-09.jpg" loading="lazy" alt="Lámina: hecho u opinión"><figcaption>Lámina de tu profesora · toca para agrandar</figcaption></figure>
+    <div class="lab"><div class="lab-title">Practica · hecho u opinión</div><div data-practice="hechoOp" data-need="5"></div></div>
+  </div>
+
+  <!-- 7 -->
+  <div class="card lesson" data-sec="7" data-title="La biografía">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span>
+    <h2><span class="sec-num">7</span>La biografía: vidas que dejan huella</h2>
+    <p>La biografía es un <b>texto informativo</b> que relata la <b>vida de una persona</b> considerada relevante y cuyas acciones merecen ser conocidas. Su <b>propósito</b> es informar sobre la vida de esa persona y <b>destacar sus principales acciones, logros o aportes</b>, explicando por qué es importante. Conocer historias reales nos inspira a construir la nuestra.</p>
+    <figure class="missfig" data-img="miss/lamina-07.jpg"><img src="miss/lamina-07.jpg" loading="lazy" alt="Lámina: la biografía"><figcaption>Lámina de tu profesora · toca para agrandar</figcaption></figure>
+    <h3>¿Qué información incluye?</h3>
+    <p>👶 Nacimiento e infancia · 🎓 Estudios · 💼 Trabajo o actividades · 🏆 Logros y aportes · ⛰️ Dificultades que enfrentó · ❤️ Muerte o situación actual (si sigue viva).</p>
+    <h3>¿Cómo se organiza? En orden cronológico</h3>
+    <p>La información va <b>desde el principio hasta el final</b>: desde el nacimiento hasta la muerte o la actualidad. Mira la vida de Gabriela Mistral ordenada así:</p>
+    <div class="timeline" id="bioTimeline"></div>
+    <h3>¿En qué formatos se presenta?</h3>
+    <p>Como <b>texto escrito</b> (un texto continuo que cuenta la historia) o como <b>infografía</b>, que combina textos breves, imágenes, fechas, líneas de tiempo y otros recursos visuales.</p>
+    <figure class="missfig" data-img="miss/info-2.jpg"><img src="miss/info-2.jpg" loading="lazy" alt="Infografía: la biografía"><figcaption>Infografía de tu profesora · toca para agrandar</figcaption></figure>
+    <div class="lab"><div class="lab-title">Practica · biografías</div><div data-practice="bio" data-need="4"></div></div>
+  </div>
+
+  <!-- 8 -->
+  <div class="card lesson" data-sec="8" data-title="El gran mapa">
+    <span class="src miss">⭐ Lo refuerza tu profesora</span>
+    <h2><span class="sec-num">8</span>El gran mapa de los textos no literarios</h2>
+    <div class="tablewrap"><table class="t">
+      <tr><th></th><th>📰 La noticia</th><th>🏆 La biografía</th><th>✉️ La carta</th></tr>
+      <tr><td><b>Propósito principal</b></td><td>Informar de manera clara y objetiva sobre un hecho reciente.</td><td>Relatar la vida y los aportes de alguien que deja huella.</td><td>Comunicar mensajes con intenciones variables (agradecer, pedir, expresar…).</td></tr>
+      <tr><td><b>Estructura clave</b></td><td>Las preguntas del lead: ¿qué?, ¿quiénes?, ¿cuándo?, ¿dónde?, ¿cómo?, ¿por qué?</td><td>Orden cronológico (línea de tiempo).</td><td>Saludo inicial, cuerpo y firma de despedida.</td></tr>
+    </table></div>
+    <div class="box tip">¡Todos estos textos tienen un <b>propósito explícito o implícito</b> que tú, como lectora, puedes descubrir!</div>
+    <figure class="missfig" data-img="miss/lamina-10.jpg"><img src="miss/lamina-10.jpg" loading="lazy" alt="Lámina: el gran mapa de los textos no literarios"><figcaption>Lámina de tu profesora · toca para agrandar</figcaption></figure>
+    <h3>¡Tú eliges tu propia aventura!</h3>
+    <p>Como lectoras, podemos elegir el tipo de texto que más nos ayude según lo que queramos investigar, aprender o sentir:</p>
+    <p>¿Quieres <b>entender el mundo</b>? → Lee una <b>noticia</b>. · ¿Quieres <b>conectar con alguien</b>? → Escribe una <b>carta</b>. · ¿Quieres <b>inspirarte</b>? → Descubre una <b>biografía</b>.</p>
+    <div class="lab"><div class="lab-title">Practica · ¿qué tipo de texto es?</div><div data-practice="tipo" data-need="4"></div></div>
+  </div>
+
+  <!-- 9 -->
+  <div class="card lesson" data-sec="9" data-title="El ambiente">
+    <span class="src libro">📘 Libro, Lección 1, págs. 158 a 171</span>
+    <h2><span class="sec-num">9</span>El ambiente de una narración</h2>
+    <p>El <b>ambiente</b> es el «dónde» y el «cuándo» de una historia: el <b>lugar</b> donde pasan las cosas y la <b>época</b> en que ocurren, junto con la forma de vivir de esa gente, sus <b>costumbres</b> (tradiciones, religión, ropa, comida, actividades).</p>
+    <p>Algunas cosas del ambiente las cuenta el narrador directamente; otras las descubres tú (las <b>infieres</b>) fijándote en lo que hacen y dicen los personajes. Conocer el ambiente ayuda a entender por qué los personajes actúan y piensan como lo hacen.</p>
+    <div class="box tip"><h4>La atmósfera o clima</h4>Además del lugar y la época, una historia «se siente» de alguna manera: alegre, tensa, triste… Eso es la <b>atmósfera</b> o <b>clima</b>, y depende de las <b>emociones</b> de los personajes. No se queda fija: <b>cambia</b> a medida que avanza el relato.</div>
+    <h3>En tu libro: <i>Sadako y las mil grullas de papel</i></h3>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th>Lugar</th><td>Hiroshima, Japón. Lugares específicos: la casa de la familia Sasaki, la escuela (la carrera de relevos), los templos en Año Nuevo y el hospital de la Cruz Roja.</td></tr>
+      <tr><th>Época</th><td>Unos diez años después de la bomba atómica que cayó sobre Hiroshima el 6 de agosto de 1945.</td></tr>
+      <tr><th>Costumbres</th><td>El kimono, los símbolos de buena suerte en la puerta, las campanas del templo en Año Nuevo y la leyenda de las mil grullas de papel.</td></tr>
+      <tr><th>Atmósfera</th><td>Cambia: alegría y entusiasmo en la casa y en la carrera → miedo, soledad y tristeza en el hospital, cuando Sadako sabe que tiene leucemia, «la enfermedad de la bomba atómica».</td></tr>
+    </table></div>
+    <div class="box gold"><h4>Cómo describir el ambiente <span class="small muted">(tu libro lo trabaja en la pág. 165)</span></h4><b>1.</b> ¿En qué país y ciudad pasa? <b>2.</b> ¿En qué época o año? <b>3.</b> ¿En qué lugares concretos ocurren las escenas? <b>4.</b> ¿Qué costumbre aparece en cada lugar (ropa, comida, fiestas, creencias, actividades)?</div>
+    <div class="box green"><h4>El comentario literario <span class="small muted">(libro, págs. 168-170)</span></h4>Tiene cuatro partes: <b>introducción</b> (se presenta el libro y su tema o conflicto), <b>desarrollo del tema</b> (se explica un tema de interés con datos investigados), <b>reflexión y análisis personal</b> (ejemplos del libro y relación con la actualidad) y <b>conclusión</b> (el mensaje o aprendizaje que te queda).</div>
+    <div class="lab"><div class="lab-title">Practica · ¿lugar, época, costumbres o atmósfera?</div><div data-practice="ambiente" data-need="5"></div></div>
+  </div>
+
+  <!-- 10 -->
+  <div class="card lesson" data-sec="10" data-title="Tradición oral">
+    <span class="src libro">📘 Libro, Lección 2, págs. 176 a 189 y 208 a 211</span>
+    <h2><span class="sec-num">10</span>Los relatos de la tradición oral</h2>
+    <p>Algunas historias <b>nadie sabe quién las inventó</b>: los abuelos se las contaron a los padres, los padres a los hijos, y así, <b>contándolas en voz alta</b> durante muchísimos años. A eso se le llama <b>tradición oral</b>. Los <b>mitos</b>, las <b>leyendas</b> y los <b>cuentos folclóricos</b> son relatos de este tipo. Cada pueblo los guarda porque le enseñan algo importante: de dónde viene, cómo cuidar la naturaleza o qué forma de ser admira.</p>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th>Relato de tu libro</th><th>Tipo y procedencia</th></tr>
+      <tr><td>«El ave mágica que hechizaba con su canto»</td><td>Cuento de Tanzania (África)</td></tr>
+      <tr><td>«La historia de la ceiba que no dejaba ver el sol»</td><td>Mito del pueblo tikuna (explica un hecho de la naturaleza)</td></tr>
+      <tr><td>«La leyenda de la paz»</td><td>Leyenda de Bakú, Azerbaiyán</td></tr>
+      <tr><td>«La flor del linoral»</td><td>Cuento de la tradición oral española</td></tr>
+    </table></div>
+    <h3>Dos relatos, en pocas palabras</h3>
+    <p><b>«La leyenda de la paz».</b> Dos príncipes enemigos van a la guerra. La madre de uno no le entrega el casco, porque una paloma hizo su nido dentro y tiene tres polluelos. El príncipe va a combatir sin casco; su enemigo, al saber por qué, le tiende la mano y le propone hacer la paz para siempre. Desde entonces los reinos son amigos y la paloma es símbolo de paz.</p>
+    <p><b>«La flor del linoral».</b> Un rey promete su corona al hijo que le traiga la flor del linoral. Los dos hermanos mayores se niegan a compartir su comida con una viejecita; el menor le da la mitad, y ella le indica cómo encontrar la flor. Por envidia, los mayores lo matan, pero una caña que crece en su tumba canta la verdad. El rey castiga a los mayores; la viejecita cura al menor, que recibe la corona, reina en paz y perdona a sus hermanos.</p>
+    <div class="box gold"><h4>Cómo comparar dos relatos <span class="small muted">(tu libro lo trabaja en la pág. 185)</span></h4><b>1.</b> ¿Cómo se llama cada uno y de dónde viene? <b>2.</b> ¿Cuál es el problema principal de cada historia? <b>3.</b> ¿Quiénes lo enfrentan y qué hacen para resolverlo? <b>4.</b> ¿Qué valores o ideas enseña cada uno? <b>5.</b> Con todo eso, ¿en qué se parecen y en qué se diferencian?</div>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th></th><th>La leyenda de la paz</th><th>La flor del linoral</th></tr>
+      <tr><td><b>Procedencia</b></td><td>Azerbaiyán</td><td>Tradición oral española</td></tr>
+      <tr><td><b>Conflicto</b></td><td>Dos reinos enemigos van a la guerra.</td><td>Tres hermanos compiten por la corona.</td></tr>
+      <tr><td><b>Acciones clave</b></td><td>La madre protege el nido; los príncipes se dan la mano.</td><td>El menor comparte su comida; la verdad se descubre y el rey hace justicia.</td></tr>
+      <tr><td><b>Valores</b></td><td>La paz y el respeto por la vida.</td><td>La generosidad, la bondad y el perdón.</td></tr>
+    </table></div>
+    <p><b>Semejanza:</b> los dos son relatos de la tradición oral y en ambos un acto de bondad (proteger un nido, compartir la comida) termina en paz. <b>Diferencia:</b> en la leyenda los enemigos se reconcilian sin castigo; en el cuento los culpables son castigados antes del perdón.</p>
+    <div class="box green"><h4>La exposición oral <span class="small muted">(libro, pág. 188)</span></h4>Se organiza en <b>introducción</b> (se presenta el tema), <b>desarrollo</b> (la información investigada, en orden) y <b>cierre</b> (una apreciación del grupo). Al exponer: saluda, habla claro y con buen volumen, apóyate con las manos y el cuerpo, muestra las imágenes en el momento justo y mira al público.</div>
+    <div class="lab"><div class="lab-title">Practica · tradición oral</div><div data-practice="tradicion" data-need="4"></div></div>
+  </div>
+
+  <!-- 11 -->
+  <div class="card lesson" data-sec="11" data-title="Raíces y afijos">
+    <span class="src libro">📘 Libro, págs. 199 y 206</span>
+    <h2><span class="sec-num">11</span>Raíces y afijos</h2>
+    <p>Muchas palabras se pueden separar en partes. La <b>raíz</b> es la parte que lleva el significado principal. Los <b>afijos</b> son pedacitos que se pegan <b>antes o después</b> de la raíz y le <b>cambian o agregan</b> algo a su significado.</p>
+    <div class="box tip" style="text-align:center"><div style="font-size:1.6em;font-weight:800;letter-spacing:.02em"><span style="color:#A83A67">des</span><span style="color:#553A9E;text-decoration:underline">esper</span><span style="color:#23915F">ado</span></div>
+      <div class="small"><b style="color:#A83A67">des-</b> prefijo: negación o inversión · <b style="color:#553A9E">esper</b> raíz: tener esperanza · <b style="color:#23915F">-ado</b> sufijo: forma un adjetivo</div></div>
+    <p>Los afijos que van <b>adelante</b> se llaman <b>prefijos</b>; los que van <b>al final</b>, <b>sufijos</b>. Truco: si encuentras una palabra desconocida, busca la raíz y el afijo que conoces, ¡y podrás adivinar qué significa!</p>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th>Prefijo</th><th>Significa</th><th>Ejemplos</th></tr>
+      <tr><td>in-, im-</td><td>no, lo contrario</td><td>inseguro, invisible, imposible, increíble</td></tr>
+      <tr><td>des-</td><td>negación o inversión</td><td>desordenar, deshacer, desconocido</td></tr>
+      <tr><td>re-</td><td>volver a hacer</td><td>releer, rehacer, reescribir</td></tr>
+      <tr><td>ante-</td><td>antes</td><td>anteayer, anteponer</td></tr>
+      <tr><td>pre-</td><td>antes</td><td>prehistoria, precalentar</td></tr>
+      <tr><td>sub-</td><td>debajo</td><td>submarino, subterráneo</td></tr>
+      <tr><td>bi-</td><td>dos</td><td>bicicleta, bilingüe</td></tr>
+    </table></div>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th>Sufijo</th><th>Significa</th><th>Ejemplos</th></tr>
+      <tr><td>-ito, -ita</td><td>pequeño (diminutivo)</td><td>cartita, perrito, casita</td></tr>
+      <tr><td>-ón, -ote</td><td>grande (aumentativo)</td><td>cabezón, grandote</td></tr>
+      <tr><td>-mente</td><td>de manera</td><td>nuevamente, rápidamente, eternamente</td></tr>
+      <tr><td>-ero, -era</td><td>oficio, persona que trabaja en algo</td><td>panadero, jardinera, zapatero</td></tr>
+      <tr><td>-dor, -dora</td><td>persona que hace la acción</td><td>corredora, nadador, jugador</td></tr>
+      <tr><td>-ble</td><td>que se puede</td><td>lavable, increíble, comestible</td></tr>
+      <tr><td>-oso, -osa</td><td>que tiene o está lleno de</td><td>orgulloso, cariñosa, peligroso</td></tr>
+    </table></div>
+    <div class="lab"><div class="lab-title">Practica · raíces y afijos</div><div data-practice="afijos" data-need="5"></div></div>
+  </div>
+
+  <!-- 12 -->
+  <div class="card lesson" data-sec="12" data-title="s, c o z">
+    <span class="src libro">📘 Libro, pág. 201</span>
+    <h2><span class="sec-num">12</span>¿Con s, con c o con z?</h2>
+    <p>Cuando hablamos, la <b>s</b>, la <b>z</b> y la <b>c</b> (con e, i) suenan igual, así que es fácil equivocarse al escribir. Estas cinco claves te ayudan:</p>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Regla</th><th>Ejemplos</th></tr>
+      <tr><td>Cuando un verbo termina en <b>-se</b> porque se le pegó el pronombre <b>se</b>, ese final va con <b>s</b> (verbo y pronombre quedan escritos juntos).</td><td>refugiándo<b>se</b>, yéndo<b>se</b>, peinándo<b>se</b></td></tr>
+      <tr><td>Los verbos que terminan en <b>-izar</b> van con <b>z</b>; pero cuando al conjugarlos después de esa letra viene una <b>e</b>, la <b>z</b> cambia a <b>c</b>.</td><td>tranquili<b>z</b>ar → tranquili<b>c</b>e · anali<b>z</b>ar → anali<b>c</b>e</td></tr>
+      <tr><td>Se escribe <b>-ción</b> si en la familia de la palabra hay otra que termina en <b>-do, -dor, -to, -tor</b> o <b>-torio</b>.</td><td>redac<b>c</b>ión – redac<b>tor</b> · can<b>c</b>ión – can<b>to</b></td></tr>
+      <tr><td>Se escribe <b>-sión</b> si en la familia hay otra palabra que termina en <b>-so, -sor, -sivo</b> o <b>-sible</b>.</td><td>inva<b>s</b>ión – inva<b>sor</b> · vi<b>s</b>ión – vi<b>sible</b></td></tr>
+      <tr><td>Los adjetivos que terminan en <b>-oso</b> u <b>-osa</b> van con <b>s</b>.</td><td>orgullo<b>s</b>o, cariño<b>s</b>a, espanto<b>s</b>o, hermo<b>s</b>a</td></tr>
+    </table></div>
+    <div class="lab"><div class="lab-title">Practica · completa con s, c o z</div><div data-practice="scz" data-need="6"></div></div>
+  </div>
+
+  <!-- 13 -->
+  <div class="card lesson" data-sec="13" data-title="Resumen">
+    <h2><span class="sec-num">13</span>Resumen para la prueba</h2>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th>Tema</th><th>Lo que hay que recordar</th></tr>
+      <tr><td>Propósito</td><td>La finalidad del texto: ¿para qué se comunica? Explícito (está escrito) o implícito (se descubre con pistas: tema, palabras, tono, actitud).</td></tr>
+      <tr><td>Carta: propósitos</td><td>Informar · expresar sentimientos · persuadir · solicitar · agradecer.</td></tr>
+      <tr><td>Carta: partes</td><td>Encabezado (lugar y fecha) · saludo · cuerpo · cierre · firma. Emisor = quien escribe; destinatario = a quien le escribe.</td></tr>
+      <tr><td>Noticia</td><td>Hecho real, reciente y de interés público. Titular · bajada · lead (qué, quiénes, cuándo, dónde, cómo, por qué) · cuerpo · cierre.</td></tr>
+      <tr><td>Hecho u opinión</td><td>Hecho: ocurrió y se puede comprobar. Opinión: lo que alguien piensa o siente (creo, para mí, opino…).</td></tr>
+      <tr><td>Biografía</td><td>Vida de una persona relevante, en orden cronológico: nacimiento, estudios, trabajo, logros, dificultades, muerte o actualidad. Texto continuo o infografía.</td></tr>
+      <tr><td>Ambiente</td><td>Lugar, época, costumbres y atmósfera (las emociones, que van cambiando).</td></tr>
+      <tr><td>Tradición oral</td><td>Mitos, leyendas y cuentos folclóricos: sin autor, de boca en boca, con enseñanzas para una comunidad.</td></tr>
+      <tr><td>Raíces y afijos</td><td>Raíz = significado. Prefijo antes (des-, in-, re-), sufijo después (-ito, -mente, -oso).</td></tr>
+      <tr><td>s, c, z</td><td>-se pronombre con s · -izar con z (→ -ice) · -ción / -sión según la familia · -oso, -osa con s.</td></tr>
+    </table></div>
+    <h3 style="margin-top:18px">Antes de la prueba, revisa que…</h3>
+    <ul class="clean" id="checklist"></ul>
+    <div class="box green" style="margin-top:16px">Cuando termines el repaso, pasa a los <a href="#ensayo">ensayos</a>.</div>
+  </div>
+
+  <div class="pager"><button class="btn ghost" id="prevSec">← Anterior</button><button class="btn blue" id="nextSec">Siguiente →</button></div>
+</section>
+
+<!-- ================= ENSAYOS ================= -->
+<section id="v-ensayo" class="view hide"></section>
+
+<!-- ================= MATERIAL DE LA MISS ================= -->
+<section id="v-miss" class="view hide">
+  <div class="card">
+    <h2>Material de la miss</h2>
+    <p class="muted" style="margin-top:0">Las láminas de la presentación «El Diario de las Exploradoras de Textos» y las cinco infografías que te mandó tu profesora. Toca una para verla en grande.</p>
+    <h3>Infografías</h3>
+    <div class="gallery" id="galInfo"></div>
+    <h3 style="margin-top:18px">Láminas de la presentación</h3>
+    <div class="gallery" id="galLam"></div>
+  </div>
+</section>
+
+<!-- ================= RESULTADOS ================= -->
+<section id="v-resultados" class="view hide"></section>
+
+</main>
+<script>
+"use strict";
+/* ============ utilidades ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const sample = (arr, n) => shuffle(arr).slice(0, n);
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const coma = n => String(n).replace(".", ",");
+const notaTxt = n => n.toFixed(1).replace(".", ",");
+
+/* ============ guardado local ============ */
+const STORE = "amparo-lenguaje-u3-v1";
+let DB = (() => { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } })();
+DB.done = DB.done || {}; DB.hits = DB.hits || {}; DB.history = DB.history || []; DB.list = DB.list || {};
+function save() { try { localStorage.setItem(STORE, JSON.stringify(DB)); } catch (e) { } }
+
+/* ============ carta y noticia ============ */
+function letterHTML(L, o = {}) {
+  const part = (k, inner) => `<div class="pt ${k}${o.hl === k ? " hl" : ""}" data-part="${k}">${o.tags ? `<span class="tag">${LPART[k]}</span>` : ""}${inner}</div>`;
+  const enc = esc(L.lugar) + (L.dest ? `<div style="text-align:left;margin-top:6px">${L.dest.map(esc).join("<br>")}</div>` : "");
+  return `<div class="letter${o.tap ? " tap" : ""}">${part("enc", enc)}${part("sal", esc(L.sal))}${part("cue", L.cue.map(p => `<p>${esc(p)}</p>`).join(""))}${part("cie", esc(L.cie))}${part("fir", esc(L.fir))}</div>`;
+}
+function newsHTML(N, o = {}) {
+  const only = o.only || ["tit", "baj", "lead", "cue", "cie"];
+  const part = (k, inner) => only.includes(k) ? `<div class="pt ${k}${o.hl === k ? " hl" : ""}" data-part="${k}">${inner}</div>` : "";
+  return `<div class="news${o.tap ? " tap" : ""}"><div class="meta"><span>${esc(N.sec)}</span><span>${esc(N.fecha)}</span></div>${part("tit", esc(N.tit))}${part("baj", esc(N.baj))}${part("lead", `<p>${esc(N.lead)}</p>`)}${part("cue", N.cue.map(p => `<p>${esc(p)}</p>`).join(""))}${part("cie", `<p>${esc(N.cie)}</p>`)}</div>`;
+}
+
+/* ============ visor de imágenes ============ */
+function lightbox(src, cap) {
+  const d = document.createElement("div"); d.className = "lightbox";
+  d.innerHTML = `<div class="lb-top"><b>${esc(cap || "Material de la miss")}</b><a href="${src}" target="_blank" rel="noopener">Abrir sola</a><button type="button">Cerrar ✕</button></div><div class="lb-img"><img src="${src}" alt=""></div>`;
+  const close = () => { d.remove(); document.removeEventListener("keydown", onKey); };
+  const onKey = e => { if (e.key === "Escape") close(); };
+  $("button", d).onclick = close;
+  d.addEventListener("click", e => { if (e.target === d || e.target.classList.contains("lb-img")) close(); });
+  document.addEventListener("keydown", onKey);
+  document.body.appendChild(d);
+}
+document.addEventListener("click", e => { const f = e.target.closest(".missfig"); if (f) lightbox(f.dataset.img, $("img", f).alt); });
+
+const MISS = {
+  info: [["info-1.jpg", "La noticia"], ["info-2.jpg", "La biografía"], ["info-3.jpg", "El propósito de los textos"], ["info-4.jpg", "Partes de una carta"], ["info-5.jpg", "Hecho u opinión"]],
+  lam: [["lamina-01.jpg", "Portada: El Diario de las Exploradoras de Textos"], ["lamina-02.jpg", "El propósito: explícito e implícito"], ["lamina-03.jpg", "La carta: mensajes con muchas intenciones"], ["lamina-04.jpg", "Radiografía de una carta"], ["lamina-05.jpg", "La noticia: nuestra ventana al mundo"], ["lamina-06.jpg", "Las piezas de una noticia"], ["lamina-07.jpg", "La biografía: vidas que dejan huella"], ["lamina-08.jpg", "El camino de la vida (orden cronológico)"], ["lamina-09.jpg", "¿Es un hecho o una opinión?"], ["lamina-10.jpg", "El gran mapa de los textos no literarios"], ["lamina-11.jpg", "¡Tú eliges tu propia aventura!"]]
+};
+function buildGallery() {
+  const g = (id, list) => { $(id).innerHTML = list.map(([f, t]) => `<button type="button" data-f="${f}" data-t="${esc(t)}"><img src="miss/${f}" loading="lazy" alt=""><span>${esc(t)}</span></button>`).join(""); $$(id + " button").forEach(b => b.onclick = () => lightbox("miss/" + b.dataset.f, b.dataset.t)); };
+  g("#galInfo", MISS.info); g("#galLam", MISS.lam);
+}
+
+/* ============ confeti ============ */
+function confetti() {
+  const c = document.createElement("canvas"); c.className = "confetti"; document.body.appendChild(c);
+  const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+  const cols = ["#7B5CC4", "#E88AAE", "#23915F", "#E9B325", "#3A86D6"];
+  const P = Array.from({ length: 140 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height * 0.4, vx: -2 + Math.random() * 4, vy: 2 + Math.random() * 4, r: 4 + Math.random() * 5, c: pick(cols), a: Math.random() * 6 }));
+  let t = 0; (function f() { x.clearRect(0, 0, c.width, c.height); P.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.a += 0.1; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r, -p.r / 2, 2 * p.r, p.r); x.restore(); }); if (++t < 200) requestAnimationFrame(f); else c.remove(); })();
+}
+
+/* ============ navegación ============ */
+const VIEWS = ["inicio", "aprender", "ensayo", "miss", "resultados"];
+function go(v, push = true) {
+  let sec = null;
+  if (v && v.startsWith("aprender-")) { sec = +v.split("-")[1]; v = "aprender"; }
+  if (!VIEWS.includes(v)) v = "inicio";
+  VIEWS.forEach(x => $("#v-" + x).classList.toggle("hide", x !== v));
+  $$("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.go === v));
+  if (v === "inicio") renderHome();
+  if (v === "aprender") showSec(sec || DB.cur || 1);
+  if (v === "ensayo") renderEnsayo();
+  if (v === "resultados") renderResults();
+  const h = "#" + (sec ? "aprender-" + sec : v);
+  if (push && location.hash !== h) history.pushState(null, "", h);
+  window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); go(g.dataset.go); return; }
+  const a = e.target.closest('a[href^="#"]'); if (a) { e.preventDefault(); go(a.getAttribute("href").slice(1)); }
+});
+window.addEventListener("popstate", () => go(location.hash.slice(1), false));
+function setHdr() { document.documentElement.style.setProperty("--hdr", $("header.top").offsetHeight + "px"); }
+window.addEventListener("resize", setHdr);
+
+/* ============ lecciones ============ */
+let SECS = [];
+function buildLessons() {
+  SECS = $$(".lesson").map(el => ({ n: +el.dataset.sec, t: el.dataset.title, el }));
+  $("#lessonNav").innerHTML = SECS.map(s => `<button data-sec="${s.n}">${s.n} · ${s.t}</button>`).join("");
+  $$("#lessonNav button").forEach(b => b.onclick = () => { showSec(+b.dataset.sec); history.pushState(null, "", "#aprender-" + b.dataset.sec); });
+  $("#prevSec").onclick = () => { showSec(DB.cur - 1); history.pushState(null, "", "#aprender-" + DB.cur); };
+  $("#nextSec").onclick = () => { if (DB.cur >= SECS.length) go("ensayo"); else { showSec(DB.cur + 1); history.pushState(null, "", "#aprender-" + DB.cur); } };
+}
+function showSec(n) {
+  n = Math.max(1, Math.min(SECS.length, n));
+  SECS.forEach(s => s.el.classList.toggle("hide", s.n !== n));
+  DB.cur = n; if (n === SECS.length) DB.done[n] = true; save();
+  $$("#lessonNav button").forEach(b => { const k = +b.dataset.sec; b.classList.toggle("on", k === n); b.classList.toggle("done", !!DB.done[k]); });
+  $("#prevSec").disabled = n === 1;
+  $("#nextSec").textContent = n === SECS.length ? "Ir a los ensayos →" : "Siguiente →";
+  window.scrollTo(0, 0);
+}
+function sectionDone(n) { if (DB.done[n]) return; DB.done[n] = true; save(); $$("#lessonNav button").forEach(b => { if (+b.dataset.sec === n) b.classList.add("done"); }); }
+
+/* ============ banco de contenidos ============ */
+const PROPS = { informar: "Informar", sentimientos: "Expresar sentimientos", persuadir: "Persuadir", solicitar: "Solicitar", agradecer: "Agradecer" };
+const PROP_DEF = {
+  informar: "entregar datos o noticias sobre una situación",
+  sentimientos: "manifestar emociones, como cariño, alegría o tristeza",
+  persuadir: "convencer al destinatario para que piense o actúe de cierta manera",
+  solicitar: "pedir algo, como un favor, información o una respuesta",
+  agradecer: "reconocer o valorar una acción recibida"
+};
+
+/* cartas: expl = propósito escrito directamente (true) o que se descubre con pistas (false) */
+const LETTERS = [
+  { miss: true, lugar: "Santiago, 12 de agosto de 2026", sal: "Querida Sofía:",
+    cue: ["Te escribo para contarte que el fin de semana fui al campo con mi familia. La pasé muy bien, conocí un lugar hermoso y vi muchos animales.", "También quería contarte que ya empezaron las clases y estoy muy contenta con mi nuevo curso. Espero que pronto podamos juntarnos para ponernos al día."],
+    cie: "Un abrazo grande,", fir: "Camila", emisor: "Camila", destinatario: "Sofía, su amiga",
+    prop: "informar", expl: true, frase: "Te escribo para contarte que…", pista: "Camila le cuenta a su amiga lo que hizo y lo que le está pasando." },
+  { lugar: "Viña del Mar, 3 de septiembre de 2026", dest: ["Señores apoderados", "5° básico"], sal: "Estimados apoderados:",
+    cue: ["Les escribimos para informarles que el viernes 11 de septiembre no habrá clases, porque el colegio será usado como local de votación.", "Las clases se retomarán el lunes 14 en el horario de siempre. Los buses de acercamiento tampoco funcionarán ese viernes."],
+    cie: "Saludos cordiales,", fir: "Dirección del colegio", emisor: "la dirección del colegio", destinatario: "los apoderados de 5° básico",
+    prop: "informar", expl: true, frase: "Les escribimos para informarles que…", pista: "Entrega datos: qué día no habrá clases, por qué y cuándo se vuelve." },
+  { lugar: "Quilpué, 22 de septiembre de 2026", sal: "Querido abuelo:",
+    cue: ["Ayer fue la final del campeonato de básquetbol. Jugamos contra el equipo de Villa Alemana y ganamos por dos puntos en el último minuto.", "Yo hice cuatro canastas y la entrenadora me eligió como la mejor jugadora del partido. El sábado nos entregarán las medallas en el gimnasio municipal."],
+    cie: "Un abrazo,", fir: "Tu nieta Emilia", emisor: "Emilia", destinatario: "su abuelo",
+    prop: "informar", expl: false, pista: "No dice «te escribo para», pero todo el cuerpo entrega datos de lo que pasó: contra quién jugaron, el resultado, cuántas canastas hizo y cuándo recibirán las medallas." },
+  { lugar: "Concón, 8 de junio de 2026", dest: ["Señora Rosa Pérez", "Pasaje Los Aromos 145"], sal: "Estimada vecina:",
+    cue: ["Le comunicamos que el corte de agua anunciado para el martes fue cambiado para el jueves 17 de junio, entre las 9:00 y las 14:00 horas.", "Durante esas horas pasará un camión aljibe por la esquina del pasaje, por si necesita agua."],
+    cie: "Atentamente,", fir: "Junta de vecinos Los Aromos", emisor: "la junta de vecinos", destinatario: "la señora Rosa, una vecina",
+    prop: "informar", expl: true, frase: "Le comunicamos que…", pista: "Entrega datos sobre una situación: el día y la hora del corte de agua." },
+  { lugar: "Valparaíso, 30 de mayo de 2026", sal: "Querida Martina:",
+    cue: ["Desde que te cambiaste de ciudad, el recreo no es lo mismo. Paso por la banca donde nos sentábamos y me acuerdo de nuestras conversaciones y de cómo nos reíamos de todo.", "Te extraño muchísimo y a veces me dan ganas de llorar cuando veo tu puesto vacío en la sala."],
+    cie: "Con todo mi cariño,", fir: "Josefa", emisor: "Josefa", destinatario: "Martina, su amiga",
+    prop: "sentimientos", expl: false, pista: "No dice para qué escribe, pero las palabras «te extraño muchísimo», «ganas de llorar» y el tono triste y cariñoso muestran que quiere expresar lo que siente." },
+  { lugar: "Limache, 14 de julio de 2026", sal: "Querida mamá:",
+    cue: ["Te escribo para decirte lo feliz que estoy de que por fin hayas vuelto a la casa después de tantos días en el hospital.", "Cada noche pensaba en ti y te echaba mucho de menos. Hoy, cuando te vi entrar, sentí que el corazón me saltaba de alegría."],
+    cie: "Te quiero mucho,", fir: "Tu hija Laura", emisor: "Laura", destinatario: "su mamá",
+    prop: "sentimientos", expl: true, frase: "Te escribo para decirte lo feliz que estoy…", pista: "Manifiesta emociones: alegría, cariño y lo mucho que la extrañó." },
+  { lugar: "La Calera, 2 de abril de 2026", sal: "Querida tía Ana:",
+    cue: ["Todavía no puedo creer que Toby ya no esté con nosotros. La casa se siente vacía y cuando vuelvo del colegio lo sigo buscando en la puerta.", "Me acuerdo de cómo movía la cola cuando me veía llegar. Estoy muy triste y creo que nunca voy a tener un perro tan bueno como él."],
+    cie: "Un beso,", fir: "Tomás", emisor: "Tomás", destinatario: "su tía Ana",
+    prop: "sentimientos", expl: false, pista: "Las palabras «muy triste», «la casa se siente vacía» y el tono de pena muestran que Tomás quiere expresar su tristeza por la muerte de su perro." },
+  { lugar: "Viña del Mar, 5 de octubre de 2026", sal: "Queridos compañeros de 5° B:",
+    cue: ["Les escribo para convencerlos de que dejemos de usar botellas plásticas desechables. Cada botella tarda cientos de años en desaparecer y muchas terminan en el mar, dañando a peces y aves.", "Si cada uno trae su propia botella reutilizable, en un año el curso evitaría más de mil botellas de basura. ¡Hagamos la prueba desde el lunes!"],
+    cie: "Cuento con ustedes,", fir: "Agustina", emisor: "Agustina", destinatario: "sus compañeros de 5° B",
+    prop: "persuadir", expl: true, frase: "Les escribo para convencerlos de que…", pista: "Da razones (el daño al mar, la basura que se evita) para que sus compañeros cambien su forma de actuar." },
+  { lugar: "Quillota, 20 de agosto de 2026", sal: "Querido papá:",
+    cue: ["¿Sabías que tener una mascota ayuda a los niños a ser más responsables? En mi curso, todos los que tienen perro lo sacan a pasear y le dan comida sin que nadie se los recuerde.", "Además, los animales nos ponen más contentos. Yo ya tengo diez años y prometo cuidarlo todos los días. Piénsalo, ¿ya?"],
+    cie: "Un abrazo gigante,", fir: "Vicente", emisor: "Vicente", destinatario: "su papá",
+    prop: "persuadir", expl: false, pista: "Nunca dice «quiero convencerte», pero da argumentos (ser más responsable, estar más contentos, su promesa) para que su papá piense distinto y acepte tener un perro." },
+  { lugar: "Villa Alemana, 12 de marzo de 2026", sal: "Estimados vecinos del pasaje Los Olivos:",
+    cue: ["¿Se han fijado en lo lindo que queda el pasaje cuando está limpio? Los niños juegan tranquilos y las visitas se van con una buena impresión.", "Si cada familia barre su vereda los sábados en la mañana, podríamos tener el pasaje más bonito del barrio. ¡Sumemos manos por nuestro pasaje!"],
+    cie: "Saludos vecinales,", fir: "Familia Soto", emisor: "la familia Soto", destinatario: "los vecinos del pasaje",
+    prop: "persuadir", expl: false, pista: "Busca convencer con razones y entusiasmo («¡Sumemos manos!») para que los vecinos actúen de cierta manera: barrer los sábados." },
+  { lugar: "Valparaíso, 16 de septiembre de 2026", dest: ["Señora Paula Díaz", "Biblioteca del colegio"], sal: "Estimada señora Paula:",
+    cue: ["Le escribo para pedirle que me preste por dos semanas más el libro Sadako y las mil grullas de papel.", "Todavía me faltan tres capítulos y lo necesito para terminar mi comentario literario. Prometo devolverlo en buen estado."],
+    cie: "Muchas gracias de antemano,", fir: "Amanda Reyes, 5° A", emisor: "Amanda, una estudiante de 5° A", destinatario: "la señora Paula, encargada de la biblioteca",
+    prop: "solicitar", expl: true, frase: "Le escribo para pedirle que…", pista: "Pide algo directamente: más tiempo con el libro." },
+  { lugar: "Olmué, 4 de octubre de 2026", dest: ["Museo de Ciencias", "Valparaíso"], sal: "Estimados señores:",
+    cue: ["Somos el 5° B de la Escuela Los Maitenes y queremos visitar el museo en noviembre.", "Les escribimos para solicitar información sobre los horarios de visita, el valor de las entradas para estudiantes y si ofrecen recorridos guiados."],
+    cie: "Esperamos su respuesta. Atentamente,", fir: "Profesora Andrea Muñoz y 5° B", emisor: "la profesora y el 5° B", destinatario: "el museo de ciencias",
+    prop: "solicitar", expl: true, frase: "Les escribimos para solicitar información…", pista: "Pide información: horarios, precios y recorridos." },
+  { lugar: "Casablanca, 9 de junio de 2026", sal: "Estimada profesora Carolina:",
+    cue: ["Esta semana estuve enferma y no pude ir al colegio.", "Le pido, por favor, que me envíe las páginas del libro que revisaron en clases y la fecha de la próxima prueba de Lenguaje, para ponerme al día."],
+    cie: "Saludos,", fir: "Florencia", emisor: "Florencia, una estudiante", destinatario: "la profesora Carolina",
+    prop: "solicitar", expl: true, frase: "Le pido, por favor, que me envíe…", pista: "Pide algo directamente: las páginas del libro y la fecha de la prueba." },
+  { lugar: "Viña del Mar, 25 de junio de 2026", sal: "Querida señora Marta:",
+    cue: ["Quiero agradecerle por habernos enseñado a plantar las lechugas del huerto del colegio.", "Gracias a su paciencia, ahora todo el curso sabe cómo cuidar una planta. Ayer cosechamos las primeras lechugas y nos acordamos de usted."],
+    cie: "Con cariño,", fir: "El 5° A", emisor: "el curso 5° A", destinatario: "la señora Marta, que les enseñó el huerto",
+    prop: "agradecer", expl: true, frase: "Quiero agradecerle por…", pista: "Reconoce y valora algo que recibieron: lo que la señora Marta les enseñó." },
+  { lugar: "Quilpué, 3 de enero de 2026", sal: "Querido tío Pedro:",
+    cue: ["¡Muchas gracias por la bicicleta! Desde que me la regalaste, la uso todas las tardes para ir a la plaza con mis amigos.", "Nunca había tenido una tan rápida. Cada vez que salgo a pedalear me acuerdo de ti."],
+    cie: "Un abrazo fuerte,", fir: "Benjamín", emisor: "Benjamín", destinatario: "su tío Pedro",
+    prop: "agradecer", expl: true, frase: "¡Muchas gracias por la bicicleta!", pista: "Valora un regalo que recibió y le da las gracias." },
+  { lugar: "Viña del Mar, 11 de agosto de 2026", dest: ["Segunda Compañía de Bomberos", "Viña del Mar"], sal: "Estimados bomberos:",
+    cue: ["El curso 5° A les escribe para darles las gracias por la visita del martes.", "Aprendimos cómo actuar en caso de incendio y todos quedamos felices de haber subido al carro bomba."],
+    cie: "Con admiración,", fir: "5° A, Escuela Los Maitenes", emisor: "el curso 5° A", destinatario: "los bomberos de la Segunda Compañía",
+    prop: "agradecer", expl: true, frase: "…les escribe para darles las gracias…", pista: "Reconoce una acción recibida: la visita de los bomberos." }
+];
+const LPART = { enc: "Encabezado", sal: "Saludo", cue: "Cuerpo", cie: "Cierre", fir: "Firma" };
+const LPART_DEF = {
+  enc: "el lugar y la fecha en que se escribe (a veces también el nombre y la ciudad del destinatario)",
+  sal: "las palabras de inicio dirigidas al destinatario; varían según la confianza",
+  cue: "el desarrollo del mensaje, organizado en párrafos",
+  cie: "la despedida, con un mensaje cariñoso o de cortesía",
+  fir: "la identificación de quien escribe, el emisor"
+};
+
+/* noticias: w = respuestas del lead */
+const NEWS = [
+  { miss: true, sec: "Medio Ambiente", fecha: "12 de abril de 2024",
+    tit: "Estudiantes lideran campaña para limpiar playas en Valparaíso",
+    baj: "La iniciativa reunió a más de 200 voluntarios y buscó generar conciencia sobre el cuidado del medio ambiente.",
+    lead: "Este sábado, más de 200 estudiantes de distintos colegios de Valparaíso participaron en una jornada de limpieza de playas en el sector de Caleta Portales, como parte de la campaña «Playas Limpias, Futuro Mejor», organizada por una agrupación juvenil y el municipio local.",
+    cue: ["La actividad comenzó a las 9:00 de la mañana y se extendió hasta el mediodía. Los voluntarios recogieron más de 500 kilos de residuos, entre plásticos, vidrios y otros desechos. «Queremos demostrar que los jóvenes también podemos hacer un cambio», señaló Camila Torres, una de las organizadoras.", "El alcalde de Valparaíso valoró la iniciativa y destacó el compromiso de las y los estudiantes con el cuidado del medio ambiente. Además, expertos en sostenibilidad señalaron que este tipo de acciones contribuyen a crear una mayor conciencia en la comunidad."],
+    cie: "La agrupación anunció que continuará realizando jornadas de limpieza en otras playas de la región durante el año, con el objetivo de seguir inspirando a más personas a sumarse al cuidado del planeta.",
+    w: { que: "una jornada de limpieza de playas", quienes: "más de 200 estudiantes de distintos colegios", cuando: "este sábado", donde: "en el sector de Caleta Portales, en Valparaíso", como: "como parte de la campaña «Playas Limpias, Futuro Mejor»", porque: "para generar conciencia sobre el cuidado del medio ambiente" } },
+  { sec: "Educación", fecha: "23 de septiembre de 2026",
+    tit: "Niñas de Quilpué crean un robot que riega el huerto escolar",
+    baj: "El invento ganó el primer lugar en la feria científica regional y viajará a la competencia nacional.",
+    lead: "El martes 22 de septiembre, cuatro estudiantes de 6° básico de la Escuela Los Aromos de Quilpué ganaron la Feria Científica Regional con un robot que riega solo las plantas del huerto, usando un sensor que mide la humedad de la tierra, para que las plantas no se sequen durante las vacaciones.",
+    cue: ["La idea nació en marzo, cuando las lechugas del huerto se secaron durante el verano. «Queríamos que nadie tuviera que venir los fines de semana a regar», explicó Antonia Rojas, una de las creadoras.", "El robot fue construido con materiales reciclados y un pequeño computador que les prestó el colegio. El jurado destacó que el proyecto es barato y fácil de copiar en otras escuelas."],
+    cie: "Las estudiantes representarán a la región en la feria nacional, que se realizará en noviembre en Santiago.",
+    w: { que: "ganaron la feria científica con un robot que riega el huerto", quienes: "cuatro estudiantes de 6° básico de la Escuela Los Aromos", cuando: "el martes 22 de septiembre", donde: "en Quilpué, en la Feria Científica Regional", como: "usando un sensor que mide la humedad de la tierra", porque: "para que las plantas no se sequen durante las vacaciones" } },
+  { sec: "Comunidad", fecha: "7 de septiembre de 2026",
+    tit: "Biblioteca sobre ruedas llega a los cerros de Viña del Mar",
+    baj: "Un bus lleno de libros recorrerá cada semana los barrios que están lejos de una biblioteca.",
+    lead: "Desde este lunes, un grupo de profesores jubilados recorre los cerros de Viña del Mar en un bus transformado en biblioteca, que presta libros gratis a niños y adultos, porque en esos barrios no hay bibliotecas cerca.",
+    cue: ["El bus tiene más de 1.500 libros, cojines para leer y una pequeña sala de cuentos. El primer día, 120 personas pidieron libros prestados.", "«Es la primera vez que mis hijos tienen tantos cuentos cerca de la casa», contó Marcela Fuentes, vecina del sector. Los profesores reunieron los libros gracias a donaciones de familias de toda la región."],
+    cie: "El bus visitará cada cerro una vez por semana, y los organizadores esperan sumar un segundo vehículo el próximo año.",
+    w: { que: "un bus convertido en biblioteca presta libros gratis", quienes: "un grupo de profesores jubilados", cuando: "desde este lunes", donde: "en los cerros de Viña del Mar", como: "en un bus transformado en biblioteca", porque: "porque en esos barrios no hay bibliotecas cerca" } },
+  { sec: "Naturaleza", fecha: "14 de septiembre de 2026",
+    tit: "Rescatan a pingüino herido en una playa de Concón",
+    baj: "El ave estaba débil y desorientada. Se recupera en un centro de rehabilitación de fauna marina.",
+    lead: "El domingo en la mañana, un equipo de veterinarios rescató a un pingüino de Humboldt en una playa de Concón, cubriéndolo con una manta para no lastimarlo, porque el ave estaba débil y tenía una aleta herida.",
+    cue: ["Unos bañistas vieron al pingüino caminando solo por la arena y avisaron al centro de rescate. «Actuaron muy bien al no tocarlo y llamar a especialistas», explicó la veterinaria Daniela Cortés.", "El pingüino de Humboldt vive en las costas de Chile y Perú, y es considerado una especie vulnerable."],
+    cie: "Se espera que el pingüino vuelva al mar en unas tres semanas, cuando se recupere por completo.",
+    w: { que: "rescataron a un pingüino de Humboldt", quienes: "un equipo de veterinarios", cuando: "el domingo en la mañana", donde: "en una playa de Concón", como: "cubriéndolo con una manta para no lastimarlo", porque: "porque el ave estaba débil y tenía una aleta herida" } },
+  { sec: "Cultura", fecha: "18 de septiembre de 2026",
+    tit: "Escuela celebra las Fiestas Patrias con una muestra de juegos típicos",
+    baj: "Trompo, emboque y carreras de ensacados llenaron el patio del colegio.",
+    lead: "El jueves 17 de septiembre, los estudiantes de la Escuela Los Maitenes de Villa Alemana celebraron las Fiestas Patrias con una muestra de juegos típicos en el patio del colegio, donde cada curso preparó un juego, para que las nuevas generaciones conozcan las tradiciones chilenas.",
+    cue: ["Los más pequeños participaron en carreras de ensacados, mientras que los cursos mayores organizaron competencias de trompo y emboque. Los apoderados prepararon empanadas y sopaipillas.", "«Muchos niños nunca habían jugado al emboque; fue lindo verlos aprender», comentó la directora, Verónica Álvarez."],
+    cie: "La escuela anunció que la muestra se repetirá cada año y que el próximo incluirá una competencia de cueca.",
+    w: { que: "celebraron las Fiestas Patrias con una muestra de juegos típicos", quienes: "los estudiantes de la Escuela Los Maitenes", cuando: "el jueves 17 de septiembre", donde: "en el patio del colegio, en Villa Alemana", como: "cada curso preparó un juego", porque: "para que las nuevas generaciones conozcan las tradiciones chilenas" } },
+  { sec: "Barrio", fecha: "28 de septiembre de 2026",
+    tit: "Vecinos recuperan una plaza abandonada en Quillota",
+    baj: "Más de 80 personas pintaron juegos, plantaron árboles y repararon bancas durante el fin de semana.",
+    lead: "Durante el fin de semana, más de 80 vecinos de la villa Los Olivos de Quillota recuperaron la plaza del sector, que llevaba años abandonada, trabajando juntos con pintura, herramientas y árboles donados, para que los niños tengan un lugar seguro donde jugar.",
+    cue: ["El trabajo se organizó a través de la junta de vecinos. Las familias pintaron los juegos, plantaron quince árboles nativos y arreglaron cuatro bancas.", "«Antes nadie venía a la plaza; ahora los niños no quieren irse», contó Rodrigo Silva, presidente de la junta de vecinos."],
+    cie: "Los vecinos se turnarán para regar los árboles y planean instalar luces en la plaza antes del verano.",
+    w: { que: "recuperaron una plaza abandonada", quienes: "más de 80 vecinos de la villa Los Olivos", cuando: "durante el fin de semana", donde: "en la plaza de la villa Los Olivos, en Quillota", como: "trabajando juntos con pintura, herramientas y árboles donados", porque: "para que los niños tengan un lugar seguro donde jugar" } }
+];
+const NPART = { tit: "Titular", baj: "Bajada", lead: "Lead", cue: "Cuerpo", cie: "Cierre" };
+const NPART_DEF = {
+  tit: "el título: resume lo más importante y llama la atención",
+  baj: "va bajo el titular y lo complementa con información inicial",
+  lead: "el primer párrafo: responde qué, quiénes, cuándo, dónde, cómo y por qué",
+  cue: "el desarrollo: detalles, explicaciones, antecedentes y opiniones de expertos o testigos",
+  cie: "la última parte: un dato final, una conclusión o lo que pasará después"
+};
+const WQ = { que: "¿Qué?", quienes: "¿Quiénes?", cuando: "¿Cuándo?", donde: "¿Dónde?", como: "¿Cómo?", porque: "¿Por qué?" };
+
+/* hecho u opinión: o = pista que delata la opinión */
+const HECHOS = [
+  "Hoy llovió en la mañana.", "La temperatura fue de 18 °C.", "Chile es un país de América del Sur.",
+  "Más de 200 estudiantes participaron en la limpieza de la playa.", "Los voluntarios recogieron más de 500 kilos de residuos.",
+  "La bomba atómica cayó sobre Hiroshima el 6 de agosto de 1945.", "Gabriela Mistral recibió el Premio Nobel de Literatura en 1945.",
+  "El pingüino de Humboldt vive en las costas de Chile y Perú.", "Arturo Prat murió en el Combate Naval de Iquique en 1879.",
+  "La biblioteca móvil tiene más de 1.500 libros.", "El agua hierve a 100 °C a nivel del mar.", "La Tierra gira alrededor del Sol.",
+  "Una semana tiene siete días.", "El Día del Libro se celebra el 23 de abril.", "El robot funciona con un sensor que mide la humedad de la tierra.",
+  "La feria nacional se realizará en noviembre en Santiago.", "Valparaíso tiene muchos cerros.", "El colegio organizó una muestra de juegos típicos el 17 de septiembre."
+];
+const OPINIONES = [
+  ["Creo que la lluvia es relajante.", "creo que"], ["Para mí, 18 °C es una temperatura agradable.", "para mí"],
+  ["Opino que Chile es un país maravilloso.", "opino que · maravilloso"], ["La limpieza de playas es la mejor actividad del año.", "la mejor"],
+  ["Pienso que todos los colegios deberían tener un huerto.", "pienso que · deberían"], ["Sadako y las mil grullas de papel es el libro más triste que existe.", "el más triste (es un juicio personal)"],
+  ["Me parece que el pingüino es el animal más simpático del mar.", "me parece · el más simpático"], ["Las Fiestas Patrias son la celebración más entretenida del año.", "la más entretenida"],
+  ["Ojalá hubiera una biblioteca sobre ruedas en cada ciudad.", "ojalá (es un deseo)"], ["Los poemas de Gabriela Mistral son preciosos.", "preciosos (valora)"],
+  ["Estoy segura de que el robot va a ganar la feria nacional.", "estoy segura de que (es una suposición sobre el futuro)"], ["Quedarse en casa un día de lluvia es muy aburrido.", "aburrido (valora)"],
+  ["En mi opinión, las cartas escritas a mano son más bonitas que los correos.", "en mi opinión · más bonitas"], ["El invierno es la estación más linda.", "la más linda"],
+  ["Las vacaciones de invierno deberían durar un mes.", "deberían"], ["Creo que la paz es lo más importante del mundo.", "creo que"],
+  ["Leer noticias es muy entretenido.", "muy entretenido (valora)"], ["La plaza recuperada quedó hermosa.", "hermosa (valora)"]
+];
+
+/* biografías: c = categoría (null si no es una sola categoría clara) */
+const BIOCAT = { nac: "Nacimiento e infancia", est: "Estudios", tra: "Trabajo o actividades", log: "Logros y aportes", dif: "Dificultades que enfrentó", fin: "Muerte o situación actual" };
+const BIOS = [
+  { name: "Gabriela Mistral", ev: [
+    ["Nació el 7 de abril de 1889 en Vicuña, en el valle de Elqui, con el nombre de Lucila Godoy Alcayaga.", "nac", "1889"],
+    ["Cuando tenía tres años, su padre se fue de la casa y su familia vivió con muy poco dinero.", "dif", "1892"],
+    ["Estudió en la escuela de Montegrande y, sobre todo, aprendió leyendo por su cuenta.", "est", "infancia"],
+    ["Trabajó muchos años como profesora en escuelas de distintas ciudades de Chile.", "tra", "desde 1904"],
+    ["En 1914 ganó los Juegos Florales de Santiago con sus «Sonetos de la muerte».", "log", "1914"],
+    ["En 1945 recibió el Premio Nobel de Literatura: fue la primera persona de Latinoamérica en obtenerlo.", "log", "1945"],
+    ["Murió el 10 de enero de 1957 en Nueva York.", "fin", "1957"] ] },
+  { name: "Arturo Prat", ev: [
+    ["Nació el 3 de abril de 1848 en Ninhue.", "nac", "1848"],
+    ["A los diez años ingresó a la Escuela Naval.", "est", "1858"],
+    ["Mientras era marino estudió Derecho, y en 1876 se tituló de abogado.", "est", "1876"],
+    ["En 1879, durante la Guerra del Pacífico, comandaba la Esmeralda, un barco antiguo y pequeño.", "tra", "1879"],
+    ["El 21 de mayo de 1879 murió en el Combate Naval de Iquique, al saltar al abordaje del Huáscar.", "fin", "1879"] ] },
+  { name: "Sadako Sasaki", ev: [
+    ["Nació el 7 de enero de 1943 en Hiroshima, Japón.", "nac", "1943"],
+    ["Tenía dos años cuando la bomba atómica cayó sobre su ciudad, el 6 de agosto de 1945.", "dif", "1945"],
+    ["En 1955 los médicos le diagnosticaron leucemia, una enfermedad causada por la radiación de la bomba.", "dif", "1955"],
+    ["En el hospital plegó grullas de papel, con la esperanza de cumplir la leyenda de las mil grullas.", null, "1955"],
+    ["Murió el 25 de octubre de 1955, a los doce años.", "fin", "1955"],
+    ["En 1958 se inauguró en Hiroshima el Monumento a los Niños por la Paz, con su figura sosteniendo una grulla.", null, "1958"] ] },
+  { name: "Violeta Parra", ev: [
+    ["Nació el 4 de octubre de 1917 en San Carlos, en la actual región de Ñuble.", "nac", "1917"],
+    ["Recorrió los campos de Chile recopilando canciones, versos y costumbres populares que estaban a punto de olvidarse.", "tra", "años 50"],
+    ["En 1964 expuso sus arpilleras y pinturas en el Museo de Artes Decorativas del Louvre, en París.", "log", "1964"],
+    ["Compuso canciones que se escuchan en todo el mundo, como «Gracias a la vida».", "log", "1966"],
+    ["Murió el 5 de febrero de 1967 en Santiago.", "fin", "1967"] ] },
+  { name: "Malala Yousafzai", ev: [
+    ["Nació el 12 de julio de 1997 en Mingora, Pakistán.", "nac", "1997"],
+    ["Desde muy pequeña defendió el derecho de las niñas a ir a la escuela, cuando en su región se lo querían prohibir.", null, "infancia"],
+    ["En 2012, cuando tenía quince años, fue atacada por un grupo armado por defender la educación de las niñas.", "dif", "2012"],
+    ["En 2014 recibió el Premio Nobel de la Paz; es la persona más joven en obtenerlo.", "log", "2014"],
+    ["Estudió en la Universidad de Oxford, en Inglaterra, y se graduó en 2020.", "est", "2020"],
+    ["Hoy sigue trabajando para que todas las niñas del mundo puedan estudiar.", "fin", "hoy"] ] },
+  { name: "Pablo Neruda", ev: [
+    ["Nació el 12 de julio de 1904 en Parral, con el nombre de Ricardo Eliécer Neftalí Reyes Basoalto.", "nac", "1904"],
+    ["Estudió Pedagogía en Francés en Santiago.", "est", "1921"],
+    ["En 1924 publicó «Veinte poemas de amor y una canción desesperada».", "log", "1924"],
+    ["Trabajó como cónsul y embajador de Chile en varios países.", "tra", "desde 1927"],
+    ["En 1971 recibió el Premio Nobel de Literatura.", "log", "1971"],
+    ["Murió el 23 de septiembre de 1973 en Santiago.", "fin", "1973"] ] }
+];
+
+/* ambiente */
+const AMB = { lugar: "Lugar", epoca: "Época", costumbres: "Costumbres", atmosfera: "Atmósfera" };
+const AMBIENTE = [
+  ["La historia transcurre en Hiroshima, una ciudad de Japón.", "lugar"],
+  ["Sadako pasa muchos días en una habitación del hospital de la Cruz Roja.", "lugar"],
+  ["El cuento ocurre en un castillo rodeado de valles y caminos.", "lugar"],
+  ["La casa de la familia quedaba en lo alto de un cerro de Valparaíso, frente al mar.", "lugar"],
+  ["La escuela era una sala de madera en medio del bosque.", "lugar"],
+  ["La historia ocurre unos diez años después de la bomba atómica de 1945.", "epoca"],
+  ["Todo sucedió en el otoño de 1879, en plena Guerra del Pacífico.", "epoca"],
+  ["Hace miles de años, cuando todavía no existían las ciudades, los pueblos vivían junto a los ríos.", "epoca"],
+  ["Era el año 1920 y en el pueblo todavía no había luz eléctrica.", "epoca"],
+  ["En Año Nuevo, la familia Sasaki visitaba los templos y escuchaba sonar las campanas.", "costumbres"],
+  ["La señora Sasaki lucía un kimono de seda floreado.", "costumbres"],
+  ["En la puerta colgaban símbolos dorados de buena suerte para proteger a la familia.", "costumbres"],
+  ["Según la tradición japonesa, quien pliega mil grullas de papel puede pedir un deseo.", "costumbres"],
+  ["Para las fiestas, las familias del pueblo preparaban empanadas y bailaban cueca en la plaza.", "costumbres"],
+  ["Cada mañana, los pescadores de la caleta salían al mar antes del amanecer.", "costumbres"],
+  ["En el hospital, Sadako se sentía sola, triste y con mucho miedo.", "atmosfera"],
+  ["La casa se llenó de risas cuando Sadako contó que la habían elegido para la carrera.", "atmosfera"],
+  ["Un silencio pesado cubrió la aldea: todos temían lo que pudiera pasar.", "atmosfera"],
+  ["Había alegría en todas partes: los niños corrían y los adultos cantaban.", "atmosfera"],
+  ["Los aldeanos estaban desolados y por todas partes se oían lamentos.", "atmosfera"]
+];
+
+/* afijos: [palabra, afijo, tipo, significado del afijo, raíz/base] */
+const AFIJOS = [
+  ["desordenar", "des-", "prefijo", "negación o inversión (lo contrario de ordenar)", "ordenar"],
+  ["deshacer", "des-", "prefijo", "negación o inversión (lo contrario de hacer)", "hacer"],
+  ["desconocido", "des-", "prefijo", "negación (que no se conoce)", "conocido"],
+  ["inseguro", "in-", "prefijo", "no, lo contrario (que no es seguro)", "seguro"],
+  ["invisible", "in-", "prefijo", "no (que no se puede ver)", "visible"],
+  ["imposible", "im-", "prefijo", "no (que no es posible)", "posible"],
+  ["releer", "re-", "prefijo", "volver a hacer (volver a leer)", "leer"],
+  ["rehacer", "re-", "prefijo", "volver a hacer", "hacer"],
+  ["reescribir", "re-", "prefijo", "volver a hacer (volver a escribir)", "escribir"],
+  ["anteayer", "ante-", "prefijo", "antes (el día antes de ayer)", "ayer"],
+  ["prehistoria", "pre-", "prefijo", "antes (la época antes de la historia escrita)", "historia"],
+  ["submarino", "sub-", "prefijo", "debajo (debajo del mar)", "marino"],
+  ["bicicleta", "bi-", "prefijo", "dos (tiene dos ruedas)", "ciclo"],
+  ["cartita", "-ita", "sufijo", "pequeño (una carta pequeña)", "carta"],
+  ["perrito", "-ito", "sufijo", "pequeño (un perro pequeño)", "perro"],
+  ["cabezón", "-ón", "sufijo", "grande (cabeza grande)", "cabeza"],
+  ["grandote", "-ote", "sufijo", "muy grande (aumentativo)", "grande"],
+  ["nuevamente", "-mente", "sufijo", "de manera (de nuevo)", "nueva"],
+  ["rápidamente", "-mente", "sufijo", "de manera (de manera rápida)", "rápida"],
+  ["panadero", "-ero", "sufijo", "oficio (persona que hace pan)", "pan"],
+  ["jardinera", "-era", "sufijo", "oficio (persona que cuida jardines)", "jardín"],
+  ["corredora", "-dora", "sufijo", "persona que hace la acción (que corre)", "correr"],
+  ["nadador", "-dor", "sufijo", "persona que hace la acción (que nada)", "nadar"],
+  ["lavable", "-ble", "sufijo", "que se puede (que se puede lavar)", "lavar"],
+  ["orgulloso", "-oso", "sufijo", "que tiene (que tiene orgullo)", "orgullo"],
+  ["cariñosa", "-osa", "sufijo", "que tiene o da (que da cariño)", "cariño"],
+  ["peligroso", "-oso", "sufijo", "que tiene (que tiene peligro)", "peligro"]
+];
+
+/* s, c, z: [palabra con _ , letra, regla] */
+const SCZ_RULE = {
+  se: "El pronombre «se» unido al verbo se escribe con s.",
+  izar: "Los verbos terminados en -izar se escriben con z; al conjugarlos, la z seguida de e se transforma en c.",
+  izarz: "Los verbos terminados en -izar se escriben con z.",
+  cion: "Va con -ción porque en su familia hay palabras terminadas en -do, -dor, -to, -tor o -torio",
+  sion: "Va con -sión porque en su familia hay palabras terminadas en -so, -sor, -sivo o -sible",
+  oso: "Los sufijos -oso y -osa, que forman adjetivos, se escriben con s."
+};
+const SCZ = [
+  ["refugiándo_e", "s", "se"], ["yéndo_e", "s", "se"], ["peinándo_e", "s", "se"], ["sentándo_e", "s", "se"], ["despidiéndo_e", "s", "se"],
+  ["que se tranquili_e", "c", "izar"], ["que ella anali_e", "c", "izar"], ["que organi_emos", "c", "izar"], ["que se reali_e", "c", "izar"], ["que utili_en", "c", "izar"],
+  ["tranquili_ar", "z", "izarz"], ["organi_ar", "z", "izarz"], ["anali_ar", "z", "izarz"],
+  ["redac_ión", "c", "cion", "redactor"], ["can_ión", "c", "cion", "canto"], ["educa_ión", "c", "cion", "educador"], ["construc_ión", "c", "cion", "constructor"], ["inven_ión", "c", "cion", "inventor"], ["observa_ión", "c", "cion", "observatorio"],
+  ["inva_ión", "s", "sion", "invasor"], ["vi_ión", "s", "sion", "visible"], ["confu_ión", "s", "sion", "confuso"], ["expre_ión", "s", "sion", "expresivo"], ["televi_ión", "s", "sion", "televisor"], ["deci_ión", "s", "sion", "decisivo"],
+  ["orgullo_o", "s", "oso"], ["cariño_a", "s", "oso"], ["hermo_a", "s", "oso"], ["espanto_o", "s", "oso"], ["peligro_o", "s", "oso"], ["delicio_a", "s", "oso"], ["famo_o", "s", "oso"]
+];
+
+/* ¿qué texto elegirías? */
+const ESCENARIOS = [
+  ["Quieres saber qué pasó ayer en el incendio de tu comuna.", "noticia"],
+  ["Quieres conocer cómo fue la vida de Gabriela Mistral.", "biografia"],
+  ["Quieres pedirle a la directora que organice una feria del libro.", "carta"],
+  ["Quieres darle las gracias a tu abuela por el regalo de cumpleaños.", "carta"],
+  ["Quieres conocer los logros de una deportista chilena famosa.", "biografia"],
+  ["Quieres enterarte de los resultados del campeonato del fin de semana.", "noticia"],
+  ["Quieres contarle a una amiga que vive lejos cómo te fue en las vacaciones.", "carta"],
+  ["Quieres inspirarte con la historia de alguien que superó grandes dificultades.", "biografia"],
+  ["Quieres informarte sobre una nueva ley que se aprobó esta semana.", "noticia"]
+];
+const TIPO = { noticia: "Una noticia", biografia: "Una biografía", carta: "Una carta" };
+
+/* preguntas de concepto (fijas) */
+const CONCEPTS = {
+  proposito: [
+    { q: "¿Qué es el propósito de un texto?", o: ["La finalidad con la que se escribe: responde «¿para qué se comunica este mensaje?»", "El título del texto", "La parte final del texto", "La cantidad de párrafos que tiene"], a: 0, e: "El propósito es la finalidad con la que se escribe o se dice un texto." },
+    { q: "Un propósito es <b>explícito</b> cuando…", o: ["aparece escrito directamente en el texto", "hay que descubrirlo con pistas", "el texto no tiene propósito", "lo explica la profesora"], a: 0, e: "Explícito = lo que se ve: el emisor lo escribe directamente («Te escribo para…»)." },
+    { q: "Un propósito es <b>implícito</b> cuando…", o: ["hay que inferirlo a partir de pistas del texto", "aparece escrito directamente", "está en el título", "está en la firma"], a: 0, e: "Implícito = lo que hay que descubrir, con la lupa de detective." },
+    { q: "¿Qué pistas sirven para descubrir un propósito implícito?", o: ["El tema, las palabras, el tono y la actitud del emisor", "El color del papel", "El largo de la carta", "La cantidad de signos de exclamación solamente"], a: 0, e: "El propósito depende del tema, las palabras, el tono y el contexto." }
+  ],
+  cartaPartes: [
+    { q: "¿Qué información va en el <b>encabezado</b> de una carta?", o: ["El lugar y la fecha", "La despedida", "El nombre de quien escribe", "Las ideas principales"], a: 0, e: "El encabezado incluye el lugar y la fecha; opcionalmente, el nombre y la ciudad del destinatario." },
+    { q: "¿Qué parte de la carta identifica al <b>emisor</b>?", o: ["La firma", "El saludo", "El encabezado", "El cuerpo"], a: 0, e: "La firma es la identificación de quien escribe." },
+    { q: "El saludo de una carta varía según…", o: ["el grado de confianza entre emisor y destinatario", "el lugar donde se escribe", "la hora del día", "el largo de la carta"], a: 0, e: "No es lo mismo «Querida Sofía:» que «Estimada directora:»: depende de la confianza." },
+    { q: "¿Quién es el <b>destinatario</b> de una carta?", o: ["La persona a quien se dirige el mensaje", "La persona que escribe la carta", "El cartero", "La persona que nombra el cuerpo"], a: 0, e: "El destinatario es a quien se le escribe; el emisor es quien escribe." },
+    { q: "Cuando en una carta se introduce un tema nuevo, el emisor…", o: ["lo anuncia al inicio de un nuevo párrafo", "lo escribe en la firma", "lo pone en el encabezado", "no lo separa"], a: 0, e: "Cada tema nuevo se marca con un párrafo nuevo." },
+    { q: "En la carta de Arturo Prat (libro, pág. 194), ¿quién es la destinataria y dónde está?", o: ["Carmela, en Valparaíso", "Blanquita, en Iquique", "Carmela, en Iquique", "La gente del vapor, en el puerto"], a: 0, e: "Prat escribe desde Iquique a su esposa Carmela, que está en Valparaíso." },
+    { q: "En la carta de Arturo Prat, ¿cuál es el lugar y la fecha del encabezado?", o: ["Iquique, 9 de abril de 1879", "Valparaíso, 21 de mayo de 1879", "Santiago, 12 de agosto de 2026", "Iquique, 25 de diciembre de 1914"], a: 0, e: "El encabezado dice: Iquique, abril 9 de 1879." }
+  ],
+  noticia: [
+    { q: "¿Qué es una noticia?", o: ["Un texto informativo que relata un hecho real, reciente y de interés público", "Un relato inventado sobre personajes fantásticos", "Un texto que cuenta la vida de una persona", "Un mensaje que una persona le escribe a otra"], a: 0, e: "La noticia relata un hecho real, reciente y de interés público." },
+    { q: "¿Cuál de estas NO es una regla de oro de la noticia?", o: ["Debe expresar los gustos de quien la escribe", "Debe ser real y reciente", "Debe ser de interés público", "La información debe ser clara, veraz y objetiva"], a: 0, e: "La noticia debe ser objetiva: no se trata de los gustos de quien escribe." },
+    { q: "¿Para qué sirve la noticia?", o: ["Para mantenernos informadas, formar nuestra opinión y participar en la sociedad", "Para contar la vida de un personaje famoso", "Para pedir un favor", "Para entretener con historias inventadas"], a: 0, e: "«Una sociedad bien informada puede tomar mejores decisiones.»" },
+    { q: "¿Cuál de estos hechos podría ser una noticia?", o: ["Un terremoto que ocurrió ayer en el norte del país", "Lo que almorcé el domingo", "Un cuento sobre un dragón que vuela", "Mi opinión sobre mi color favorito"], a: 0, e: "Es real, reciente y le interesa a mucha gente. Los otros no cumplen las reglas de oro." },
+    { q: "¿Cuál es el propósito principal de una noticia?", o: ["Informar de manera clara y objetiva sobre un hecho reciente", "Expresar sentimientos", "Relatar la vida de alguien", "Convencer al lector de comprar algo"], a: 0, e: "Así lo resume el gran mapa de tu profesora." },
+    { q: "Una información <b>veraz</b> es una información…", o: ["verdadera", "entretenida", "muy larga", "inventada"], a: 0, e: "Veraz = que dice la verdad." }
+  ],
+  noticiaPartes: [
+    { q: "¿Qué parte de la noticia responde qué, quiénes, cuándo, dónde, cómo y por qué?", o: ["El lead (o entrada)", "El titular", "El cierre", "La bajada"], a: 0, e: "El lead es el primer párrafo y responde las seis preguntas." },
+    { q: "¿Qué hace la <b>bajada</b> de una noticia?", o: ["Complementa al titular con más información inicial", "Da el dato final de la noticia", "Cuenta las opiniones de los testigos", "Resume en una palabra la noticia"], a: 0, e: "La bajada (entradilla) va bajo el titular y lo complementa." },
+    { q: "¿En qué parte de la noticia suelen aparecer las opiniones de expertos o testigos?", o: ["En el cuerpo", "En el titular", "En la bajada", "En la fecha"], a: 0, e: "El cuerpo entrega los detalles, antecedentes y opiniones de expertos o testigos." },
+    { q: "¿Qué parte de la noticia resume lo más importante y llama la atención?", o: ["El titular", "El cuerpo", "El cierre", "El lead"], a: 0, e: "El titular es el título de la noticia." },
+    { q: "¿Qué suele traer el <b>cierre</b> de una noticia?", o: ["Un dato final, una conclusión o lo que pasará después", "Las seis preguntas básicas", "El nombre del periódico", "El título"], a: 0, e: "El cierre es la última parte de la noticia." }
+  ],
+  hechoOp: [
+    { q: "¿Qué es un <b>hecho</b>?", o: ["Algo que realmente ocurrió y se puede comprobar", "Lo que alguien piensa o siente", "Un deseo para el futuro", "Un gusto personal"], a: 0, e: "Un hecho se basa en datos reales y puede demostrarse." },
+    { q: "¿Qué es una <b>opinión</b>?", o: ["Lo que alguien piensa o siente sobre algo", "Algo que se puede comprobar", "Un dato numérico", "Una fecha importante"], a: 0, e: "La opinión expresa gustos, creencias o puntos de vista; no es igual para todos." },
+    { q: "¿Las noticias tienen hechos, opiniones o ambos?", o: ["Ambos: los hechos informan y las opiniones muestran puntos de vista", "Solo hechos", "Solo opiniones", "Ninguno de los dos"], a: 0, e: "Por ejemplo, lo que dice un testigo es una opinión dentro de la noticia." }
+  ],
+  bio: [
+    { q: "¿Qué es una biografía?", o: ["Un texto informativo que relata la vida de una persona relevante", "Un texto que relata un hecho reciente", "Un mensaje dirigido a un destinatario", "Un cuento de la tradición oral"], a: 0, e: "Relata la vida de una persona cuyas acciones merecen ser conocidas." },
+    { q: "¿Cómo se organiza la información en una biografía?", o: ["En orden cronológico: desde el nacimiento hasta la muerte o la actualidad", "De lo menos importante a lo más importante", "En orden alfabético", "Con las preguntas del lead"], a: 0, e: "Orden cronológico, como una línea de tiempo." },
+    { q: "¿Cuál es el propósito de una biografía?", o: ["Informar sobre la vida de una persona y destacar sus logros y aportes", "Convencer al lector de algo", "Pedir un favor", "Contar una noticia reciente"], a: 0, e: "Destaca sus principales acciones, logros o aportes y explica por qué es importante." },
+    { q: "¿En qué formatos puede presentarse una biografía?", o: ["Como texto escrito continuo o como infografía", "Solo como carta", "Solo como noticia", "Solo como poema"], a: 0, e: "La infografía combina textos breves, imágenes, fechas y líneas de tiempo." },
+    { q: "¿Qué información NO suele ir en una biografía?", o: ["Lo que desayunó el lector hoy", "Su nacimiento e infancia", "Sus logros y aportes", "Las dificultades que enfrentó"], a: 0, e: "La biografía trata de la vida de la persona, no del lector." }
+  ],
+  tipo: [
+    { q: "¿Qué tipo de texto se organiza en orden cronológico, como una línea de tiempo?", o: ["La biografía", "La noticia", "La carta", "El poema"], a: 0, e: "Estructura clave de la biografía: orden cronológico." },
+    { q: "¿Qué texto tiene como estructura clave las preguntas del lead?", o: ["La noticia", "La biografía", "La carta", "El cuento"], a: 0, e: "El lead responde qué, quiénes, cuándo, dónde, cómo y por qué." },
+    { q: "¿Qué texto tiene saludo inicial, cuerpo y firma de despedida?", o: ["La carta", "La noticia", "La biografía", "La infografía"], a: 0, e: "Esa es la estructura clave de la carta." },
+    { q: "La noticia, la biografía y la carta son textos…", o: ["no literarios", "de la tradición oral", "poéticos", "de ciencia ficción"], a: 0, e: "Tu profesora los llama «El gran mapa de los textos no literarios»." }
+  ],
+  ambiente: [
+    { q: "¿Qué forma el <b>ambiente</b> de una narración?", o: ["El lugar, la época y las costumbres (y la atmósfera)", "Solo los personajes principales", "El título y el autor", "El inicio, el desarrollo y el final"], a: 0, e: "El ambiente es el lugar y la época en que se sitúa la historia, con su cultura y costumbres." },
+    { q: "¿Qué es la <b>atmósfera</b> o clima de una narración?", o: ["Las emociones y estados de ánimo que se viven en la historia", "El tiempo meteorológico del lugar", "La fecha en que ocurre la historia", "La ropa que usan los personajes"], a: 0, e: "La atmósfera va cambiando según las acciones y relaciones de los personajes." },
+    { q: "En <i>Sadako y las mil grullas de papel</i>, ¿dónde ocurre la historia?", o: ["En Hiroshima, Japón", "En Iquique, Chile", "En Tanzania, África", "En Valparaíso, Chile"], a: 0, e: "La novela transcurre en Hiroshima, Japón." },
+    { q: "En <i>Sadako</i>, ¿cómo cambia la atmósfera?", o: ["De la alegría de la carrera al miedo y la tristeza del hospital", "Del miedo a la alegría", "Siempre es alegre", "Siempre es triste"], a: 0, e: "Al principio Sadako está feliz; en el hospital se siente sola, triste y con miedo." },
+    { q: "¿Por qué a Sadako le da leucemia?", o: ["Por la radiación de la bomba atómica que cayó sobre Hiroshima cuando era pequeña", "Porque corría demasiado", "Porque no comía bien", "Por un accidente en la escuela"], a: 0, e: "La leucemia de Sadako es «la enfermedad de la bomba atómica»: el lugar y la época explican lo que le pasa." }
+  ],
+  tradicion: [
+    { q: "¿Qué tienen en común los relatos de la tradición oral?", o: ["No tienen autor conocido y se transmiten de boca en boca, de generación en generación", "Todos fueron escritos por un mismo autor", "Siempre son noticias reales", "Solo se leen en libros"], a: 0, e: "Se han transmitido oralmente, de una generación a otra." },
+    { q: "¿Cuáles son relatos de la tradición oral?", o: ["Los mitos, las leyendas y los cuentos folclóricos", "Las noticias, las biografías y las cartas", "Las novelas y los comentarios literarios", "Las infografías y los afiches"], a: 0, e: "Mitos, leyendas y cuentos folclóricos." },
+    { q: "¿Qué comunican los relatos de la tradición oral?", o: ["Enseñanzas o ideas importantes para una comunidad", "Solo datos científicos", "Noticias de la semana", "Instrucciones para armar algo"], a: 0, e: "Por ejemplo, su origen, el valor que le dan a la naturaleza o las cualidades humanas que consideran importantes." },
+    { q: "En «La leyenda de la paz», ¿por qué el príncipe fue a combatir sin casco?", o: ["Porque en su casco una paloma había hecho su nido con tres polluelos", "Porque lo perdió en la batalla anterior", "Porque su enemigo se lo robó", "Porque no le gustaba usarlo"], a: 0, e: "Su madre no quiso destruir el nido de la paloma." },
+    { q: "¿Qué valor transmite «La leyenda de la paz»?", o: ["La paz y el respeto por la vida", "La venganza", "La competencia", "La riqueza"], a: 0, e: "Si no se destruye un nido, ¿cómo destruir los hogares de miles de personas?" },
+    { q: "En «La flor del linoral», ¿por qué el hermano menor logra encontrar la flor?", o: ["Porque compartió su comida con una viejecita, que le indicó el camino", "Porque era el más fuerte", "Porque sus hermanos lo ayudaron", "Porque el rey le dio un mapa"], a: 0, e: "Su generosidad fue recompensada." },
+    { q: "¿Qué valores transmite «La flor del linoral»?", o: ["La generosidad y el perdón", "La envidia y la venganza", "La rapidez y la fuerza", "El egoísmo"], a: 0, e: "El menor es generoso con la viejecita y, al final, perdona a sus hermanos." },
+    { q: "«La flor del linoral» es un cuento de la tradición oral…", o: ["española", "japonesa", "de Tanzania", "tikuna"], a: 0, e: "Así lo indica tu libro (pág. 208)." },
+    { q: "Para comparar dos narraciones, ¿qué se analiza?", o: ["Procedencia, conflicto, personajes y acciones, valores; luego semejanzas y diferencias", "Solo cuál es más larga", "Solo el título", "Solo cuántos personajes tiene cada una"], a: 0, e: "Es el paso a paso de tu libro (pág. 185)." },
+    { q: "«El ave mágica que hechizaba con su canto» es un cuento de…", o: ["Tanzania, en África", "Japón", "Chile", "España"], a: 0, e: "Cuento de Tanzania (libro, pág. 178)." }
+  ],
+  afijos: [
+    { q: "¿Qué es la <b>raíz</b> de una palabra?", o: ["La parte que contiene su significado", "La primera letra", "La última sílaba", "El acento"], a: 0, e: "A la raíz se le agregan afijos que modifican el significado." },
+    { q: "¿Qué es un <b>prefijo</b>?", o: ["Un afijo que va antes de la raíz", "Un afijo que va después de la raíz", "La raíz de la palabra", "Una palabra corta"], a: 0, e: "Los prefijos van al principio (des-, in-, re-)." },
+    { q: "¿Qué es un <b>sufijo</b>?", o: ["Un afijo que va después de la raíz", "Un afijo que va antes de la raíz", "Un signo de puntuación", "La raíz de la palabra"], a: 0, e: "Los sufijos van al final (-ito, -mente, -oso)." }
+  ],
+  cartaProp: [
+    { q: "¿Qué propósito tiene una carta que busca <b>convencer</b> al destinatario para que piense o actúe de cierta manera?", o: ["Persuadir", "Informar", "Agradecer", "Solicitar"], a: 0, e: "Persuadir = convencer." },
+    { q: "Una carta que <b>pide</b> un favor, una información o una respuesta tiene el propósito de…", o: ["Solicitar", "Persuadir", "Informar", "Expresar sentimientos"], a: 0, e: "Solicitar = pedir algo." },
+    { q: "Una carta que <b>reconoce o valora</b> una acción recibida tiene el propósito de…", o: ["Agradecer", "Informar", "Solicitar", "Persuadir"], a: 0, e: "Agradecer = reconocer lo que alguien hizo por ti." },
+    { q: "Para identificar el propósito de una carta, conviene preguntarse:", o: ["¿Para qué fue escrita y qué quiere lograr el emisor?", "¿Cuántas palabras tiene?", "¿En qué papel está escrita?", "¿Tiene dibujos?"], a: 0, e: "Es el tip de detective de tu profesora." }
+  ]
+};
+/* situaciones de carta (propósito) */
+const SITUACIONES = [
+  ["Una estudiante le escribe a la directora para pedirle permiso para organizar una feria de ciencias.", "solicitar"],
+  ["Un niño le escribe a su abuela para contarle que se cambió de colegio y cómo es su nueva sala.", "informar"],
+  ["Una vecina escribe a la junta de vecinos para darles las gracias por arreglar el alumbrado.", "agradecer"],
+  ["Un niño le escribe a su mejor amigo para decirle cuánto lo echa de menos desde que se fue a vivir al sur.", "sentimientos"],
+  ["Un curso escribe al alcalde con razones para convencerlo de que es mejor construir una ciclovía que un estacionamiento.", "persuadir"],
+  ["La municipalidad escribe a los vecinos para avisar que el camión de la basura pasará los martes en vez de los lunes.", "informar"],
+  ["Una niña le escribe a una escritora para pedirle que visite su colegio.", "solicitar"],
+  ["Un estudiante escribe a sus compañeros con argumentos para que todos apaguen las luces al salir de la sala.", "persuadir"],
+  ["Una niña le escribe a su profesora de 4° para agradecerle todo lo que le enseñó.", "agradecer"],
+  ["Un estudiante de 11 años le escribe a un niño ucraniano para darle ánimo y decirle que no está solo (libro, pág. 212).", "sentimientos"]
+];
+
+/* ============ generadores de preguntas ============ */
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const PROP_KEYS = ["informar", "sentimientos", "persuadir", "solicitar", "agradecer"];
+const PROP_OPTS = PROP_KEYS.map(k => PROPS[k]);
+const LP_KEYS = ["enc", "sal", "cue", "cie", "fir"];
+const LP_ART = { enc: "el encabezado", sal: "el saludo", cue: "el cuerpo", cie: "el cierre", fir: "la firma" };
+const NP_KEYS = ["tit", "baj", "lead", "cue", "cie"];
+const NP_ART = { tit: "el titular", baj: "la bajada", lead: "el lead", cue: "el cuerpo", cie: "el cierre" };
+const W_KEYS = ["que", "quienes", "cuando", "donde", "como", "porque"];
+const W_ASK = { que: "¿Qué ocurrió?", quienes: "¿Quiénes participaron?", cuando: "¿Cuándo ocurrió?", donde: "¿Dónde ocurrió?", como: "¿Cómo lo hicieron?", porque: "¿Por qué o para qué lo hicieron?" };
+const TOPIC_SEC = { proposito: 1, cartaProp: 2, cartaPartes: 3, noticia: 4, noticiaPartes: 5, lead: 5, hechoOp: 6, bio: 7, tipo: 8, ambiente: 9, tradicion: 10, afijos: 11, scz: 12 };
+
+/* pregunta de alternativas con la correcta en la posición 0 del arreglo: la baraja y fija ans */
+function mcShuffled(topic, q, opts, exp, extra = {}) {
+  const idx = shuffle(opts.map((_, i) => i));
+  return { t: "mc", topic, q, opts: idx.map(i => opts[i]), ans: idx.indexOf(0), exp, ...extra };
+}
+function concept(topic) {
+  const c = pick(CONCEPTS[topic]);
+  return mcShuffled(topic, c.q, c.o, c.e, { tall: c.o.some(o => o.length > 38) });
+}
+
+const G = {
+  proposito() {
+    if (Math.random() < 0.3) return concept("proposito");
+    const L = pick(LETTERS);
+    const exp = L.expl
+      ? `Es <b>explícito</b>: la carta lo dice directamente: «${esc(L.frase)}». Su propósito es <b>${PROPS[L.prop].toLowerCase()}</b>.`
+      : `Es <b>implícito</b>: la carta nunca dice «te escribo para…». ${esc(L.pista)} Su propósito es <b>${PROPS[L.prop].toLowerCase()}</b>.`;
+    return { t: "mc", topic: "proposito", pre: letterHTML(L), q: "¿El propósito de esta carta es explícito o implícito?", opts: ["Explícito: está escrito directamente", "Implícito: hay que descubrirlo con pistas"], ans: L.expl ? 0 : 1, exp, tall: true };
+  },
+  cartaProp() {
+    const r = Math.random();
+    if (r < 0.15) return concept("cartaProp");
+    if (r < 0.4) {
+      const [s, k] = pick(SITUACIONES);
+      return { t: "mc", topic: "cartaProp", q: `${esc(s)} ¿Cuál es el propósito de esa carta?`, opts: PROP_OPTS, ans: PROP_KEYS.indexOf(k), exp: `Es <b>${PROPS[k].toLowerCase()}</b>: ${PROP_DEF[k]}.`, tall: true };
+    }
+    const L = pick(LETTERS);
+    return { t: "mc", topic: "cartaProp", pre: letterHTML(L), q: "¿Cuál es el propósito principal de esta carta?", opts: PROP_OPTS, ans: PROP_KEYS.indexOf(L.prop), exp: `Su propósito es <b>${PROPS[L.prop].toLowerCase()}</b>: ${PROP_DEF[L.prop]}. ${esc(L.pista)}`, tall: true };
+  },
+  cartaPartes() {
+    const r = Math.random(), L = pick(LETTERS), k = pick(LP_KEYS);
+    if (r < 0.35) return { t: "tap", topic: "cartaPartes", pre: letterHTML(L, { tap: true }), q: `Toca <b>${LP_ART[k]}</b> de esta carta.`, ans: k, exp: `${cap(LP_ART[k])} es ${LPART_DEF[k]}.` };
+    if (r < 0.6) return { t: "mc", topic: "cartaPartes", pre: letterHTML(L, { hl: k }), q: "¿Cómo se llama la parte marcada en amarillo?", opts: LP_KEYS.map(x => LPART[x]), ans: LP_KEYS.indexOf(k), exp: `Es ${LP_ART[k]}: ${LPART_DEF[k]}.` };
+    if (r < 0.82) {
+      const who = Math.random() < 0.5 ? "emisor" : "destinatario";
+      const right = L[who], other = who === "emisor" ? L.destinatario : L.emisor;
+      const pool = [...new Set(LETTERS.filter(x => x !== L).flatMap(x => [x.emisor, x.destinatario]))].filter(x => x !== right && x !== other);
+      const opts = [right, other, ...sample(pool, 2)].map(cap);
+      return mcShuffled("cartaPartes", `¿Quién es el <b>${who}</b> de esta carta?`, opts, `El emisor es quien escribe (lo muestra la firma: «${esc(L.fir)}»). El destinatario es a quien se le escribe (lo muestra el saludo: «${esc(L.sal)}»). Aquí el ${who} es <b>${esc(right)}</b>.`, { pre: letterHTML(L), tall: true });
+    }
+    return concept("cartaPartes");
+  },
+  noticia() { return concept("noticia"); },
+  noticiaPartes() {
+    const r = Math.random(), N = pick(NEWS), k = pick(NP_KEYS);
+    if (r < 0.35) return { t: "tap", topic: "noticiaPartes", pre: newsHTML(N, { tap: true }), q: `Toca <b>${NP_ART[k]}</b> de esta noticia.`, ans: k, exp: `${cap(NP_ART[k])} es ${NPART_DEF[k]}.` };
+    if (r < 0.7) return { t: "mc", topic: "noticiaPartes", pre: newsHTML(N, { hl: k }), q: "¿Cómo se llama la parte marcada en amarillo?", opts: NP_KEYS.map(x => NPART[x]), ans: NP_KEYS.indexOf(k), exp: `Es ${NP_ART[k]}: ${NPART_DEF[k]}.` };
+    return concept("noticiaPartes");
+  },
+  lead() {
+    const N = pick(NEWS), key = pick(W_KEYS), pre = newsHTML(N, { only: ["tit", "baj", "lead"] });
+    if (Math.random() < 0.6) {
+      const others = sample(W_KEYS.filter(x => x !== key), 3);
+      const exp = `La pregunta ${W_ASK[key]} se responde con «${esc(N.w[key])}». Las otras alternativas responden otras preguntas: ` + others.map(o => `«${esc(N.w[o])}» responde ${WQ[o]}`).join("; ") + ".";
+      return mcShuffled("lead", `Lee el comienzo de la noticia. <b>${W_ASK[key]}</b>`, [N.w[key], ...others.map(o => N.w[o])].map(cap), exp, { pre, tall: true });
+    }
+    return { t: "mc", topic: "lead", pre, q: `En esta noticia, «${esc(N.w[key])}» responde a la pregunta…`, opts: W_KEYS.map(x => WQ[x]), ans: W_KEYS.indexOf(key), exp: `«${esc(N.w[key])}» dice ${{ que: "qué pasó", quienes: "quiénes lo hicieron", cuando: "cuándo ocurrió", donde: "dónde ocurrió", como: "cómo lo hicieron", porque: "por qué o para qué lo hicieron" }[key]}: responde <b>${WQ[key]}</b>.` };
+  },
+  hechoOp() {
+    const r = Math.random(), oExp = ([s, p]) => `«${esc(s)}» es una <b>opinión</b>: la pista es <span class="hl-o">${esc(p)}</span>.`;
+    if (r < 0.1) return concept("hechoOp");
+    if (r < 0.45) {
+      const nO = rnd(1, 3), sents = shuffle([...sample(HECHOS, 4 - nO).map(s => ({ s, lab: 0 })), ...sample(OPINIONES, nO).map(o => ({ s: o[0], p: o[1], lab: 1 }))]);
+      return { t: "cls", topic: "hechoOp", q: "Clasifica cada oración: ¿es un hecho o una opinión?", labels: ["Hecho", "Opinión"], items: sents.map(x => esc(x.s)), ans: sents.map(x => x.lab), exp: sents.map(x => x.lab ? `«${esc(x.s)}» → <b>opinión</b> (pista: <span class="hl-o">${esc(x.p)}</span>)` : `«${esc(x.s)}» → <b>hecho</b> (se puede comprobar)`).join("<br>") };
+    }
+    if (r < 0.75) {
+      if (Math.random() < 0.5) { const o = pick(OPINIONES); return { t: "mc", topic: "hechoOp", q: `«${esc(o[0])}» es…`, opts: ["Un hecho: se puede comprobar", "Una opinión: es lo que alguien piensa o siente"], ans: 1, exp: oExp(o), tall: true }; }
+      const h = pick(HECHOS); return { t: "mc", topic: "hechoOp", q: `«${esc(h)}» es…`, opts: ["Un hecho: se puede comprobar", "Una opinión: es lo que alguien piensa o siente"], ans: 0, exp: `«${esc(h)}» es un <b>hecho</b>: ocurrió o existe y se puede comprobar con datos.`, tall: true };
+    }
+    if (Math.random() < 0.5) { const o = pick(OPINIONES); return mcShuffled("hechoOp", "¿Cuál de estas oraciones es una <b>opinión</b>?", [o[0], ...sample(HECHOS, 3)].map(esc), oExp(o) + " Las demás son hechos: se pueden comprobar.", { tall: true }); }
+    const h = pick(HECHOS); return mcShuffled("hechoOp", "¿Cuál de estas oraciones es un <b>hecho</b>?", [h, ...sample(OPINIONES, 3).map(o => o[0])].map(esc), `«${esc(h)}» es un <b>hecho</b>: se puede comprobar. Las demás expresan lo que alguien piensa o siente.`, { tall: true });
+  },
+  bio() {
+    const r = Math.random(), B = pick(BIOS);
+    if (r < 0.15) return concept("bio");
+    if (r < 0.5) {
+      const idx = B.ev.length <= 5 ? B.ev.map((_, i) => i) : sample(B.ev.map((_, i) => i), 5).sort((a, b) => a - b);
+      const evs = idx.map(i => B.ev[i]), disp = shuffle(evs.map((_, i) => i));
+      return { t: "order", topic: "bio", q: `Ordena cronológicamente estos hechos de la vida de <b>${B.name}</b>. Tócalos del primero al último.`, items: disp.map(i => esc(evs[i][0])), ans: evs.map((_, i) => disp.indexOf(i)), exp: `La biografía va en orden cronológico:<br>` + evs.map((e, i) => `${i + 1}. ${esc(e[0])}`).join("<br>") };
+    }
+    if (r < 0.85) {
+      const cands = BIOS.flatMap(b => b.ev.filter(e => e[1]).map(e => [b, e])), [b, e] = pick(cands), keys = Object.keys(BIOCAT);
+      return { t: "mc", topic: "bio", q: `En la biografía de ${b.name} dice: «${esc(e[0])}» ¿Qué tipo de información es?`, opts: keys.map(k => BIOCAT[k]), ans: keys.indexOf(e[1]), exp: `Es información de <b>${BIOCAT[e[1]].toLowerCase()}</b>.`, tall: true };
+    }
+    const evs = sample(B.ev.map((e, i) => [e, i]), 4), first = evs.reduce((a, b) => (b[1] < a[1] ? b : a));
+    return mcShuffled("bio", `¿Qué hecho va <b>primero</b> en una biografía de ${B.name}?`, [first[0][0], ...evs.filter(x => x !== first).map(x => x[0][0])].map(esc), `En orden cronológico va primero: «${esc(first[0][0])}».`, { tall: true });
+  },
+  tipo() {
+    const r = Math.random(), T = ["noticia", "biografia", "carta"], O = T.map(k => TIPO[k]);
+    if (r < 0.2) return concept("tipo");
+    if (r < 0.55) {
+      const [s, k] = pick(ESCENARIOS), why = { noticia: "¿Quieres entender el mundo y saber lo que pasa? → Lee una noticia.", biografia: "¿Quieres conocer una vida e inspirarte? → Descubre una biografía.", carta: "¿Quieres conectar con alguien (contarle, pedirle, agradecerle)? → Escribe una carta." }[k];
+      return { t: "mc", topic: "tipo", q: `${esc(s)} ¿Qué texto te sirve?`, opts: O, ans: T.indexOf(k), exp: why };
+    }
+    const k = pick(T); let frag, why;
+    if (k === "carta") { const L = pick(LETTERS); frag = `<div class="letter"><div class="pt">${esc(L.sal)}</div><div class="pt"><p>${esc(L.cue[0])}</p></div></div>`; why = "Tiene saludo dirigido a un destinatario: es una carta."; }
+    else if (k === "noticia") { const N = pick(NEWS); frag = newsHTML(N, { only: ["tit", "lead"] }); why = "Tiene titular y un lead que cuenta qué pasó, quiénes, cuándo y dónde: es una noticia."; }
+    else { const B = pick(BIOS), st = rnd(0, B.ev.length - 3); frag = `<div class="letter" style="font-family:inherit"><p style="margin:0">${B.ev.slice(st, st + 3).map(e => esc(e[0])).join(" ")}</p></div>`; why = `Relata la vida de ${B.name} en orden cronológico: es una biografía.`; }
+    return { t: "mc", topic: "tipo", pre: frag, q: "¿Qué tipo de texto es este fragmento?", opts: O, ans: T.indexOf(k), exp: why };
+  },
+  ambiente() {
+    if (Math.random() < 0.3) return concept("ambiente");
+    const [s, k] = pick(AMBIENTE), keys = Object.keys(AMB);
+    const why = { lugar: "Dice <b>dónde</b> ocurre la historia: es el lugar.", epoca: "Dice <b>cuándo</b> ocurre la historia: es la época.", costumbres: "Muestra tradiciones, creencias, vestimenta, comida o actividades: son las <b>costumbres</b>.", atmosfera: "Muestra las emociones o el estado de ánimo que se vive: es la <b>atmósfera</b>." }[k];
+    return { t: "mc", topic: "ambiente", q: `«${esc(s)}» Este detalle del ambiente muestra…`, opts: ["El lugar", "La época", "Las costumbres", "La atmósfera (las emociones)"], ans: keys.indexOf(k), exp: why, tall: true };
+  },
+  tradicion() { return concept("tradicion"); },
+  afijos() {
+    const r = Math.random();
+    if (r < 0.1) return concept("afijos");
+    const [w, a, tipo, sig, base] = pick(AFIJOS), bare = a.replace(/-/g, "");
+    const split = tipo === "prefijo" ? `<b style="color:#A83A67">${bare}</b>${esc(w.slice(bare.length))}` : `${esc(w.slice(0, w.length - bare.length))}<b style="color:#23915F">${bare}</b>`;
+    const exp = `«${split}»: ${tipo} <b>${a}</b> = ${esc(sig)}.`;
+    if (r < 0.5) { const pool = [...new Set(AFIJOS.map(x => x[1]))].filter(x => x !== a); return mcShuffled("afijos", `¿Qué afijo tiene la palabra <b>«${w}»</b>?`, [a, ...sample(pool, 3)], exp); }
+    if (r < 0.75) return { t: "mc", topic: "afijos", q: `En la palabra <b>«${w}»</b>, el afijo <b>${a}</b> es…`, opts: ["Un prefijo: va antes de la raíz", "Un sufijo: va después de la raíz"], ans: tipo === "prefijo" ? 0 : 1, exp, tall: true };
+    const short = x => x.split(" (")[0], pool = [...new Set(AFIJOS.map(x => short(x[3])))].filter(x => x !== short(sig));
+    return mcShuffled("afijos", `¿Qué significa el ${tipo} <b>${a}</b> en la palabra «${w}»?`, [short(sig), ...sample(pool, 3)].map(cap), exp, { tall: true });
+  },
+  scz() {
+    const [w, l, rule, fam] = pick(SCZ), full = w.replace("_", l);
+    return { t: "mc", topic: "scz", q: `¿Qué letra completa la palabra? <span style="font-size:1.3em;font-weight:800;letter-spacing:.03em">${esc(w.replace("_", " __ "))}</span>`, opts: ["s", "c", "z"], ans: ["s", "c", "z"].indexOf(l), exp: `Se escribe <b>${esc(full)}</b>. ${SCZ_RULE[rule]}${fam ? `: ${esc(fam)}.` : ""}` };
+  }
+};
+function genQ(topic) { const q = G[topic](); q.topic = topic; q.sec = TOPIC_SEC[topic]; return q; }
+
+/* ============ dibujar y corregir una pregunta ============ */
+const LET = "ABCDEF";
+function gradeQ(q, v) {
+  if (v == null) return 0;
+  if (q.t === "mc") return v === q.ans ? 2 : 0;
+  if (q.t === "tap") return v === q.ans ? 2 : 0;
+  if (q.t === "order") { if (!Array.isArray(v) || v.length !== q.ans.length) return 0; const good = v.filter((x, i) => x === q.ans[i]).length; return good === q.ans.length ? 2 : good >= q.ans.length - 2 ? 1 : 0; }
+  if (q.t === "cls") { if (!Array.isArray(v) || v.some(x => x == null)) return 0; const bad = v.filter((x, i) => x !== q.ans[i]).length; return bad === 0 ? 2 : bad === 1 ? 1 : 0; }
+  return 0;
+}
+function isAnswered(q, v) { if (v == null) return false; if (q.t === "order") return Array.isArray(v) && v.length === q.items.length; if (q.t === "cls") return Array.isArray(v) && v.length === q.items.length && v.every(x => x != null); return true; }
+
+/* cfg: { value, instant, locked, onChange(v) } */
+function renderQ(el, q, cfg) {
+  let v = cfg.value == null ? (q.t === "order" ? [] : q.t === "cls" ? q.items.map(() => null) : null) : JSON.parse(JSON.stringify(cfg.value));
+  let locked = !!cfg.locked;
+  const head = `<div class="q-text big-q" style="margin-bottom:10px">${q.q}</div>` + (q.pre ? `<div class="pre">${q.pre}</div>` : "");
+  const fbx = `<div class="fbx"></div>`;
+  const commit = () => { cfg.onChange && cfg.onChange(v); };
+  const finish = () => { locked = true; reveal(); cfg.onDone && cfg.onDone(gradeQ(q, v)); };
+
+  function reveal() {
+    const pts = gradeQ(q, v), cls = pts === 2 ? "ok" : pts ? "part" : "bad";
+    if (q.t === "mc") $$(".opt", el).forEach(b => { const k = +b.dataset.k; b.classList.remove("sel"); if (k === q.ans) b.classList.add("ok"); else if (k === v) b.classList.add("bad"); });
+    if (q.t === "tap") $$("[data-part]", el).forEach(p => { p.classList.remove("hl"); if (p.dataset.part === q.ans) p.classList.add("ok"); else if (p.dataset.part === v) p.classList.add("bad"); });
+    if (q.t === "order") $$(".dest .it", el).forEach((b, i) => b.classList.add(v[i] === q.ans[i] ? "ok" : "bad"));
+    if (q.t === "cls") $$(".crow", el).forEach((row, i) => row.classList.add(v[i] === q.ans[i] ? "ok" : "bad"));
+    $$("[data-check]", el).forEach(b => b.remove());
+    const tag = pts === 2 ? "¡Bien!" : pts ? "Casi." : v == null || (Array.isArray(v) && !v.length) ? "No respondiste." : "Todavía no.";
+    $(".fbx", el).innerHTML = `<div class="fb ${cls}"><span class="score-chip ${cls}">${pts} / 2</span> <b>${tag}</b> ${q.exp}${pts < 2 && q.sec && !cfg.noReview ? ` <a href="#aprender-${q.sec}">Repasar esto →</a>` : ""}</div>`;
+  }
+
+  if (q.t === "mc") {
+    el.innerHTML = head + `<div class="opts ${q.tall || q.opts.length > 4 ? "tall" : ""}">${q.opts.map((o, k) => `<button type="button" class="opt" data-k="${k}"><span class="l">${LET[k]}</span><span>${o}</span></button>`).join("")}</div>` + fbx;
+    $$(".opt", el).forEach(b => b.onclick = () => { if (locked) return; v = +b.dataset.k; $$(".opt", el).forEach(x => x.classList.toggle("sel", x === b)); commit(); if (cfg.instant) finish(); });
+    if (v != null) $(`.opt[data-k="${v}"]`, el)?.classList.add("sel");
+  }
+  if (q.t === "tap") {
+    el.innerHTML = head + fbx;
+    $$("[data-part]", el).forEach(p => p.onclick = () => { if (locked) return; v = p.dataset.part; $$("[data-part]", el).forEach(x => x.classList.toggle("hl", x === p)); commit(); if (cfg.instant) finish(); });
+    if (v != null) $(`[data-part="${v}"]`, el)?.classList.add("hl");
+  }
+  if (q.t === "order") {
+    el.innerHTML = head + `<div class="orderq"><div class="small muted">Toca los hechos en orden. Si te equivocas, toca uno de la lista de abajo para devolverlo.</div><div class="pool"></div><div class="small" style="font-weight:800;margin-top:6px">Tu orden:</div><div class="dest"></div></div>` + fbx;
+    const draw = () => {
+      $(".pool", el).innerHTML = q.items.map((t, i) => `<button type="button" class="it ${v.includes(i) ? "used" : ""}" data-i="${i}"><span class="n">•</span><span>${t}</span></button>`).join("");
+      $(".dest", el).innerHTML = v.length ? v.map((i, k) => `<button type="button" class="it" data-k="${k}"><span class="n">${k + 1}</span><span>${q.items[i]}</span></button>`).join("") : `<div class="small muted">(vacío)</div>`;
+      $$(".pool .it", el).forEach(b => b.onclick = () => { if (locked) return; const i = +b.dataset.i; if (v.includes(i)) return; v.push(i); commit(); draw(); });
+      $$(".dest .it", el).forEach(b => b.onclick = () => { if (locked) return; v.splice(+b.dataset.k, 1); commit(); draw(); });
+      $$("[data-check]", el).forEach(b => b.remove());
+      if (cfg.instant && !locked && v.length === q.items.length) { $(".orderq", el).insertAdjacentHTML("beforeend", `<button type="button" class="btn blue" data-check="1" style="margin-top:6px">Comprobar</button>`); $("[data-check]", el).onclick = finish; }
+    };
+    draw();
+  }
+  if (q.t === "cls") {
+    el.innerHTML = head + `<div class="clsq">${q.items.map((t, i) => `<div class="crow"><span class="tx">${t}</span><span class="seg" data-row="${i}">${q.labels.map((l, k) => `<button type="button" data-k="${k}" class="${v[i] === k ? "sel" : ""}">${l}</button>`).join("")}</span></div>`).join("")}</div>` + fbx;
+    const maybeBtn = () => { $$("[data-check]", el).forEach(b => b.remove()); if (cfg.instant && !locked && v.every(x => x != null)) { $(".clsq", el).insertAdjacentHTML("beforeend", `<button type="button" class="btn blue" data-check="1" style="margin-top:10px">Comprobar</button>`); $("[data-check]", el).onclick = finish; } };
+    $$(".seg", el).forEach(s => $$("button", s).forEach(b => b.onclick = () => { if (locked) return; const i = +s.dataset.row; v[i] = +b.dataset.k; $$("button", s).forEach(x => x.classList.toggle("sel", x === b)); commit(); maybeBtn(); }));
+    maybeBtn();
+  }
+  if (locked) reveal();
+  return { reveal: () => { locked = true; reveal(); }, value: () => v };
+}
+
+/* ============ práctica infinita dentro de cada lección ============ */
+function practiceLoop(el, topics, sec, need) {
+  const draw = () => {
+    const hits = DB.hits[sec] || 0, q = genQ(pick(topics));
+    el.innerHTML = `<div class="counter">${DB.done[sec] ? "<b>✓ Lección lista.</b> Puedes seguir practicando." : `Aciertos: <b>${hits}</b> de ${need} para completar la lección.`}</div><div class="qbox"></div>`;
+    renderQ($(".qbox", el), q, { instant: true, noReview: true, onDone: pts => {
+      if (pts === 2) { DB.hits[sec] = (DB.hits[sec] || 0) + 1; save(); if (DB.hits[sec] >= need) sectionDone(sec); }
+      $(".counter", el).innerHTML = DB.done[sec] ? "<b>✓ Lección lista.</b> Puedes seguir practicando." : `Aciertos: <b>${DB.hits[sec] || 0}</b> de ${need} para completar la lección.`;
+      $(".fbx", el).insertAdjacentHTML("beforeend", `<div class="q-actions"><button type="button" class="btn blue small" data-next="1">Otra pregunta →</button></div>`);
+      $("[data-next]", el).onclick = draw;
+    } });
+  };
+  draw();
+}
+
+/* ============ ensayos autogenerados ============ */
+const PLAN = [["proposito", 2], ["cartaProp", 3], ["cartaPartes", 2], ["noticia", 1], ["noticiaPartes", 2], ["lead", 2], ["hechoOp", 3], ["bio", 3], ["tipo", 1], ["ambiente", 2], ["tradicion", 1], ["afijos", 1], ["scz", 1]];
+const FOCOS = [
+  ["El propósito (explícito o implícito)", ["proposito"], 1],
+  ["La carta: propósitos", ["cartaProp"], 2],
+  ["La carta: partes, emisor y destinatario", ["cartaPartes"], 3],
+  ["La noticia, sus partes y el lead", ["noticia", "noticiaPartes", "lead"], 5],
+  ["Hecho u opinión", ["hechoOp"], 6],
+  ["La biografía", ["bio"], 7],
+  ["Tipos de texto", ["tipo"], 8],
+  ["Ambiente y tradición oral", ["ambiente", "tradicion"], 9],
+  ["Raíces, afijos y s-c-z", ["afijos", "scz"], 11]
+];
+const MINUTES = 45;
+let TIMER = null;
+const nota = (p, max) => { const c = 0.6 * max; return Math.round((p < c ? 1 + 3 * p / c : 4 + 3 * (p - c) / (max - c)) * 10 + 1e-9) / 10; };
+const sig = q => q.q + "|" + (q.pre || "") + "|" + (q.items ? q.items.join() : "");
+
+function makeEnsayo(mode) {
+  const items = [], seen = new Set();
+  PLAN.forEach(([t, n]) => { for (let i = 0; i < n; i++) { let q, k = 0; do { q = genQ(t); } while (seen.has(sig(q)) && ++k < 25); seen.add(sig(q)); items.push(q); } });
+  return { mode, items, ans: {}, start: mode === "sim" ? Date.now() : null, done: false, created: Date.now() };
+}
+function scoreEns(E) {
+  let pts = 0; const foc = FOCOS.map(() => ({ p: 0, m: 0 }));
+  E.items.forEach((q, i) => { const p = gradeQ(q, E.ans[i]); pts += p; FOCOS.forEach(([, ts], f) => { if (ts.includes(q.topic)) { foc[f].p += p; foc[f].m += 2; } }); });
+  const max = E.items.length * 2; return { pts, max, nota: nota(pts, max), foc };
+}
+function renderEnsayo() {
+  clearInterval(TIMER);
+  const root = $("#v-ensayo"), E = DB.ens;
+  if (!E || E.done && !E.show) {
+    const last = DB.history.slice(-1)[0];
+    root.innerHTML = `<div class="card hero"><h1>Ensayos de Lenguaje</h1>
+      <p>Cada ensayo se arma solo con <b>24 preguntas nuevas</b> (48 puntos), con más peso en lo que refuerza tu profesora: propósito, carta, noticia, hecho u opinión y biografía. La nota usa la escala de siempre: 60% = 4,0.</p>
+      <div class="paths" style="grid-template-columns:1fr 1fr">
+        <div class="path"><div class="step">Modo práctica</div><h3>Te corrige al tiro</h3><p>Después de cada respuesta ves si está bien y por qué. Cuenta tu primera respuesta.</p><button class="btn blue" data-new="guia">Nuevo ensayo de práctica</button></div>
+        <div class="path"><div class="step">Modo simulacro</div><h3>Como la prueba</h3><p>${MINUTES} minutos, sin correcciones hasta que entregas. Al final: nota y corrección.</p><button class="btn" data-new="sim">Nuevo simulacro</button></div>
+      </div>${last ? `<p class="small muted" style="margin:14px 0 0">Último ensayo: ${last.pts} de ${last.max} puntos · nota ${notaTxt(last.nota)}. <a href="#resultados">Ver todos mis resultados</a></p>` : ""}</div>`;
+    $$("[data-new]", root).forEach(b => b.onclick = () => { DB.ens = makeEnsayo(b.dataset.new); save(); renderEnsayo(); window.scrollTo(0, 0); });
+    return;
+  }
+  const guided = E.mode === "guia", total = E.items.length;
+  let h = `<div class="testbar"><b>${guided ? "Ensayo · práctica" : "Ensayo · simulacro"}</b><div class="progress"><i id="pbar"></i></div><span class="small" id="pcount"></span>${!guided && !E.done ? `<span class="timer" id="timer"></span>` : ""}${E.done ? "" : `<button type="button" class="btn small blue" data-fin="1">${guided ? "Ver mi nota" : "Entregar"}</button>`}</div>`;
+  if (E.done) h += resultCard(E);
+  h += E.items.map((q, i) => `<div class="card q" id="eq-${i}"><div class="q-head"><div class="q-num">${i + 1}</div><div style="flex:1"></div><div class="q-pts">2 pts</div></div><div class="qbody"></div></div>`).join("");
+  h += `<div class="row" style="justify-content:space-between;margin-top:10px">${E.done ? `<button class="btn blue" data-close="1">Hacer otro ensayo</button>` : `<button type="button" class="btn blue" data-fin="1">${guided ? "Ver mi nota" : "Entregar el ensayo"}</button>`}<button type="button" class="btn ghost small" data-quit="1">${E.done ? "Volver" : "Abandonar este ensayo"}</button></div>`;
+  root.innerHTML = h;
+  E.items.forEach((q, i) => {
+    const body = $(`#eq-${i} .qbody`), answered = E.ans[i] != null;
+    renderQ(body, q, { value: E.ans[i], instant: guided && !E.done, locked: E.done || (guided && answered && isAnswered(q, E.ans[i]) && E.locked?.[i]),
+      onChange: v => { if (E.done) return; E.ans[i] = v; save(); progress(); },
+      onDone: () => { E.locked = E.locked || {}; E.locked[i] = true; save(); progress(); } });
+  });
+  $$("[data-fin]", root).forEach(b => b.onclick = finishEns);
+  $$("[data-close]", root).forEach(b => b.onclick = () => { DB.ens = null; save(); renderEnsayo(); window.scrollTo(0, 0); });
+  $$("[data-quit]", root).forEach(b => b.onclick = () => { if (E.done || confirm("¿Abandonar este ensayo? Se pierden las respuestas.")) { DB.ens = null; save(); renderEnsayo(); window.scrollTo(0, 0); } });
+  const tick = () => { const el = $("#timer"); if (!el) return; const left = Math.round((E.start + MINUTES * 60000 - Date.now()) / 1000), a = Math.abs(left); el.textContent = (left < 0 ? "+" : "") + `${Math.floor(a / 60)}:${String(a % 60).padStart(2, "0")}`; el.classList.toggle("late", left < 0); };
+  if (!guided && !E.done) { tick(); TIMER = setInterval(tick, 1000); }
+  function progress() { const n = E.items.filter((q, i) => isAnswered(q, E.ans[i])).length; const pb = $("#pbar"); if (pb) { pb.style.width = (100 * n / total) + "%"; $("#pcount").textContent = `${n} de ${total} respondidas`; } }
+  progress();
+}
+function finishEns() {
+  const E = DB.ens, left = E.items.filter((q, i) => !isAnswered(q, E.ans[i])).length;
+  if (left && !confirm(`Te ${left === 1 ? "falta 1 pregunta" : `faltan ${left} preguntas`}. ¿${E.mode === "guia" ? "Ver la nota" : "Entregar"} igual?`)) return;
+  clearInterval(TIMER);
+  E.done = true; E.show = true; E.end = Date.now();
+  const sc = scoreEns(E);
+  DB.history.push({ mode: E.mode, date: new Date().toISOString(), pts: sc.pts, max: sc.max, nota: sc.nota, foc: sc.foc.map(f => [f.p, f.m]), min: E.start ? Math.round((E.end - E.start) / 60000) : null });
+  save(); renderEnsayo(); window.scrollTo(0, 0);
+  if (sc.nota >= 6) confetti();
+}
+function focoRows(foc) {
+  return `<div class="focos">${foc.map((f, i) => { if (!f.m) return ""; const pct = f.p / f.m, col = pct >= 0.8 ? "#23915F" : pct >= 0.5 ? "#E9B325" : "#D64545"; return `<div class="foco"><span>${FOCOS[i][0]} ${pct < 0.8 ? `· <a href="#aprender-${FOCOS[i][2]}">repasar</a>` : ""}</span><div class="meter"><i style="width:${Math.max(4, pct * 100)}%;background:${col}"></i></div><b>${coma(f.p)}/${f.m}</b></div>`; }).join("")}</div>`;
+}
+function resultCard(E) {
+  const sc = scoreEns(E), n = sc.nota;
+  const msg = n >= 6 ? "¡Excelente! Estás muy bien preparada." : n >= 5 ? "¡Muy bien! Revisa abajo lo que quedó marcado." : n >= 4 ? "Aprobado. Repasa los temas en rojo antes de la prueba." : "Todavía falta. Repasa las lecciones de los temas en rojo y vuelve a intentarlo.";
+  const mins = E.start && E.end ? Math.round((E.end - E.start) / 60000) : null;
+  return `<div class="card"><div class="result-top"><div><div class="small muted">Nota</div><div class="nota ${n >= 4 ? "ok" : "bad"}">${notaTxt(n)}</div></div>
+    <div style="flex:1;min-width:220px"><div><b>${sc.pts} de ${sc.max} puntos</b>${mins != null ? ` · ${mins} min` : ""}</div><div class="meter" style="margin:8px 0"><i style="width:${sc.pts / sc.max * 100}%;background:${n >= 4 ? "#23915F" : "#D64545"}"></i></div><p class="small" style="margin:0">${msg}</p></div></div>
+    <h3 style="margin-top:18px">En qué fijarse</h3>${focoRows(sc.foc)}<p class="small muted" style="margin:12px 0 0">Escala: 60% = 4,0. Abajo está la corrección de cada pregunta.</p></div>`;
+}
+function fmtDate(iso) { const d = new Date(iso), p = x => String(x).padStart(2, "0"); return `${p(d.getDate())}-${p(d.getMonth() + 1)}-${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+function renderResults() {
+  const root = $("#v-resultados"), H = DB.history;
+  if (!H.length) { root.innerHTML = `<div class="card"><h2>Mis resultados</h2><p>Todavía no hay resultados. Cuando termines un ensayo, tu nota queda guardada aquí.</p><button class="btn blue" data-go="ensayo">Ir a los ensayos</button></div>`; return; }
+  const last = H.slice(-1)[0];
+  root.innerHTML = `<div class="card"><h2>Mis resultados</h2><div class="tablewrap"><table class="t hist"><tr><th>Fecha</th><th>Modo</th><th>Puntos</th><th>Nota</th></tr>${H.slice().reverse().map(x => `<tr><td>${fmtDate(x.date)}</td><td>${x.mode === "sim" ? "Simulacro" : "Práctica"}</td><td>${x.pts} / ${x.max}</td><td><b style="color:${x.nota >= 4 ? "var(--green)" : "var(--red)"}">${notaTxt(x.nota)}</b></td></tr>`).join("")}</table></div></div>
+    <div class="card"><h3>Último ensayo (${fmtDate(last.date)}): nota ${notaTxt(last.nota)}</h3>${focoRows(last.foc.map(([p, m]) => ({ p, m })))}</div>`;
+}
+
+/* ============ piezas de las lecciones ============ */
+function xray(boxSel, infoSel, html, names, defs, nums) {
+  $(boxSel).innerHTML = html;
+  $$(`${boxSel} [data-part]`).forEach(p => p.onclick = () => {
+    $$(`${boxSel} [data-part]`).forEach(x => x.classList.toggle("hl", x === p));
+    const k = p.dataset.part; $(infoSel).innerHTML = `<b>${nums[k]}. ${names[k]}:</b> ${defs[k]}.`;
+  });
+}
+function buildTimeline() {
+  $("#bioTimeline").innerHTML = BIOS[0].ev.map(([t, c, y]) => `<div class="ev"><b>${esc(y)}</b> ${esc(t)}${c ? `<span class="cat">${BIOCAT[c]}</span>` : ""}</div>`).join("");
+}
+const LIST = [
+  "Sé decir qué es el propósito y distinguir si es explícito o implícito.",
+  "Me sé los cinco propósitos de la carta: informar, expresar sentimientos, persuadir, solicitar y agradecer.",
+  "Reconozco las partes de la carta: encabezado, saludo, cuerpo, cierre y firma; y quién es el emisor y el destinatario.",
+  "Sé las reglas de oro de la noticia: real y reciente, de interés público, clara, veraz y objetiva.",
+  "Reconozco titular, bajada, lead, cuerpo y cierre, y respondo las seis preguntas del lead.",
+  "Distingo un hecho (se puede comprobar) de una opinión (creo, para mí, opino…).",
+  "Sé qué información tiene una biografía y que va en orden cronológico.",
+  "Describo el ambiente: lugar, época, costumbres y atmósfera.",
+  "Sé qué son los relatos de la tradición oral: mitos, leyendas y cuentos folclóricos.",
+  "Reconozco prefijos y sufijos, y aplico las reglas de s, c y z."
+];
+function buildChecklist() {
+  $("#checklist").innerHTML = LIST.map((t, i) => `<li><label class="tick"><input type="checkbox" data-i="${i}" ${DB.list[i] ? "checked" : ""}><span>${t}</span></label></li>`).join("");
+  $$("#checklist input").forEach(c => c.onchange = () => { DB.list[c.dataset.i] = c.checked; save(); });
+}
+function renderHome() {
+  const done = Object.keys(DB.done).filter(k => DB.done[k]).length, last = DB.history.slice(-1)[0], E = DB.ens;
+  $("#st-aprender").innerHTML = done ? `<span style="color:var(--green)">${done} de 13 lecciones listas</span>` : `<span class="muted">Sin empezar</span>`;
+  $("#st-ensayo").innerHTML = E && !E.done ? `<span style="color:var(--orange-ink)">Tienes un ensayo en curso</span>` : last ? `<span style="color:${last.nota >= 4 ? "var(--green)" : "var(--red)"}">Último: ${last.pts}/${last.max} pts · nota ${notaTxt(last.nota)}</span>` : `<span class="muted">Sin empezar</span>`;
+}
+
+/* ============ arranque ============ */
+function init() {
+  setHdr();
+  buildLessons(); buildGallery(); buildTimeline(); buildChecklist();
+  xray("#xrayLetter", "#xrayInfo", letterHTML(LETTERS[0], { tap: true }), LPART, LPART_DEF, { enc: 1, sal: 2, cue: 3, cie: 4, fir: 5 });
+  xray("#xrayNews", "#xrayNewsInfo", newsHTML(NEWS[0], { tap: true }), NPART, NPART_DEF, { tit: 1, baj: 2, lead: 3, cue: 4, cie: 5 });
+  $$("[data-practice]").forEach(el => practiceLoop(el, el.dataset.practice.split(","), +el.closest(".lesson").dataset.sec, +el.dataset.need));
+  if (DB.ens && DB.ens.done) DB.ens.show = true;
+  go(location.hash.slice(1) || "inicio", false);
+}
+init();
+</script>
+</body></html>
