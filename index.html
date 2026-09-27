@@ -30,6 +30,7 @@ a.ramo:active{transform:scale(.98)}
 .go{margin-top:auto;padding-top:8px;font-weight:800}
 .mat .ico{background:#DCEBFA}.mat .go{color:#1D5FA8}
 .len .ico{background:#ECE6FA}.len .go{color:#553A9E}
+.cie .ico{background:#DDF3E8}.cie .go{color:#1D6B4B}
 .foot{margin-top:28px;font-size:.85rem;color:var(--muted)}
 </style>
 </head>
@@ -52,6 +53,13 @@ a.ramo:active{transform:scale(.98)}
       <div class="st" id="st-len"></div>
       <div class="go">Entrar →</div>
     </a>
+    <a class="ramo cie" href="ciencias/">
+      <div class="ico">🔬</div>
+      <h2>Ciencias Naturales</h2>
+      <p>Unidad 2, Lección 2: ¡Vivir libre de tabaco! El cigarrillo y sus componentes, efectos en el cuerpo, datos de Chile, tablas y gráficos, prevención y medioambiente.</p>
+      <div class="st" id="st-cie"></div>
+      <div class="go">Entrar →</div>
+    </a>
   </div>
   <p class="foot">Consejo: en Safari, toca Compartir → «Agregar a inicio» para tener esta página como una app.</p>
 </main>
@@ -68,6 +76,7 @@ a.ramo:active{transform:scale(.98)}
   }
   document.getElementById("st-mat").innerHTML = line(read("amparo-fracciones-transformaciones-v1"), 12);
   document.getElementById("st-len").innerHTML = line(read("amparo-lenguaje-u3-v1"), 13);
+  document.getElementById("st-cie").innerHTML = line(read("amparo-ciencias-tabaco-v1"), 9);
 })();
 </script>
 </body>

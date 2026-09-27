@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amparo · Ciencias Naturales</title>
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-title" content="Estudio">
+<meta name="theme-color" content="#FBF7F0">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<style>
+
+:root{
+  --bg:#FBF7F0; --card:#FFFFFF; --ink:#1F2A37; --muted:#5B6675; --line:#E6DFD3;
+  --blue:#3A86D6; --blue-soft:#DCEBFA; --blue-ink:#1D5FA8;
+  --orange:#F0A43C; --orange-soft:#FDEBD1; --orange-ink:#A4610A;
+  --fig:#C9CDD2; --fig-ink:#3A3F45;
+  --green:#23915F; --green-soft:#DFF3E9; --red:#D64545; --red-soft:#FBE3E3;
+  --gold:#E9B325; --gold-soft:#FFF4D3;
+  --radius:16px; --shadow:0 1px 2px rgba(31,42,55,.06),0 4px 14px rgba(31,42,55,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+button,.opt,.slot,.chip,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em}
+h1{font-size:1.9rem} h2{font-size:1.45rem} h3{font-size:1.15rem} h4{font-size:1rem}
+p{margin:.4em 0 .8em}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+a{color:var(--blue-ink)}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+.hide{display:none!important}
+
+/* ---------- barra superior ---------- */
+header.top{position:sticky;top:0;z-index:20;background:rgba(251,247,240,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:800;font-size:1.05rem;margin-right:auto;white-space:nowrap}
+.brand span{color:var(--blue)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap}
+nav.tabs button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:.92rem;font-weight:600}
+nav.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media (max-width:900px){.top-in{gap:8px}.brand{font-size:.95rem}nav.tabs{gap:4px}nav.tabs button{padding:5px 10px;font-size:.84rem}}
+
+main{max-width:960px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px;margin:0 0 18px}
+@media (max-width:560px){.card{padding:18px 16px}}
+
+/* ---------- inicio ---------- */
+.hero{padding:28px 26px}
+.hero h1 span{color:var(--blue)}
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:10px}
+@media (max-width:760px){.paths{grid-template-columns:1fr}}
+.path{border:1px solid var(--line);border-radius:14px;padding:16px;background:#FFFDF9;display:flex;flex-direction:column;gap:6px}
+.path .step{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.path h3{margin:0}
+.path p{margin:0 0 6px;font-size:.95rem;color:var(--muted);flex:1}
+.path .state{font-size:.85rem;font-weight:700}
+
+/* ---------- botones ---------- */
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;background:var(--ink);color:#fff}
+.btn.blue{background:var(--blue)} .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:6px 12px;font-size:.9rem;border-radius:10px}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- fracciones ---------- */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .12em;line-height:1.08;font-variant-numeric:tabular-nums;font-weight:700}
+.fr>span{padding:0 .18em;min-width:.9em;text-align:center}
+.fr>.n{border-bottom:2px solid currentColor}
+.mx{display:inline-flex;align-items:center;vertical-align:middle;font-weight:700}
+.mx>.w{margin-right:.02em}
+.big{font-size:1.35em}
+.fin{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;gap:3px;margin:0 .15em}
+.fin .bar{width:100%;height:2px;background:var(--ink);border-radius:2px}
+.inp{font-size:max(16px,1em);width:3.1em;height:2.1em;text-align:center;border:1.5px solid #CFC6B8;border-radius:9px;background:#FFFDF9;font-weight:700;padding:0 2px}
+.inp.w{width:2.4em}
+.inp:focus{outline:3px solid var(--blue-soft);border-color:var(--blue)}
+.inp.ok{border-color:var(--green);background:var(--green-soft)}
+.inp.bad{border-color:var(--red);background:var(--red-soft)}
+.inp.wide{width:12em;text-align:left;padding:0 10px}
+
+/* ---------- módulo ---------- */
+.lesson-nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+.lesson-nav button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 11px;font-size:.88rem;font-weight:600}
+.lesson-nav button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.lesson-nav button.done::after{content:" ✓";color:var(--green)}
+.lesson-nav button.on.done::after{color:#fff}
+.book{display:inline-block;font-size:.85rem;font-weight:700;color:var(--blue-ink);background:var(--blue-soft);border-radius:999px;padding:3px 12px;margin-bottom:10px}
+.sec-num{display:inline-block;background:var(--blue-soft);color:var(--blue-ink);font-weight:800;border-radius:8px;padding:1px 9px;margin-right:6px}
+.box{border-radius:12px;padding:12px 16px;margin:12px 0}
+.box.tip{background:var(--blue-soft)}
+.box.warn{background:var(--red-soft)}
+.box.gold{background:var(--gold-soft)}
+.box.green{background:var(--green-soft)}
+.box h4{margin:0 0 4px}
+.lab{border:1px dashed #CFC6B8;border-radius:14px;padding:14px;margin:14px 0;background:#FFFDF9}
+.lab-title{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--orange-ink);margin-bottom:8px}
+.ctrl{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px 6px}
+.ctrl button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;font-weight:800;font-size:1.1rem}
+.ctrl .v{min-width:1.6em;text-align:center;font-weight:800}
+.eq{font-size:1.3em;margin:8px 0;display:flex;align-items:center;gap:.35em;flex-wrap:wrap}
+table.t{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95rem}
+table.t th,table.t td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.t th{background:#F4EFE6}
+.tablewrap{overflow-x:auto}
+.check{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.check-title{font-weight:800;margin-bottom:6px}
+.pager{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+svg{max-width:100%;height:auto;display:block}
+.fig{margin:10px 0}
+ul.clean{list-style:none;padding:0;margin:0}
+.tick{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.tick input{width:22px;height:22px;margin-top:3px;flex:none}
+
+/* ---------- preguntas ---------- */
+.part-h{margin:26px 0 10px;font-size:1.2rem}
+.q{position:relative}
+.q-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.q-num{flex:none;min-width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;padding:0 6px}
+.q-text{flex:1;padding-top:3px}
+.q-pts{flex:none;font-size:.82rem;color:var(--muted);font-weight:700;padding-top:6px;white-space:nowrap}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.opts.tall{grid-template-columns:1fr 1fr}
+@media (max-width:640px){.opts{grid-template-columns:1fr 1fr}.opts.tall{grid-template-columns:1fr}}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;text-align:left;min-height:58px}
+.opt .l{flex:none;width:28px;height:28px;border-radius:8px;background:#F1ECE3;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .l{background:var(--blue);color:#fff}
+.opt.ok{border-color:var(--green);background:var(--green-soft)}
+.opt.ok .l{background:var(--green);color:#fff}
+.opt.bad{border-color:var(--red);background:var(--red-soft)}
+.opt.bad .l{background:var(--red);color:#fff}
+.locked .opt{cursor:default}
+.sub{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.sub:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.sub-h{font-weight:700;margin-bottom:6px}
+.line{display:flex;align-items:center;gap:.45em;flex-wrap:wrap;margin:8px 0;font-size:1.1em}
+.calc{font-size:.9em;color:var(--muted);display:inline-flex;align-items:center;gap:.35em;flex-wrap:wrap;margin-left:.6em}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:8px 14px;font-weight:800;min-width:44px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.sel{background:var(--blue);color:#fff}
+.seg.ok{border-color:var(--green)} .seg.bad{border-color:var(--red)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:6px 12px;font-size:1.1em}
+.chip.used{opacity:.3}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0;font-size:1.1em}
+.slot{min-width:56px;min-height:58px;border:2px dashed #CFC6B8;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#FFFDF9;cursor:pointer}
+.slot.filled{border-style:solid;border-color:var(--blue);background:var(--blue-soft)}
+.fb{border-radius:12px;padding:10px 14px;margin-top:12px;font-size:.95rem}
+.fb.ok{background:var(--green-soft)} .fb.bad{background:var(--red-soft)} .fb.part{background:var(--gold-soft)}
+.fb b.tag{display:inline-block;margin-right:6px}
+.fb a{font-weight:700}
+.q-actions{margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.score-chip{font-weight:800;font-size:.9rem;border-radius:999px;padding:3px 10px;background:#F1ECE3}
+.score-chip.ok{background:var(--green-soft);color:var(--green)}
+.score-chip.bad{background:var(--red-soft);color:var(--red)}
+.score-chip.part{background:var(--gold-soft);color:#8A6A0A}
+.gridwrap{touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tools button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:6px 12px;font-weight:700}
+.tools button.sel{border-color:var(--orange);background:var(--orange-soft)}
+.fig3{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.fig3 .seg{display:grid;grid-template-columns:repeat(3,1fr);width:100%}
+.fig3 .seg button{min-width:0;padding:9px 4px;font-size:.88rem}
+.fig3 .cell{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+
+/* ---------- barra del ensayo ---------- */
+.testbar{position:sticky;top:calc(var(--hdr,58px) + 8px);z-index:10;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:14px;padding:10px 16px;margin-bottom:16px}
+.testbar .grow{flex:1}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.2rem}
+.timer.late{color:#FF9A9A}
+.progress{height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;min-width:120px;flex:1}
+.progress i{display:block;height:100%;background:var(--gold);width:0}
+
+/* ---------- resultados ---------- */
+.result-top{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.nota{font-size:3rem;font-weight:900;line-height:1}
+.nota.ok{color:var(--green)} .nota.bad{color:var(--red)}
+.meter{height:12px;background:#F1ECE3;border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%}
+.focos{display:grid;gap:10px;margin-top:10px}
+.foco{display:grid;grid-template-columns:1fr 150px 64px;gap:12px;align-items:center;font-size:.95rem}
+@media (max-width:640px){.foco{grid-template-columns:1fr 70px}.foco .meter{grid-column:1/-1}}
+.foco b{font-variant-numeric:tabular-nums;text-align:right}
+.hist td,.hist th{font-size:.92rem}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+/* ================= Ciencias: color propio ================= */
+:root{ --blue:#2A9D6F; --blue-soft:#DDF3E8; --blue-ink:#1D6B4B; --orange:#F0A43C; --orange-soft:#FDEBD1; --orange-ink:#A4610A; }
+.brand span{color:var(--blue)}
+
+/* etiqueta de fuente */
+.src{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:3px 11px;margin:0 6px 10px 0}
+.src.miss{background:#FDEBD1;color:#8A5210}
+.src.libro{background:var(--blue-soft);color:var(--blue-ink)}
+
+/* ================= carta ================= */
+.letter{background:#FFFDF6;border:1px solid #E7DDC7;border-radius:6px;box-shadow:0 2px 10px rgba(80,60,20,.08);padding:18px 20px;font-family:Georgia,"Times New Roman",serif;font-size:1rem;line-height:1.55;max-width:620px}
+.letter .pt{border-radius:8px;padding:3px 6px;margin:2px -6px;transition:background .2s,outline .2s}
+.letter .pt.enc,.letter .pt.fir{text-align:right}
+.letter .pt.cie{margin-top:8px}
+.letter .pt p{margin:0 0 .6em}
+.letter .pt p:last-child{margin:0}
+.letter.tap .pt{cursor:pointer;outline:2px dashed transparent}
+.letter.tap .pt:hover{outline-color:#D8CFF0}
+.pt.hl{background:#FFF1A8;outline:2px solid #E9B325!important}
+.pt.ok{background:var(--green-soft);outline:2px solid var(--green)!important}
+.pt.bad{background:var(--red-soft);outline:2px solid var(--red)!important}
+.pt .tag{display:inline-block;font:700 .72rem/1.2 ui-rounded,system-ui,sans-serif;background:var(--ink);color:#fff;border-radius:6px;padding:2px 7px;margin-right:6px;vertical-align:middle}
+
+/* ================= noticia ================= */
+.news{background:#fff;border:1px solid #DAD6CF;border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:16px 18px;max-width:660px;font-family:Georgia,"Times New Roman",serif}
+.news .meta{display:flex;justify-content:space-between;font:600 .78rem/1.2 ui-rounded,system-ui,sans-serif;color:var(--muted);border-bottom:1px solid #eee;padding-bottom:6px;margin-bottom:8px}
+.news .pt{border-radius:8px;padding:3px 6px;margin:2px -6px}
+.news .pt.tit{font-size:1.45rem;font-weight:800;line-height:1.2}
+.news .pt.baj{font-size:1.02rem;color:#444;font-style:italic}
+.news .pt p{margin:0 0 .55em}
+.news .pt p:last-child{margin:0}
+.news.tap .pt{cursor:pointer;outline:2px dashed transparent}
+
+/* ================= figuras de la profesora ================= */
+.missfig{margin:14px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;cursor:zoom-in}
+.missfig img{display:block;width:100%;height:auto}
+.missfig figcaption{font-size:.82rem;color:var(--muted);padding:7px 12px;border-top:1px solid var(--line);background:#FFFDF9}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.gallery button{border:1px solid var(--line);border-radius:12px;background:#fff;padding:0;overflow:hidden;text-align:left}
+.gallery img{display:block;width:100%;height:150px;object-fit:cover;object-position:top}
+.gallery span{display:block;font-size:.85rem;font-weight:700;padding:7px 10px}
+.lightbox{position:fixed;inset:0;z-index:60;background:#16121E;display:flex;flex-direction:column}
+.lightbox .lb-top{display:flex;gap:10px;align-items:center;padding:10px 14px;color:#fff}
+.lightbox .lb-top b{flex:1;font-size:.95rem}
+.lightbox .lb-top button,.lightbox .lb-top a{border:0;border-radius:10px;padding:8px 14px;font-weight:700;background:#fff;color:#222;text-decoration:none;font-size:.9rem}
+.lightbox .lb-img{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 10px 14px;text-align:center}
+.lightbox .lb-img img{max-width:100%;height:auto;border-radius:8px;background:#fff}
+
+/* ================= línea de tiempo ================= */
+.timeline{position:relative;margin:12px 0;padding-left:26px}
+.timeline:before{content:"";position:absolute;left:9px;top:4px;bottom:4px;width:3px;background:var(--blue-soft);border-radius:3px}
+.timeline .ev{position:relative;margin:0 0 12px}
+.timeline .ev:before{content:"";position:absolute;left:-22px;top:5px;width:13px;height:13px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 1px var(--blue)}
+.timeline .ev b{color:var(--blue-ink)}
+.timeline .cat{display:inline-block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;background:#F1ECE3;border-radius:6px;padding:1px 7px;margin-left:6px;color:var(--muted)}
+
+/* ================= preguntas especiales ================= */
+.orderq .pool,.orderq .dest{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.orderq .it{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;text-align:left;display:flex;gap:10px;align-items:flex-start}
+.orderq .it .n{flex:none;width:26px;height:26px;border-radius:8px;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.orderq .it.used{opacity:.35}
+.orderq .dest .it{border-color:var(--blue);background:var(--blue-soft)}
+.orderq .dest .it.ok{border-color:var(--green);background:var(--green-soft)}
+.orderq .dest .it.bad{border-color:var(--red);background:var(--red-soft)}
+.orderq .dest .it.ok .n{background:var(--green)} .orderq .dest .it.bad .n{background:var(--red)}
+.clsq .crow{display:flex;gap:10px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:9px 0;flex-wrap:wrap}
+.clsq .crow .tx{flex:1;min-width:200px}
+.clsq .crow.ok .tx{color:var(--green)} .clsq .crow.bad .tx{color:var(--red)}
+.pre{margin:4px 0 12px}
+.qsrc{font-size:.78rem;color:var(--muted);font-weight:700;margin-bottom:6px}
+.big-q{font-size:1.05rem}
+.w6{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+@media (max-width:560px){.w6{grid-template-columns:repeat(2,1fr)}}
+.w6 div{border-radius:12px;padding:10px;background:var(--blue-soft);text-align:center;font-weight:800;color:var(--blue-ink)}
+.w6 div small{display:block;font-weight:600;color:var(--ink);font-size:.8rem;margin-top:4px}
+.purp{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+@media (max-width:760px){.purp{grid-template-columns:repeat(2,1fr)}}
+.purp div{border-radius:12px;padding:10px;font-size:.88rem}
+.purp div b{display:block;font-size:.98rem;margin-bottom:3px}
+.pc1{background:#DCEBFA}.pc2{background:#FBE3EC}.pc3{background:#DFF3E9}.pc4{background:#ECE6FA}.pc5{background:#FFF4D3}
+.tbl-mini td,.tbl-mini th{font-size:.9rem}
+.hl-o{background:#FBE3EC;border-radius:4px;padding:0 3px;font-weight:700}
+.hl-h{background:#DFF3E9;border-radius:4px;padding:0 3px;font-weight:700}
+.counter{font-size:.85rem;font-weight:700;color:var(--muted);margin-bottom:8px}
+.counter b{color:var(--green)}
+.picker{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.picker button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;font-weight:700;font-size:.9rem}
+.picker button.sel{border-color:var(--blue);background:var(--blue-soft)}
+
+/* ================= Ciencias ================= */
+.cig-comp{cursor:pointer}
+.cig-comp:hover circle{stroke-width:4}
+.cig-comp.on circle{fill:#FFF1A8;stroke:#E9B325}
+.effect-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media (max-width:640px){.effect-grid{grid-template-columns:1fr}}
+.effect-grid .col{border-radius:14px;padding:12px 14px}
+.effect-grid .col h4{margin:0 0 6px}
+.effect-grid ul{margin:0;padding-left:18px}
+.effect-grid li{margin:4px 0}
+.c-corto{background:#FFF4D3}.c-largo{background:#FBE3E3}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+@media (max-width:640px){.stat-grid{grid-template-columns:1fr 1fr}}
+.stat{border-radius:14px;padding:12px;background:var(--blue-soft);text-align:center}
+.stat b{display:block;font-size:1.7rem;line-height:1.1;color:var(--blue-ink)}
+.stat span{font-size:.85rem}
+.chartwrap{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;margin:10px 0}
+.builder .brow{display:grid;grid-template-columns:110px 1fr 64px;gap:10px;align-items:center;margin:6px 0}
+.builder input[type=range]{width:100%;accent-color:var(--blue)}
+.builder .bv{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.selrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.selrow select{font:inherit;font-size:max(16px,.95rem);border:1.5px solid var(--line);border-radius:10px;padding:6px 10px;background:#fff}
+.exp-stage{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.cost-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+@media (max-width:700px){.cost-grid{grid-template-columns:repeat(2,1fr)}}
+.cost-grid div{background:#2B2F36;color:#fff;border-radius:12px;padding:10px;text-align:center;font-size:.85rem}
+.cost-grid b{display:block;font-size:1.25rem;color:#FFD27A}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../" style="text-decoration:none;color:inherit">← Ramos · <span>Ciencias 5°</span></a>
+  <nav class="tabs" id="tabs">
+    <button data-go="inicio">Inicio</button>
+    <button data-go="aprender">1 · Aprender</button>
+    <button data-go="ensayo">2 · Ensayos</button>
+    <button data-go="resultados">Mis resultados</button>
+  </nav>
+</div></header>
+
+<main id="app">
+
+<!-- ================= INICIO ================= -->
+<section id="v-inicio" class="view">
+  <div class="card hero">
+    <p class="muted small" style="margin:0 0 6px">Prueba de Ciencias Naturales · Unidad 2, Lección 2: ¡Vivir libre de tabaco!</p>
+    <h1>Hola, Amparo. Vamos a preparar la prueba de <span>Ciencias Naturales</span>.</h1>
+    <p>La prueba es sobre el tabaco: qué tiene un cigarrillo, qué le hace al cuerpo, qué dicen los datos de Chile, cómo leer tablas y gráficos, cómo se previene y qué daño le hace al medioambiente. Primero repasas cada tema y después haces ensayos que se arman solos, distintos cada vez.</p>
+    <div class="paths" style="grid-template-columns:1fr 1fr">
+      <div class="path"><div class="step">Paso 1</div><h3>Aprender</h3><p>Nueve lecciones cortas con dibujos que puedes tocar y ejercicios que no se acaban.</p><div class="state" id="st-aprender"></div><button class="btn blue" data-go="aprender">Empezar a repasar</button></div>
+      <div class="path"><div class="step">Paso 2</div><h3>Ensayos</h3><p>20 preguntas al azar. Modo práctica (te corrige al tiro) o simulacro (con tiempo y nota).</p><div class="state" id="st-ensayo"></div><button class="btn" data-go="ensayo">Ir a los ensayos</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Lo que entra en la prueba <span class="small muted">(libro, págs. 94 a 107)</span></h3>
+    <p style="margin:0">Los componentes del cigarrillo · el experimento de la botella · efectos en el organismo a corto y largo plazo · fumadores pasivos · el tabaquismo en Chile en cifras · leer tablas y hacer gráficos de barras · factores de riesgo y prevención (Ley Antitabaco, ODS 3) · el impacto del tabaco en el medioambiente.</p>
+  </div>
+</section>
+
+<!-- ================= APRENDER ================= -->
+<section id="v-aprender" class="view hide">
+  <div class="lesson-nav" id="lessonNav"></div>
+
+  <!-- 1 -->
+  <div class="card lesson" data-sec="1" data-title="El cigarrillo">
+    <span class="src libro">📘 Libro, pág. 96</span>
+    <h2><span class="sec-num">1</span>¿Qué es el cigarrillo?</h2>
+    <p>El cigarrillo es una de las formas más comunes de consumir las hojas de una planta llamada <b>tabaco</b>. Pero adentro de ese rollito de papel no hay solo tabaco: hay muchas sustancias dañinas. Toca cada círculo para conocerlas.</p>
+    <div class="chartwrap" id="cigSvg"></div>
+    <div id="cigInfo" class="box tip" style="min-height:70px"><b>Toca un componente del cigarrillo.</b></div>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th>Componente</th><th>¿Qué es y qué hace?</th></tr>
+      <tbody id="compTable"></tbody>
+    </table></div>
+    <div class="box gold"><h4>Truco para recordar</h4>La <b>nicotina</b> es la que produce <b>adicción</b> (por eso cuesta tanto dejar de fumar). El <b>alquitrán</b> es el que <b>ensucia y oscurece</b> y provoca <b>cáncer</b>. El <b>monóxido de carbono</b> le <b>quita oxígeno</b> a la sangre.</div>
+    <h3>La ciencia cambia con la evidencia</h3>
+    <p>Durante mucho tiempo, las empresas tabacaleras negaron o le quitaron importancia a los estudios que mostraban que fumar hace daño. Pero los científicos siguieron investigando y juntaron cada vez más <b>evidencias</b> (pruebas). Con esas evidencias cambió lo que pensaban los médicos y la gente, y se crearon campañas y leyes. Así funciona la ciencia: <b>las ideas cambian cuando aparecen nuevas pruebas</b>.</p>
+    <div class="lab"><div class="lab-title">Practica · los componentes</div><div data-practice="comp" data-need="5"></div></div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card lesson" data-sec="2" data-title="El experimento">
+    <span class="src libro">📘 Libro, pág. 97</span>
+    <h2><span class="sec-num">2</span>El experimento de la botella</h2>
+    <p>Unos estudiantes armaron este montaje: pusieron un <b>cigarrillo</b> en la tapa de una <b>botella plástica</b> y, entre ambos, un trozo de <b>algodón</b>. Un <b>adulto</b> encendió el cigarrillo y <b>apretó y soltó la botella</b> una y otra vez, <b>como si la botella respirara</b>, hasta que el cigarrillo se consumió. Al final sacaron el algodón con pinzas.</p>
+    <div class="lab"><div class="lab-title">Pruébalo · haz el experimento (aquí, sin humo de verdad)</div>
+      <div class="exp-stage"><div id="expSvg" style="flex:1;min-width:240px"></div>
+        <div style="flex:1;min-width:220px"><div class="row"><button class="btn blue" id="expGo">Encender y «respirar»</button><button class="btn ghost small" id="expReset">Empezar de nuevo</button></div><div id="expTxt" class="small" style="margin-top:10px">El algodón está blanco. Aprieta el botón para simular que la botella respira el humo.</div></div></div></div>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Pregunta</th><th>Respuesta</th></tr>
+      <tr><td>¿Qué le pasó al algodón?</td><td>Cambió de <b>blanco</b> a <b>amarillo y café oscuro</b>, y quedó pegajoso.</td></tr>
+      <tr><td>¿Qué lo manchó?</td><td>Sobre todo el <b>alquitrán</b>, junto con otras sustancias del humo, como la <b>nicotina</b>, que quedaron atrapadas en el algodón.</td></tr>
+      <tr><td>¿Qué representa la botella que se aprieta?</td><td>Los <b>pulmones</b> de una persona que fuma: al apretar y soltar, la botella «respira» el humo.</td></tr>
+      <tr><td>¿Qué tiene que ver con una persona?</td><td>Las mismas sustancias que manchan el algodón se van <b>acumulando en los pulmones</b> de quien fuma todos los días.</td></tr>
+    </table></div>
+    <div class="box gold"><h4>¿Cómo se podría cambiar el experimento?</h4>Para comparar distintos tipos de cigarrillos (con filtro, sin filtro, mentolados), se repite el experimento cambiando <b>solo el tipo de cigarrillo</b> y dejando <b>todo lo demás igual</b> (misma botella, mismo algodón, mismas veces que se aprieta). Después se comparan los algodones. Lo único que cambias se llama <b>variable</b>.</div>
+    <div class="box warn">Este experimento solo lo puede hacer un <b>adulto</b>, porque el humo es dañino.</div>
+    <div class="lab"><div class="lab-title">Practica · el experimento</div><div data-practice="exp" data-need="4"></div></div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card lesson" data-sec="3" data-title="El organismo">
+    <span class="src libro">📘 Libro, pág. 98</span>
+    <h2><span class="sec-num">3</span>¿Qué pasa en el organismo con el cigarrillo?</h2>
+    <p>Mucha gente cree que el cigarrillo solo daña los pulmones, pero sus sustancias afectan <b>muchos órganos y tejidos</b> del cuerpo. Algunos efectos aparecen enseguida y otros después de años de fumar.</p>
+    <div class="effect-grid">
+      <div class="col c-corto"><h4>⏱️ A corto plazo (enseguida)</h4><ul>
+        <li>Aumentan la <b>presión</b> de la sangre y el <b>ritmo del corazón</b>.</li>
+        <li>Disminuyen la <b>capacidad para respirar</b> y la <b>temperatura</b> del cuerpo.</li>
+        <li>Bajan las <b>defensas</b> contra las infecciones.</li>
+        <li><b>Tos</b>, dolor de garganta (faringitis) y <b>dolor de cabeza</b>.</li>
+        <li>Menos <b>olfato</b>, problemas para <b>dormir</b> y <b>mal aliento</b>.</li></ul></div>
+      <div class="col c-largo"><h4>📅 A largo plazo (después de años)</h4><ul>
+        <li>El doble de riesgo de <b>ACV</b> (accidente cerebrovascular) y el cuádruple de riesgo de <b>enfermedades del corazón</b> (cardiopatías).</li>
+        <li>Más probabilidad de enfermedades respiratorias: <b>enfisema pulmonar</b>, <b>asma</b> y <b>EPOC</b>.</li>
+        <li>Más de <b>10 tipos de cáncer</b>: el humo tiene al menos <b>70 sustancias cancerígenas</b>. Es la principal causa del <b>cáncer de pulmón</b>.</li></ul></div>
+    </div>
+    <div class="box tip"><h4>Palabras clave</h4><b>EPOC</b>: enfermedad pulmonar obstructiva crónica (a los pulmones les cuesta cada vez más sacar el aire). <b>ACV</b>: accidente cerebrovascular (se interrumpe la sangre que llega al cerebro). <b>Cancerígeno</b>: que puede provocar cáncer.</div>
+    <h3>Los fumadores pasivos</h3>
+    <p>El tabaco no solo daña a quien fuma: también a las personas que respiran el <b>humo ajeno</b>, llamadas <b>fumadores pasivos</b>. El humo ajeno causa enfermedades graves del corazón y de los pulmones, incluido el cáncer de pulmón, y cada año provoca la muerte de alrededor de <b>1,3 millones de personas</b> en el mundo.</p>
+    <div class="lab"><div class="lab-title">Practica · efectos en el organismo</div><div data-practice="org" data-need="5"></div></div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card lesson" data-sec="4" data-title="Leer tablas">
+    <span class="src libro">📘 Libro, pág. 99</span>
+    <h2><span class="sec-num">4</span>Leer una tabla y encontrar relaciones</h2>
+    <p>En una comuna de Chile se estudió cuántos niños tenían asma según la cantidad de cigarrillos que fumaban sus padres cada día. Estos fueron los resultados:</p>
+    <div class="tablewrap"><table class="t" style="max-width:460px">
+      <tr><th>Cigarrillos diarios fumados por los padres</th><th>Número de niños enfermos de asma</th></tr>
+      <tr><td>0</td><td>3</td></tr><tr><td>20</td><td>10</td></tr><tr><td>30</td><td>16</td></tr>
+    </table></div>
+    <div class="fig" id="asmaChart"></div>
+    <div class="box gold"><h4>Cómo leer la tabla, paso a paso</h4>
+      <b>1. ¿Qué niños se enferman más?</b> Busca el número más alto: 16 niños, cuyos padres fuman <b>30 cigarrillos</b> diarios.<br>
+      <b>2. ¿Cuántos se enferman sin humo?</b> Mira la fila del 0: <b>3 niños</b>.<br>
+      <b>3. ¿Qué relación hay?</b> Cuando sube una columna, ¿qué pasa con la otra? <b>A más cigarrillos fumados por los padres, más niños enfermos de asma.</b><br>
+      <b>4. ¿El asma afecta solo a los niños expuestos al humo?</b> <b>No</b>: hay 3 niños con asma cuyos padres no fuman, así que el asma también tiene otras causas. El humo <b>aumenta</b> el riesgo.</div>
+    <div class="lab"><div class="lab-title">Practica · leer tablas (con datos nuevos cada vez)</div><div data-practice="tabla" data-need="4"></div></div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card lesson" data-sec="5" data-title="Chile en cifras">
+    <span class="src libro">📘 Libro, pág. 100</span>
+    <h2><span class="sec-num">5</span>Radiografía del tabaquismo en Chile</h2>
+    <p>El <b>tabaquismo</b> (la adicción al tabaco) sigue siendo la principal causa de enfermedad y muerte que <b>se podría evitar</b> en el mundo. Estos son los datos de Chile que aparecen en tu libro:</p>
+    <div class="stat-grid">
+      <div class="stat"><b>33,33 %</b><span>de las personas en Chile fuma<br>(29,1 % de las mujeres y 37,8 % de los hombres)</span></div>
+      <div class="stat"><b>N° 1</b><span>Chile es el país que más cigarrillos consume en Latinoamérica</span></div>
+      <div class="stat"><b>13,9 y 14</b><span>años: edad a la que se empieza a fumar (niñas y niños)</span></div>
+      <div class="stat"><b>52</b><span>personas mueren cada día en Chile por el tabaquismo</span></div>
+      <div class="stat"><b>80,8 %</b><span>percibe que fumar es un riesgo</span></div>
+      <div class="stat"><b>8.012</b><span>personas al año reciben un diagnóstico de cáncer provocado por el tabaco</span></div>
+    </div>
+    <h3>Personas que se enferman cada año por el tabaco</h3>
+    <div class="chartwrap" id="enfChart"></div>
+    <p class="small muted">Los 8.012 cánceres son 3.026 de pulmón y 4.986 de otros tipos. La enfermedad con más casos es la EPOC.</p>
+    <div class="box tip"><h4>Fuentes que cita tu libro</h4>Encuesta Nacional de Salud (2017), Estudio Nacional de Drogas en Población Escolar de SENDA (2020), Organización Panamericana de la Salud e IECS (2017). En ciencias, los datos siempre deben tener una <b>fuente</b> confiable.</div>
+    <div class="lab"><div class="lab-title">Practica · Chile en cifras</div><div data-practice="chile" data-need="5"></div></div>
+  </div>
+
+  <!-- 6 -->
+  <div class="card lesson" data-sec="6" data-title="Gráficos">
+    <span class="src libro">📘 Libro, págs. 101 y 103</span>
+    <h2><span class="sec-num">6</span>Registrar datos en un gráfico de barras</h2>
+    <p>SENDA hizo un estudio entre noviembre de 2020 y junio de 2021 para ver cómo cambia el consumo de tabaco en Chile. Esta tabla muestra el <b>porcentaje de personas que fuman cigarrillos todos los días</b> (prevalencia), según su edad:</p>
+    <div class="tablewrap"><table class="t" style="max-width:520px">
+      <tr><th>Edad</th><th>2018</th><th>2020</th></tr>
+      <tbody id="prevTable"></tbody>
+    </table></div>
+    <div class="box gold"><h4>Paso a paso para hacer un gráfico</h4>
+      <b>1. Identifica qué debes registrar.</b> Aquí: los grupos de edad y el porcentaje de fumadores en 2018 y en 2020.<br>
+      <b>2. Reconoce las partes del gráfico.</b> Un <b>título</b> que diga de qué trata; el <b>eje horizontal</b> (el de abajo), donde van las categorías (los grupos de edad); el <b>eje vertical</b> (el del lado), donde van los valores (el porcentaje), con una escala pareja; y una <b>leyenda</b> con el color de cada año.<br>
+      <b>3. Registra la información.</b> Dibuja una barra por cada dato, con la altura que indica la tabla.</div>
+    <div class="box tip">El <b>gráfico de barras</b> sirve para <b>comparar</b> cantidades entre grupos. Con dos colores (2018 y 2020) puedes ver de un vistazo qué grupos subieron y cuáles bajaron.</div>
+    <div class="lab"><div class="lab-title">Pruébalo · arma tú el gráfico</div><div id="builder" class="builder"></div></div>
+    <h3>¿Qué nos dice el gráfico?</h3>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><td>Grupo con más fumadores en 2020</td><td><b>35 a 44 años</b> (25,4 %)</td></tr>
+      <tr><td>Grupos que <b>bajaron</b> entre 2018 y 2020</td><td>12 a 18, 19 a 25 y 26 a 34 años</td></tr>
+      <tr><td>Grupo que <b>bajó más</b></td><td><b>19 a 25 años</b>: de 16,6 % a 15,1 % (1,5 puntos menos)</td></tr>
+      <tr><td>Grupo que <b>se mantuvo igual</b></td><td>35 a 44 años (25,4 % los dos años)</td></tr>
+      <tr><td>Grupo que <b>subió</b></td><td><b>45 a 64 años</b>: de 22,5 % a 24,2 %</td></tr>
+    </table></div>
+    <div class="lab"><div class="lab-title">Practica · leer gráficos (con datos nuevos cada vez)</div><div data-practice="graf" data-need="5"></div></div>
+  </div>
+
+  <!-- 7 -->
+  <div class="card lesson" data-sec="7" data-title="Riesgo y prevención">
+    <span class="src libro">📘 Libro, págs. 94 y 102</span>
+    <h2><span class="sec-num">7</span>Factores de riesgo y prevención</h2>
+    <p>Todos podemos encontrarnos alguna vez con el cigarrillo: porque alguien nos lo ofrece o porque vemos fumar a personas cercanas. Lo que hace más probable que una persona empiece a fumar se llama <b>factor de riesgo</b>.</p>
+    <div class="box tip"><h4>Factor de riesgo</h4>Es cualquier <b>rasgo, característica o situación</b> de una persona que <b>aumenta la probabilidad</b> de que haga algo; en este caso, de que fume.</div>
+    <h3>Los principales factores de riesgo del consumo de cigarrillos</h3>
+    <p>🏠 Vivir en una familia donde hay <b>fumadores en el hogar</b>. · 🎉 Ir a <b>fiestas o reuniones con amigos que fuman</b>. · 👫 La <b>presión del grupo</b>, por ejemplo, cuando el mejor amigo fuma. · ❓ <b>No conocer los daños</b> que provoca el tabaco.</p>
+    <h3>¿Cómo se previene?</h3>
+    <p>Una forma de prevenir es <b>conocer los daños</b> del tabaco. Por eso, en Chile y en el mundo se hacen <b>campañas</b> para disminuir el consumo, como el <b>Día Mundial sin Tabaco</b> <span class="small muted">(se celebra cada 31 de mayo)</span>, y se aprueban leyes que limitan la venta y la publicidad del tabaco.</p>
+    <div class="box gold"><h4>La Ley Antitabaco de Chile (2013)</h4>
+      ✔ Ambientes <b>libres de humo</b> en lugares públicos cerrados, transportes y restaurantes.<br>
+      ✔ Prohibido vender cigarrillos a <b>menores de edad</b> y <b>cerca de los colegios</b>.<br>
+      ✔ <b>Advertencias</b> sobre los riesgos del tabaco en los envases y en la publicidad.<br>
+      ✔ Prohibido vender cigarrillos <b>por unidad</b> (sueltos).</div>
+    <div class="box green"><h4>ODS 3: Salud y bienestar</h4>Los <b>Objetivos de Desarrollo Sostenible</b> (ODS) son metas que los países acordaron para el año 2030. El <b>ODS 3, Salud y bienestar</b>, busca reducir en <b>un tercio</b> las muertes prematuras por <b>enfermedades no transmisibles</b> (las que no se contagian, como el cáncer o las enfermedades del corazón). Para lograrlo, controlar el tabaco es una prioridad.</div>
+    <div class="lab"><div class="lab-title">Practica · riesgo y prevención</div><div data-practice="riesgo,prev" data-need="5"></div></div>
+  </div>
+
+  <!-- 8 -->
+  <div class="card lesson" data-sec="8" data-title="Medioambiente">
+    <span class="src libro">📘 Libro, págs. 104 y 105</span>
+    <h2><span class="sec-num">8</span>El impacto del tabaco en el medioambiente</h2>
+    <p>La Organización Mundial de la Salud (OMS) advierte que el tabaco no solo daña a las personas: también al planeta. La mayor parte del tabaco se cultiva en países pobres o de ingresos medios, en tierras y con agua que se podrían usar para <b>producir alimentos</b>.</p>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Consecuencia</th><th>¿Por qué ocurre?</th></tr>
+      <tr><td>🌳 <b>Deforestación</b></td><td>Los cultivos de tabaco necesitan grandes extensiones de tierra, y se <b>talan bosques</b> para abrir espacio.</td></tr>
+      <tr><td>💧 <b>Consumo de agua</b></td><td>Cultivar tabaco gasta muchísima agua, lo que genera <b>escasez</b> en lugares donde ya hay poca.</td></tr>
+      <tr><td>🌫️ <b>Contaminación del aire</b></td><td>Al quemar tabaco, tanto en las fábricas como al fumar, se liberan <b>miles de sustancias químicas</b> al aire.</td></tr>
+      <tr><td>🚬 <b>Residuos</b></td><td>Los <b>filtros</b> de los cigarrillos (las colillas) <b>no son biodegradables</b>: duran años y contaminan la tierra y el agua.</td></tr>
+    </table></div>
+    <h3>Lo que la industria del tabaco le cuesta al mundo cada año</h3>
+    <div class="cost-grid"><div><b>+8 millones</b>de vidas humanas</div><div><b>600 millones</b>de árboles</div><div><b>200 mil</b>hectáreas de tierra</div><div><b>22.000 millones</b>de toneladas de agua</div><div><b>84 millones</b>de toneladas de CO₂</div></div>
+    <h3>¿Qué se está haciendo?</h3>
+    <p>Países como <b>Francia</b> y <b>España</b>, y lugares como <b>San Francisco</b> y <b>California</b> (Estados Unidos), buscan que la <b>industria tabacalera se haga responsable de limpiar</b> la contaminación que produce. La OMS invita a los países a <b>ayudar a los productores de tabaco a cambiarse a cultivos sostenibles</b>, a poner <b>impuestos altos</b> al tabaco (incluso un impuesto ambiental) y a ofrecer <b>ayuda a las personas para dejar de fumar</b>.</p>
+    <div class="lab"><div class="lab-title">Practica · tabaco y medioambiente</div><div data-practice="amb" data-need="4"></div></div>
+  </div>
+
+  <!-- 9 -->
+  <div class="card lesson" data-sec="9" data-title="Resumen">
+    <h2><span class="sec-num">9</span>Resumen para la prueba</h2>
+    <div class="tablewrap"><table class="t tbl-mini">
+      <tr><th>Tema</th><th>Lo que hay que recordar</th></tr>
+      <tr><td>Componentes</td><td>Nicotina (adictiva) · alquitrán (oscurece, provoca cáncer) · monóxido de carbono (quita oxígeno a la sangre) · arsénico (veneno) · butano (gas combustible) · tolueno (irrita las vías respiratorias) · mercurio (daña el sistema nervioso).</td></tr>
+      <tr><td>Experimento</td><td>El algodón se oscurece por el alquitrán; la botella que se aprieta representa los pulmones. Para comparar, cambia solo una cosa (la variable).</td></tr>
+      <tr><td>Corto plazo</td><td>Sube la presión y el ritmo del corazón, cuesta respirar, bajan las defensas, tos, mal aliento, menos olfato.</td></tr>
+      <tr><td>Largo plazo</td><td>ACV, enfermedades del corazón, enfisema, asma, EPOC y más de 10 tipos de cáncer (sobre todo de pulmón).</td></tr>
+      <tr><td>Fumador pasivo</td><td>Quien respira el humo ajeno; también se enferma.</td></tr>
+      <tr><td>Chile</td><td>33,33 % fuma · n° 1 en Latinoamérica · se empieza a los 13,9-14 años · 52 muertes al día · la EPOC es la enfermedad más frecuente.</td></tr>
+      <tr><td>Tablas y gráficos</td><td>Buscar relaciones («a más…, más…»). En el gráfico de barras: título, eje horizontal (categorías), eje vertical (valores), leyenda.</td></tr>
+      <tr><td>Riesgo y prevención</td><td>Factores: fumadores en casa, amigos que fuman, presión del grupo, no conocer los daños. Ley Antitabaco 2013. ODS 3.</td></tr>
+      <tr><td>Medioambiente</td><td>Deforestación, gasto de agua, contaminación del aire y colillas que no son biodegradables.</td></tr>
+    </table></div>
+    <h3 style="margin-top:18px">Antes de la prueba, revisa que…</h3>
+    <ul class="clean" id="checklist"></ul>
+    <div class="box green" style="margin-top:16px">Cuando termines el repaso, pasa a los <a href="#ensayo">ensayos</a>.</div>
+  </div>
+
+  <div class="pager"><button class="btn ghost" id="prevSec">← Anterior</button><button class="btn blue" id="nextSec">Siguiente →</button></div>
+</section>
+
+<!-- ================= ENSAYOS ================= -->
+<section id="v-ensayo" class="view hide"></section>
+
+<!-- ================= RESULTADOS ================= -->
+<section id="v-resultados" class="view hide"></section>
+
+</main>
+<script>
+"use strict";
+/* ============ utilidades ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const sample = (arr, n) => shuffle(arr).slice(0, n);
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const coma = n => String(n).replace(".", ",");
+const notaTxt = n => n.toFixed(1).replace(".", ",");
+const fmtN = n => { const [e, d] = String(n).split("."); return e.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + (d ? "," + d : ""); };
+
+/* ============ guardado local ============ */
+const STORE = "amparo-ciencias-tabaco-v1";
+let DB = (() => { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } })();
+DB.done = DB.done || {}; DB.hits = DB.hits || {}; DB.history = DB.history || []; DB.list = DB.list || {};
+function save() { try { localStorage.setItem(STORE, JSON.stringify(DB)); } catch (e) { } }
+
+/* ============ gráfico de barras (SVG) ============
+   o = { title, cats[], series:[{name, color, vals[]}], ylab, xlab, max?, step?, dec? } */
+function barChart(o) {
+  const all = o.series.flatMap(s => s.vals);
+  const step = o.step || niceStep(Math.max(...all));
+  const max = o.max || Math.ceil(Math.max(...all) / step) * step;
+  const W = 640, H = 330, L = Math.max(58, 34 + fmtN(max).length * 7.5), R = 14, T = o.title ? 40 : 18, B = o.series.length > 1 ? 86 : 64;
+  const ph = H - T - B, pw = W - L - R, n = o.cats.length, ns = o.series.length;
+  const gw = pw / n, bw = Math.min(46, (gw * 0.72) / ns);
+  const y = v => T + ph - (v / max) * ph;
+  let s = `<rect width="${W}" height="${H}" fill="#fff"/>`;
+  if (o.title) s += `<text x="${W / 2}" y="24" text-anchor="middle" font-size="16" font-weight="800" fill="#1F2A37">${esc(o.title)}</text>`;
+  for (let v = 0; v <= max + 1e-9; v += step) s += `<line x1="${L}" y1="${y(v)}" x2="${W - R}" y2="${y(v)}" stroke="#E6DFD3"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-size="12" fill="#5B6675">${fmtN(+v.toFixed(2))}</text>`;
+  s += `<line x1="${L}" y1="${T}" x2="${L}" y2="${T + ph}" stroke="#1F2A37" stroke-width="2"/><line x1="${L}" y1="${T + ph}" x2="${W - R}" y2="${T + ph}" stroke="#1F2A37" stroke-width="2"/>`;
+  o.cats.forEach((c, i) => {
+    const gx = L + i * gw + gw / 2, x0 = gx - (bw * ns) / 2;
+    o.series.forEach((se, k) => {
+      const v = se.vals[i], bx = x0 + k * bw;
+      s += `<rect x="${bx + 2}" y="${y(v)}" width="${bw - 4}" height="${Math.max(0, T + ph - y(v))}" rx="3" fill="${se.color}"/>`;
+      if (o.labels !== false) s += `<text x="${bx + bw / 2}" y="${y(v) - 5}" text-anchor="middle" font-size="11" font-weight="700" fill="#1F2A37">${fmtN(v)}</text>`;
+    });
+    const words = String(c).split(" "), lines = words.length > 1 && String(c).length > 12 ? [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")] : [c];
+    lines.forEach((ln, j) => s += `<text x="${gx}" y="${T + ph + 18 + j * 14}" text-anchor="middle" font-size="12" fill="#1F2A37">${esc(ln)}</text>`);
+  });
+  if (o.xlab) s += `<text x="${L + pw / 2}" y="${T + ph + 50}" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5B6675">${esc(o.xlab)}</text>`;
+  if (o.ylab) s += `<text transform="translate(14 ${T + ph / 2}) rotate(-90)" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5B6675">${esc(o.ylab)}</text>`;
+  if (ns > 1) o.series.forEach((se, k) => { const lx = L + 10 + k * 110; s += `<rect x="${lx}" y="${H - 20}" width="14" height="14" rx="3" fill="${se.color}"/><text x="${lx + 20}" y="${H - 9}" font-size="12.5" font-weight="700" fill="#1F2A37">${esc(se.name)}</text>`; });
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="aspect-ratio:${W} / ${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+function niceStep(m) { const raw = m / 5, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
+
+/* ============ confeti ============ */
+function confetti() {
+  const c = document.createElement("canvas"); c.className = "confetti"; document.body.appendChild(c);
+  const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+  const cols = ["#2A9D6F", "#F0A43C", "#3A86D6", "#E9B325", "#E88AAE"];
+  const P = Array.from({ length: 140 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height * 0.4, vx: -2 + Math.random() * 4, vy: 2 + Math.random() * 4, r: 4 + Math.random() * 5, c: pick(cols), a: Math.random() * 6 }));
+  let t = 0; (function f() { x.clearRect(0, 0, c.width, c.height); P.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.a += 0.1; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r, -p.r / 2, 2 * p.r, p.r); x.restore(); }); if (++t < 200) requestAnimationFrame(f); else c.remove(); })();
+}
+
+/* ============ navegación ============ */
+const VIEWS = ["inicio", "aprender", "ensayo", "resultados"];
+function go(v, push = true) {
+  let sec = null;
+  if (v && v.startsWith("aprender-")) { sec = +v.split("-")[1]; v = "aprender"; }
+  if (!VIEWS.includes(v)) v = "inicio";
+  VIEWS.forEach(x => $("#v-" + x).classList.toggle("hide", x !== v));
+  $$("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.go === v));
+  if (v === "inicio") renderHome();
+  if (v === "aprender") showSec(sec || DB.cur || 1);
+  if (v === "ensayo") renderEnsayo();
+  if (v === "resultados") renderResults();
+  const h = "#" + (sec ? "aprender-" + sec : v);
+  if (push && location.hash !== h) history.pushState(null, "", h);
+  window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); go(g.dataset.go); return; }
+  const a = e.target.closest('a[href^="#"]'); if (a) { e.preventDefault(); go(a.getAttribute("href").slice(1)); }
+});
+window.addEventListener("popstate", () => go(location.hash.slice(1), false));
+function setHdr() { document.documentElement.style.setProperty("--hdr", $("header.top").offsetHeight + "px"); }
+window.addEventListener("resize", setHdr);
+
+/* ============ lecciones ============ */
+let SECS = [];
+function buildLessons() {
+  SECS = $$(".lesson").map(el => ({ n: +el.dataset.sec, t: el.dataset.title, el }));
+  $("#lessonNav").innerHTML = SECS.map(s => `<button data-sec="${s.n}">${s.n} · ${s.t}</button>`).join("");
+  $$("#lessonNav button").forEach(b => b.onclick = () => { showSec(+b.dataset.sec); history.pushState(null, "", "#aprender-" + b.dataset.sec); });
+  $("#prevSec").onclick = () => { showSec(DB.cur - 1); history.pushState(null, "", "#aprender-" + DB.cur); };
+  $("#nextSec").onclick = () => { if (DB.cur >= SECS.length) go("ensayo"); else { showSec(DB.cur + 1); history.pushState(null, "", "#aprender-" + DB.cur); } };
+}
+function showSec(n) {
+  n = Math.max(1, Math.min(SECS.length, n));
+  SECS.forEach(s => s.el.classList.toggle("hide", s.n !== n));
+  DB.cur = n; if (n === SECS.length) DB.done[n] = true; save();
+  $$("#lessonNav button").forEach(b => { const k = +b.dataset.sec; b.classList.toggle("on", k === n); b.classList.toggle("done", !!DB.done[k]); });
+  $("#prevSec").disabled = n === 1;
+  $("#nextSec").textContent = n === SECS.length ? "Ir a los ensayos →" : "Siguiente →";
+  window.scrollTo(0, 0);
+}
+function sectionDone(n) { if (DB.done[n]) return; DB.done[n] = true; save(); $$("#lessonNav button").forEach(b => { if (+b.dataset.sec === n) b.classList.add("done"); }); }
+
+/* ============ banco de contenidos (libro págs. 94-107, con palabras propias) ============ */
+const COMP = [
+  { n: "Nicotina", d: "Sustancia de las hojas de tabaco. Es muy adictiva: el cuerpo la pide una y otra vez. Estimula y hace sentir menos estrés y menos hambre.", k: "es muy adictiva", x: 0.12 },
+  { n: "Alquitrán", d: "Sustancia pegajosa que se pega y se acumula en los lugares por donde pasa el humo, y los oscurece. Provoca cáncer.", k: "se acumula y oscurece los lugares por donde pasa el humo, y provoca cáncer", x: 0.27 },
+  { n: "Monóxido de carbono", d: "Gas que se libera al quemar el cigarrillo. En el cuerpo se une a los glóbulos rojos y hace que la sangre transporte menos oxígeno.", k: "se une a los glóbulos rojos y disminuye el transporte de oxígeno", x: 0.42 },
+  { n: "Arsénico", d: "Sustancia química venenosa. Se usa para fabricar veneno para ratas (raticidas).", k: "es un veneno que se usa en raticidas", x: 0.56 },
+  { n: "Butano", d: "Gas combustible, el mismo que se usa en algunos encendedores y cocinas. En grandes cantidades puede provocar desmayos.", k: "es un gas combustible que puede provocar desmayos", x: 0.7 },
+  { n: "Tolueno", d: "Sustancia química que se usa como solvente en las industrias. Irrita las vías respiratorias.", k: "es un solvente industrial que irrita las vías respiratorias", x: 0.83 },
+  { n: "Mercurio", d: "Metal tóxico que daña el sistema nervioso.", k: "es un metal tóxico para el sistema nervioso", x: 0.95 }
+];
+
+/* efectos en el organismo: p = corto | largo */
+const EFECTOS = [
+  ["Aumentan la presión de la sangre y el ritmo del corazón.", "corto"],
+  ["Disminuye la capacidad para respirar.", "corto"],
+  ["Baja la temperatura del cuerpo.", "corto"],
+  ["Bajan las defensas contra las infecciones.", "corto"],
+  ["Tos y dolor de garganta (faringitis).", "corto"],
+  ["Dolor de cabeza.", "corto"],
+  ["Disminuye el olfato.", "corto"],
+  ["Problemas para dormir.", "corto"],
+  ["Mal aliento.", "corto"],
+  ["Se duplica el riesgo de sufrir un accidente cerebrovascular (ACV).", "largo"],
+  ["Se cuadruplica el riesgo de enfermedades del corazón (cardiopatías).", "largo"],
+  ["Enfisema pulmonar.", "largo"],
+  ["EPOC (enfermedad pulmonar obstructiva crónica).", "largo"],
+  ["Cáncer de pulmón.", "largo"],
+  ["Cáncer de boca, garganta o esófago.", "largo"],
+  ["Cáncer de hígado o de estómago.", "largo"]
+];
+
+/* datos de Chile (pág. 100) */
+const ENF = [["EPOC", 60470], ["Enfermedades cardíacas", 23851], ["ACV", 14473], ["Neumonía", 6174], ["Otros cánceres", 4986], ["Cáncer de pulmón", 3026]];
+/* prevalencia diaria de cigarrillo por edad (pág. 101) */
+const PREV = [["12 a 18 años", 3.5, 2.4], ["19 a 25 años", 16.6, 15.1], ["26 a 34 años", 21.6, 20.5], ["35 a 44 años", 25.4, 25.4], ["45 a 64 años", 22.5, 24.2]];
+
+/* factores de riesgo (r = true) y situaciones que protegen (r = false) */
+const RIESGO = [
+  ["Vivir en una casa donde alguien fuma.", true], ["Ir a fiestas con amigos que fuman.", true], ["Que tu mejor amigo fume y te invite a probar.", true],
+  ["No conocer los daños que provoca el tabaco.", true], ["Sentir presión del grupo para encajar.", true], ["Ver a los adultos cercanos fumar todos los días.", true],
+  ["Conocer los daños que provoca el tabaco.", false], ["Tener amigos que no fuman.", false], ["Vivir en una casa libre de humo.", false],
+  ["Participar en un grupo que informa sobre los riesgos del tabaquismo.", false], ["Saber decir «no» cuando te ofrecen un cigarrillo.", false]
+];
+/* medidas: l = está en la Ley Antitabaco (2013) según el libro */
+const LEY = [
+  ["Espacios libres de humo en lugares públicos cerrados, transportes y restaurantes.", true],
+  ["Prohibir la venta de cigarrillos a menores de edad.", true],
+  ["Prohibir la venta de cigarrillos cerca de los colegios.", true],
+  ["Advertir sobre los riesgos del tabaco en los envases y en la publicidad.", true],
+  ["Prohibir la venta de cigarrillos por unidad (sueltos).", true],
+  ["Permitir la venta de cigarrillos sueltos en los quioscos.", false],
+  ["Regalar cigarrillos en las fiestas para promocionarlos.", false],
+  ["Permitir fumar dentro de los buses.", false],
+  ["Vender cigarrillos a cualquier edad si van acompañados.", false]
+];
+/* medioambiente */
+const AMB = [
+  ["Deforestación", "Se talan bosques para abrir espacio a los cultivos de tabaco, que necesitan mucha tierra."],
+  ["Consumo de agua", "Cultivar tabaco gasta muchísima agua y puede provocar escasez donde ya hay poca."],
+  ["Contaminación del aire", "Al quemar tabaco, en las fábricas y al fumar, se liberan miles de sustancias químicas."],
+  ["Residuos", "Los filtros de los cigarrillos no son biodegradables: duran años y contaminan la tierra y el agua."]
+];
+const COSTOS = [["vidas humanas", "más de 8 millones"], ["árboles", "600 millones"], ["hectáreas de tierra", "200 mil"], ["toneladas de agua", "22.000 millones"], ["toneladas de CO₂", "84 millones"]];
+
+/* preguntas de concepto (fijas) */
+const CONCEPTS = {
+  comp: [
+    { q: "El cigarrillo es una forma de consumir las hojas de una planta llamada…", o: ["tabaco", "té", "menta", "eucalipto"], a: 0, e: "El cigarrillo se hace con hojas de la planta de tabaco (libro, pág. 96)." },
+    { q: "¿Por qué a las personas les cuesta tanto dejar de fumar?", o: ["Porque la nicotina es muy adictiva", "Porque el alquitrán es dulce", "Porque el butano da energía", "Porque el cigarrillo tiene vitaminas"], a: 0, e: "La nicotina produce adicción: el cuerpo la pide una y otra vez." },
+    { q: "¿Por qué cambió lo que la gente pensaba del tabaco con los años?", o: ["Porque los científicos juntaron cada vez más evidencias de sus daños", "Porque el tabaco cambió de color", "Porque las tabacaleras lo recomendaron", "Porque ahora los cigarrillos son más baratos"], a: 0, e: "Las ideas científicas cambian cuando aparecen nuevas pruebas (evidencias)." },
+    { q: "Durante mucho tiempo, ¿qué hizo la industria del tabaco con los estudios sobre sus riesgos?", o: ["Los negó o les quitó importancia", "Los publicó en los envases", "Los enseñó en los colegios", "Los financió para prohibir el tabaco"], a: 0, e: "Hasta que las evidencias fueron tantas que la opinión médica y pública cambió." }
+  ],
+  exp: [
+    { q: "En el experimento de la botella, ¿qué le pasa al algodón?", o: ["Se pone amarillo y café oscuro, y queda pegajoso", "Se pone más blanco", "Se moja con agua", "No cambia nada"], a: 0, e: "Las sustancias del humo quedan atrapadas en el algodón y lo oscurecen." },
+    { q: "¿Qué componente es el principal responsable de oscurecer el algodón?", o: ["El alquitrán", "El butano", "El mercurio", "El oxígeno"], a: 0, e: "El alquitrán se pega y oscurece los lugares por donde pasa el humo." },
+    { q: "¿Por qué se aprieta y se suelta la botella?", o: ["Para simular la respiración de una persona que fuma", "Para romper el cigarrillo", "Para enfriar el humo", "Para limpiar el algodón"], a: 0, e: "La botella «respira» el humo, como lo harían los pulmones." },
+    { q: "En el experimento, la botella que se aprieta representa…", o: ["los pulmones", "el corazón", "el estómago", "la boca"], a: 0, e: "Y el algodón muestra lo que queda dentro de los pulmones." },
+    { q: "¿Qué relación hay entre el algodón manchado y una persona que fuma?", o: ["Esas sustancias se van acumulando en sus pulmones", "Ninguna: al cuerpo no le pasa nada", "El cuerpo elimina todo el humo al instante", "Solo se manchan los dientes"], a: 0, e: "Lo mismo que queda en el algodón se acumula en los pulmones de quien fuma." },
+    { q: "Quieres comparar cigarrillos con filtro y sin filtro. ¿Cómo lo harías bien?", o: ["Repitiendo el experimento y cambiando solo el tipo de cigarrillo", "Cambiando la botella, el algodón y el cigarrillo a la vez", "Usando un algodón mojado en uno y seco en el otro", "Apretando más fuerte una de las botellas"], a: 0, e: "Solo se cambia una cosa (la variable); todo lo demás queda igual para poder comparar." },
+    { q: "¿Quién debe hacer el experimento de la botella?", o: ["Solo un adulto, porque el humo es dañino", "Cualquier niño", "Nadie puede hacerlo nunca", "Solo alguien que fume"], a: 0, e: "El humo es dañino: lo hace un adulto, con cuidado." },
+    { q: "En un experimento, lo único que se cambia para ver qué pasa se llama…", o: ["variable", "conclusión", "resultado", "materiales"], a: 0, e: "Si se cambian varias cosas a la vez, no se sabe cuál produjo la diferencia." }
+  ],
+  org: [
+    { q: "¿Qué es un fumador pasivo?", o: ["Una persona que respira el humo de los cigarrillos de otros", "Una persona que fuma muy poco", "Una persona que dejó de fumar", "Una persona que fuma sin moverse"], a: 0, e: "Los fumadores pasivos también se enferman por el humo ajeno." },
+    { q: "¿Aproximadamente cuántas personas mueren cada año en el mundo por respirar humo ajeno?", o: ["1,3 millones", "13 personas", "130", "13 mil millones"], a: 0, e: "Alrededor de 1,3 millones de muertes prematuras al año (libro, pág. 98)." },
+    { q: "¿Cuántos tipos de cáncer puede causar el tabaquismo, según tu libro?", o: ["Más de 10", "Solo uno", "Dos", "Ninguno"], a: 0, e: "El humo tiene al menos 70 sustancias cancerígenas." },
+    { q: "¿Cuál es el principal cáncer causado por el tabaco?", o: ["El cáncer de pulmón", "El cáncer de piel", "El cáncer de huesos", "El cáncer de ojos"], a: 0, e: "El tabaco es la principal causa del cáncer de pulmón." },
+    { q: "Una sustancia <b>cancerígena</b> es una sustancia que…", o: ["puede provocar cáncer", "cura el cáncer", "da energía", "limpia los pulmones"], a: 0, e: "El humo del tabaco tiene al menos 70 sustancias cancerígenas." },
+    { q: "¿El cigarrillo daña solo los pulmones?", o: ["No: sus sustancias afectan muchos órganos y tejidos", "Sí, solo los pulmones", "Solo el corazón", "Solo los dientes"], a: 0, e: "Afecta el corazón, el cerebro, los vasos sanguíneos, las defensas y más." },
+    { q: "¿Qué significa EPOC?", o: ["Enfermedad pulmonar obstructiva crónica", "Enfermedad por ondas de calor", "Estudio para observar células", "Envase para ocultar cigarrillos"], a: 0, e: "A los pulmones les cuesta cada vez más sacar el aire." }
+  ],
+  chile: [
+    { q: "Según tu libro, ¿qué porcentaje de las personas en Chile fuma?", o: ["33,33 %", "3,3 %", "80,8 %", "52 %"], a: 0, e: "33,33 % (Encuesta Nacional de Salud, 2017)." },
+    { q: "¿Quiénes fuman más en Chile, según tu libro?", o: ["Los hombres (37,8 %) más que las mujeres (29,1 %)", "Las mujeres (37,8 %) más que los hombres (29,1 %)", "Hombres y mujeres por igual", "Solo los adolescentes"], a: 0, e: "37,8 % de los hombres y 29,1 % de las mujeres." },
+    { q: "¿En qué lugar está Chile en consumo de cigarrillos en Latinoamérica?", o: ["En el número 1", "En el último lugar", "En el número 10", "Chile no consume cigarrillos"], a: 0, e: "Chile es el país n° 1 en consumo de cigarrillos en Latinoamérica." },
+    { q: "¿A qué edad, aproximadamente, se empieza a fumar en Chile?", o: ["A los 14 años (13,9 las niñas y 14 los niños)", "A los 25 años", "A los 40 años", "A los 8 años"], a: 0, e: "Por eso la prevención es tan importante en el colegio." },
+    { q: "¿Cuántas personas mueren cada día en Chile por el tabaquismo?", o: ["52", "5", "520", "1"], a: 0, e: "52 personas por día (Organización Panamericana de la Salud)." },
+    { q: "¿Qué enfermedad causada por el tabaco tiene más casos cada año en Chile?", o: ["La EPOC (60.470 personas)", "La neumonía", "El cáncer de pulmón", "El ACV"], a: 0, e: "EPOC 60.470 · cardíacas 23.851 · ACV 14.473 · neumonía 6.174 · cáncer 8.012." },
+    { q: "¿Cuántas personas al año son diagnosticadas en Chile con un cáncer provocado por el tabaco?", o: ["8.012", "52", "60.470", "33"], a: 0, e: "3.026 de pulmón y 4.986 de otros tipos: 8.012 en total." },
+    { q: "El tabaquismo es la principal causa de enfermedad y muerte…", o: ["que se podría evitar (prevenible)", "que nadie puede evitar", "solo en los animales", "solo en los niños"], a: 0, e: "Por eso se llama causa «prevenible»: si no se fuma, se evita." },
+    { q: "¿Por qué los datos de tu libro indican su fuente (por ejemplo, SENDA o la Encuesta Nacional de Salud)?", o: ["Para saber de dónde vienen y que son confiables", "Para que el libro sea más largo", "Porque es obligatorio decorar", "No tienen ninguna razón"], a: 0, e: "En ciencias, un dato vale si viene de una fuente confiable." }
+  ],
+  graf: [
+    { q: "En un gráfico de barras sobre fumadores por grupo de edad, ¿qué va en el <b>eje horizontal</b>?", o: ["Los grupos de edad", "El porcentaje de fumadores", "El título", "Los colores"], a: 0, e: "En el eje horizontal van las categorías; en el vertical, los valores." },
+    { q: "En ese mismo gráfico, ¿qué va en el <b>eje vertical</b>?", o: ["El porcentaje de fumadores", "Los grupos de edad", "Los nombres de las personas", "La fecha de hoy"], a: 0, e: "El eje vertical tiene los valores, con una escala pareja." },
+    { q: "¿Para qué sirve un gráfico de barras?", o: ["Para comparar cantidades entre distintos grupos", "Para escribir un cuento", "Para dibujar un mapa", "Para medir la temperatura"], a: 0, e: "Con las barras se ve de un vistazo qué grupo tiene más o menos." },
+    { q: "¿Cuál es el primer paso para hacer un gráfico?", o: ["Identificar qué información debes registrar", "Pintar las barras de colores", "Borrar la tabla", "Inventar los datos"], a: 0, e: "1. Identifica qué registrar · 2. Reconoce las partes del gráfico · 3. Registra la información." },
+    { q: "Si un gráfico compara 2018 y 2020 con dos colores, ¿qué parte explica qué color es cada año?", o: ["La leyenda", "El título", "El eje horizontal", "La escala"], a: 0, e: "La leyenda indica qué representa cada color." },
+    { q: "Según la tabla de SENDA, ¿qué grupo tenía más fumadores diarios en 2020?", o: ["35 a 44 años (25,4 %)", "12 a 18 años", "19 a 25 años", "45 a 64 años"], a: 0, e: "35 a 44 años: 25,4 %." },
+    { q: "Según la tabla de SENDA, ¿qué grupo <b>aumentó</b> su consumo entre 2018 y 2020?", o: ["45 a 64 años (de 22,5 % a 24,2 %)", "12 a 18 años", "19 a 25 años", "26 a 34 años"], a: 0, e: "Fue el único grupo que subió." },
+    { q: "Según la tabla de SENDA, ¿qué grupo <b>disminuyó más</b> entre 2018 y 2020?", o: ["19 a 25 años (bajó 1,5 puntos)", "35 a 44 años", "45 a 64 años", "Ninguno bajó"], a: 0, e: "De 16,6 % a 15,1 %. El de 12 a 18 y el de 26 a 34 bajaron 1,1 puntos." },
+    { q: "Según la tabla de SENDA, ¿qué pasó con el grupo de 35 a 44 años entre 2018 y 2020?", o: ["Se mantuvo igual (25,4 %)", "Bajó a la mitad", "Subió al doble", "Dejó de fumar"], a: 0, e: "25,4 % en 2018 y también en 2020." }
+  ],
+  riesgo: [
+    { q: "¿Qué es un factor de riesgo?", o: ["Algo que aumenta la probabilidad de que una persona haga algo, como fumar", "Algo que impide fumar", "Una enfermedad del pulmón", "Un componente del cigarrillo"], a: 0, e: "Es un rasgo, característica o situación que aumenta la probabilidad." },
+    { q: "¿Cuál de estos es un factor de riesgo para empezar a fumar?", o: ["Que el mejor amigo fume", "Practicar un deporte", "Conocer los daños del tabaco", "Vivir en una casa sin humo"], a: 0, e: "La presión del grupo de amigos es uno de los principales factores de riesgo." }
+  ],
+  prev: [
+    { q: "¿En qué año se promulgó la Ley Antitabaco en Chile, según tu libro?", o: ["2013", "1813", "2023", "1990"], a: 0, e: "Ley Antitabaco de 2013." },
+    { q: "¿Cuál es una forma de prevenir el consumo de tabaco?", o: ["Conocer los daños que provoca", "Probar un cigarrillo para saber cómo es", "Juntarse solo con personas que fuman", "Comprar cigarrillos sueltos"], a: 0, e: "Informarse es una de las mejores formas de prevenir." },
+    { q: "¿Cómo se llama el ODS que busca que todas las personas tengan una vida sana?", o: ["ODS 3: Salud y bienestar", "ODS 13: Acción por el clima", "ODS 4: Educación de calidad", "ODS 14: Vida submarina"], a: 0, e: "El control del tabaco es una prioridad del ODS 3." },
+    { q: "¿Qué busca la meta del ODS 3 relacionada con el tabaco?", o: ["Reducir en un tercio las muertes prematuras por enfermedades no transmisibles al 2030", "Que todos fumen menos de un cigarrillo al día", "Duplicar los cultivos de tabaco", "Cerrar todos los hospitales"], a: 0, e: "Enfermedades no transmisibles: las que no se contagian, como el cáncer o las del corazón." },
+    { q: "¿Qué son las enfermedades <b>no transmisibles</b>?", o: ["Las que no se contagian de una persona a otra, como el cáncer", "Las que se contagian con un estornudo", "Las que solo tienen los animales", "Las que se curan solas en un día"], a: 0, e: "Muchas de ellas se relacionan con el tabaco." },
+    { q: "¿Para qué sirven las campañas como el Día Mundial sin Tabaco?", o: ["Para informar sobre los daños del tabaco y disminuir su consumo", "Para vender más cigarrillos", "Para regalar cigarrillos", "Para enseñar a fumar"], a: 0, e: "Se celebra cada 31 de mayo." }
+  ],
+  amb: [
+    { q: "¿Por qué las colillas (filtros) de cigarrillo contaminan tanto?", o: ["Porque no son biodegradables y duran años", "Porque se disuelven en el agua al instante", "Porque sirven de abono", "Porque son de papel"], a: 0, e: "Contaminan la tierra y las fuentes de agua durante años." },
+    { q: "¿Qué organismo advirtió sobre el daño del tabaco en el medioambiente?", o: ["La Organización Mundial de la Salud (OMS)", "La FIFA", "El Servicio de Impuestos", "La NASA"], a: 0, e: "La OMS (libro, pág. 104)." },
+    { q: "¿Qué propone la OMS para disminuir el daño del tabaco?", o: ["Ayudar a los productores a cambiarse a cultivos sostenibles, subir los impuestos al tabaco y ayudar a dejar de fumar", "Plantar más tabaco", "Bajar los precios de los cigarrillos", "Botar las colillas al mar"], a: 0, e: "Incluso un impuesto ambiental." },
+    { q: "¿Qué buscan países como Francia y España con la industria tabacalera?", o: ["Que se haga responsable de limpiar la contaminación que produce", "Que venda más cigarrillos", "Que no pague impuestos", "Que cultive tabaco en los parques"], a: 0, e: "También lo hacen San Francisco y California, en Estados Unidos." },
+    { q: "¿Por qué cultivar tabaco puede afectar la alimentación de un país?", o: ["Porque usa tierra y agua que servirían para producir alimentos", "Porque el tabaco es un alimento", "Porque mejora las cosechas", "No la afecta"], a: 0, e: "La OMS lo advierte, sobre todo en países de ingresos bajos y medianos." }
+  ]
+};
+
+/* ============ generadores de preguntas ============ */
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const TOPIC_SEC = { comp: 1, exp: 2, org: 3, tabla: 4, chile: 5, graf: 6, riesgo: 7, prev: 7, amb: 8 };
+function mcShuffled(topic, q, opts, exp, extra = {}) {
+  const idx = shuffle(opts.map((_, i) => i));
+  return { t: "mc", topic, q, opts: idx.map(i => opts[i]), ans: idx.indexOf(0), exp, ...extra };
+}
+function concept(topic) { const c = pick(CONCEPTS[topic]); return mcShuffled(topic, c.q, c.o, c.e, { tall: c.o.some(o => o.length > 38) }); }
+const tableHTML = (h, rows) => `<div class="tablewrap"><table class="t" style="max-width:480px"><tr>${h.map(x => `<th>${esc(x)}</th>`).join("")}</tr>${rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
+const chartPre = o => `<div class="chartwrap">${barChart(o)}</div>`;
+const uniqueExtreme = (vals, f) => { const m = f(...vals); return vals.filter(v => v === m).length === 1; };
+
+/* escenarios de tablas: dir = +1 (a más, más) o -1 (a más, menos) */
+const TABLAS = [
+  { x: "Cigarrillos diarios fumados por los padres", y: "Niños con asma", xs: [0, 10, 20, 30], dir: 1, base: [2, 5], inc: [2, 6], zero: true, xw: "cigarrillos fumados por los padres", yw: "niños con asma" },
+  { x: "Horas al día expuestos al humo", y: "Niños con tos frecuente", xs: [0, 1, 2, 3], dir: 1, base: [1, 4], inc: [2, 5], zero: true, xw: "horas expuestos al humo", yw: "niños con tos" },
+  { x: "Años fumando", y: "Personas con problemas para respirar (de cada 100)", xs: [0, 5, 10, 20], dir: 1, base: [2, 6], inc: [4, 9], zero: true, xw: "años fumando", yw: "personas con problemas para respirar" },
+  { x: "Cigarrillos fumados en la última hora", y: "Latidos del corazón por minuto", xs: [0, 1, 2, 3], dir: 1, base: [68, 75], inc: [3, 7], zero: false, xw: "cigarrillos fumados", yw: "latidos por minuto" },
+  { x: "Semanas desde que dejó de fumar", y: "Veces que tose en el día", xs: [0, 4, 8, 12], dir: -1, base: [26, 34], inc: [4, 8], zero: false, xw: "semanas sin fumar", yw: "veces que tose" }
+];
+function makeTable() {
+  const s = pick(TABLAS); let v = rnd(...s.base); const ys = [v];
+  for (let i = 1; i < s.xs.length; i++) { v += s.dir * rnd(...s.inc); ys.push(Math.max(0, v)); }
+  return { s, ys, html: tableHTML([s.x, s.y], s.xs.map((x, i) => [String(x), String(ys[i])])) };
+}
+
+const G = {
+  comp() {
+    const r = Math.random();
+    if (r < 0.25) return concept("comp");
+    const c = pick(COMP), others = sample(COMP.filter(x => x !== c), 3);
+    if (r < 0.65) return mcShuffled("comp", `¿Qué componente del cigarrillo es este? «${esc(c.d)}»`, [c.n, ...others.map(o => o.n)], `Es el <b>${c.n.toLowerCase()}</b>.`, { tall: true });
+    return mcShuffled("comp", `¿Qué hace el componente <b>${c.n.toLowerCase()}</b>?`, [c.k, ...others.map(o => o.k)].map(cap), `${esc(c.d)}`, { tall: true });
+  },
+  exp() { return concept("exp"); },
+  org() {
+    const r = Math.random();
+    if (r < 0.35) return concept("org");
+    if (r < 0.7) {
+      const nL = rnd(1, 3), items = shuffle([...sample(EFECTOS.filter(e => e[1] === "corto"), 4 - nL), ...sample(EFECTOS.filter(e => e[1] === "largo"), nL)]);
+      return { t: "cls", topic: "org", q: "Clasifica cada efecto del cigarrillo: ¿aparece a corto plazo o a largo plazo?", labels: ["Corto plazo", "Largo plazo"], items: items.map(e => esc(e[0])), ans: items.map(e => (e[1] === "corto" ? 0 : 1)), exp: items.map(e => `${esc(e[0])} → <b>${e[1] === "corto" ? "corto plazo" : "largo plazo"}</b>`).join("<br>") };
+    }
+    const want = Math.random() < 0.5 ? "largo" : "corto", right = pick(EFECTOS.filter(e => e[1] === want)), wrong = sample(EFECTOS.filter(e => e[1] !== want), 3);
+    return mcShuffled("org", `¿Cuál de estos es un efecto del cigarrillo a <b>${want} plazo</b>?`, [right[0], ...wrong.map(w => w[0])].map(esc), `«${esc(right[0])}» aparece a ${want} plazo. Los demás aparecen a ${want === "largo" ? "corto" : "largo"} plazo.`, { tall: true });
+  },
+  tabla() {
+    if (Math.random() < 0.25) {
+      const pre = tableHTML(["Cigarrillos diarios fumados por los padres", "Número de niños enfermos de asma"], [["0", "3"], ["20", "10"], ["30", "16"]]);
+      const v = pick([
+        ["¿Qué niños son los que más se enferman de asma?", ["Los hijos de padres que fuman 30 cigarrillos diarios", "Los hijos de padres que no fuman", "Los hijos de padres que fuman 20 cigarrillos diarios", "Todos por igual"], "16 niños: es el número más alto de la tabla."],
+        ["¿Cuántos niños se enferman de asma sin estar expuestos al humo del cigarrillo?", ["3", "0", "10", "16"], "La fila del 0 (padres que no fuman) muestra 3 niños."],
+        ["¿Qué relación muestra la tabla?", ["A más cigarrillos fumados por los padres, más niños enfermos de asma", "A más cigarrillos, menos niños con asma", "No hay ninguna relación", "El asma solo afecta a los hijos de padres que no fuman"], "Cuando sube la cantidad de cigarrillos, sube el número de niños con asma."],
+        ["¿Se puede afirmar que el asma afecta solo a los niños expuestos al humo?", ["No, porque 3 niños tienen asma aunque sus padres no fumen", "Sí, solo a los expuestos", "Sí, porque 16 es más que 3", "No se puede saber nada con la tabla"], "El asma tiene otras causas; el humo aumenta el riesgo."]]);
+      return mcShuffled("tabla", `Tabla de tu libro (pág. 99). ${v[0]}`, v[1], v[2], { pre, tall: true });
+    }
+    const T = makeTable(), s = T.s, ys = T.ys, r = Math.random();
+    const more = s.dir > 0 ? `A más ${s.xw}, más ${s.yw}` : `A más ${s.xw}, menos ${s.yw}`;
+    const less = s.dir > 0 ? `A más ${s.xw}, menos ${s.yw}` : `A más ${s.xw}, más ${s.yw}`;
+    if (r < 0.35) return mcShuffled("tabla", "Observa la tabla. ¿Qué relación muestra?", [more, less, "No hay ninguna relación entre los datos", `${cap(s.yw)} es siempre igual`], `Cuando aumenta «${s.x.toLowerCase()}», ${s.dir > 0 ? "aumenta" : "disminuye"} «${s.y.toLowerCase()}»: ${ys.join(" → ")}.`, { pre: T.html, tall: true });
+    if (r < 0.65) {
+      const big = s.dir > 0 ? s.xs.length - 1 : 0;
+      return mcShuffled("tabla", `Según la tabla, ¿en qué caso hay más ${s.yw}?`, [s.xs[big], ...s.xs.filter((_, i) => i !== big).slice(0, 3)].map(x => `Con ${x} ${s.xw}`), `El valor más alto es ${ys[big]}, con ${s.xs[big]} ${s.xw}.`, { pre: T.html, tall: true });
+    }
+    if (s.zero && r < 0.85) return mcShuffled("tabla", `Según la tabla, ¿se puede afirmar que el problema afecta <b>solo</b> a quienes están expuestos al humo?`, [`No, porque hay ${ys[0]} casos aunque la exposición sea 0`, "Sí, solo afecta a los expuestos", "Sí, porque el número más alto está al final", "No se puede leer nada en la tabla"], `Con 0 de exposición igual hay ${ys[0]} casos: el problema tiene otras causas, y el humo aumenta el riesgo.`, { pre: T.html, tall: true });
+    const i = rnd(0, ys.length - 1), wrongs = [...new Set(ys.filter((_, k) => k !== i))].slice(0, 3);
+    while (wrongs.length < 3) { const w = ys[i] + rnd(1, 9); if (!wrongs.includes(w) && w !== ys[i]) wrongs.push(w); }
+    return mcShuffled("tabla", `Según la tabla, ¿cuántos hay cuando el valor de «${s.x.toLowerCase()}» es ${s.xs[i]}?`, [ys[i], ...wrongs].map(String), `En la fila ${s.xs[i]} se lee ${ys[i]}.`, { pre: T.html });
+  },
+  chile() { return concept("chile"); },
+  graf() {
+    const r = Math.random();
+    if (r < 0.4) return concept("graf");
+    const kind = pick(["prev", "enf", "colillas", "cursos", "campana"]);
+    if (kind === "prev") {
+      const pre = chartPre({ title: "Fumadores diarios según edad (%)", cats: PREV.map(p => p[0].replace(" años", "")), series: [{ name: "2018", color: "#9BC9B4", vals: PREV.map(p => p[1]) }, { name: "2020", color: "#2A9D6F", vals: PREV.map(p => p[2]) }], ylab: "Porcentaje (%)", xlab: "Edad (años)", step: 5 });
+      const v = pick([
+        ["¿Qué grupo de edad tenía más fumadores diarios en 2020?", ["35 a 44 años", "45 a 64 años", "26 a 34 años", "19 a 25 años"], "La barra más alta de 2020 es la de 35 a 44 años (25,4 %)."],
+        ["¿Qué grupo de edad aumentó entre 2018 y 2020?", ["45 a 64 años", "12 a 18 años", "19 a 25 años", "35 a 44 años"], "Es el único cuya barra de 2020 es más alta que la de 2018 (de 22,5 % a 24,2 %)."],
+        ["¿Qué grupo de edad se mantuvo igual entre 2018 y 2020?", ["35 a 44 años", "12 a 18 años", "45 a 64 años", "26 a 34 años"], "Sus dos barras miden 25,4 %."],
+        ["¿Qué grupo de edad tiene menos fumadores diarios?", ["12 a 18 años", "19 a 25 años", "35 a 44 años", "45 a 64 años"], "Las barras más bajas son las de 12 a 18 años (3,5 % y 2,4 %)."]]);
+      return mcShuffled("graf", v[0], v[1], v[2], { pre, tall: true });
+    }
+    if (kind === "enf") {
+      const pre = chartPre({ title: "Personas que se enferman cada año por el tabaco (Chile)", cats: ENF.map(e => e[0]), series: [{ name: "", color: "#2A9D6F", vals: ENF.map(e => e[1]) }], ylab: "Personas", step: 10000 });
+      const v = pick([
+        ["Según el gráfico, ¿qué enfermedad tiene más casos?", ["EPOC", "Enfermedades cardíacas", "ACV", "Neumonía"], "La barra más alta es la de la EPOC: 60.470 personas."],
+        ["Según el gráfico, ¿qué enfermedad tiene menos casos?", ["Cáncer de pulmón", "Neumonía", "ACV", "EPOC"], "La barra más baja es la del cáncer de pulmón: 3.026 personas."],
+        ["Según el gráfico, ¿cuántas personas se enferman cada año de ACV?", ["14.473", "60.470", "23.851", "6.174"], "La barra del ACV marca 14.473."]]);
+      return mcShuffled("graf", v[0], v[1], v[2], { pre });
+    }
+    let cats, vals, title, ylab, xlab;
+    do {
+      if (kind === "colillas") { cats = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]; vals = cats.map(() => rnd(4, 24) * 5); title = "Colillas recogidas en una playa"; ylab = "Número de colillas"; xlab = "Día"; }
+      else if (kind === "cursos") { cats = ["5° A", "5° B", "6° A", "6° B"]; vals = cats.map(() => rnd(10, 38)); title = "Estudiantes que participaron en la campaña antitabaco"; ylab = "Número de estudiantes"; xlab = "Curso"; }
+      else { cats = ["5° A", "5° B", "6° A", "6° B"]; vals = cats.map(() => rnd(6, 20)); title = "Estudiantes que conocen los daños del tabaco"; ylab = "Número de estudiantes"; xlab = "Curso"; }
+    } while (!uniqueExtreme(vals, Math.max) || !uniqueExtreme(vals, Math.min));
+    if (kind === "campana") {
+      const after = vals.map(v => v + rnd(3, 14)), same = rnd(0, 3); after[same] = vals[same];
+      const pre = chartPre({ title, cats, series: [{ name: "Antes de la campaña", color: "#F3C98B", vals }, { name: "Después", color: "#2A9D6F", vals: after }], ylab, xlab });
+      return mcShuffled("graf", "Según el gráfico, ¿qué curso <b>no cambió</b> después de la campaña?", [cats[same], ...cats.filter((_, i) => i !== same)], `En ${cats[same]} las dos barras miden lo mismo (${vals[same]}). En los otros cursos aumentó.`, { pre });
+    }
+    const pre = chartPre({ title, cats, series: [{ name: "", color: "#2A9D6F", vals }], ylab, xlab });
+    const w = Math.random(), mx = vals.indexOf(Math.max(...vals)), mn = vals.indexOf(Math.min(...vals));
+    if (w < 0.35) return mcShuffled("graf", `Según el gráfico, ¿qué ${xlab.toLowerCase()} tiene el valor más alto?`, [cats[mx], ...cats.filter((_, i) => i !== mx).slice(0, 3)], `La barra más alta es la de ${cats[mx]} (${vals[mx]}).`, { pre });
+    if (w < 0.6) return mcShuffled("graf", `Según el gráfico, ¿qué ${xlab.toLowerCase()} tiene el valor más bajo?`, [cats[mn], ...cats.filter((_, i) => i !== mn).slice(0, 3)], `La barra más baja es la de ${cats[mn]} (${vals[mn]}).`, { pre });
+    if (w < 0.8) return mcShuffled("graf", "En este gráfico, ¿qué información está en el <b>eje vertical</b>?", [ylab, xlab, title, "Los colores de las barras"], `El eje vertical muestra los valores: «${ylab}». En el horizontal van las categorías: «${xlab}».`, { pre, tall: true });
+    const i = rnd(0, cats.length - 1), others = [...new Set(vals.filter((v, k) => k !== i && v !== vals[i]))].slice(0, 3);
+    while (others.length < 3) { const x = vals[i] + (others.length + 1) * 5; if (!others.includes(x)) others.push(x); }
+    return mcShuffled("graf", `Según el gráfico, ¿cuánto vale la barra de <b>${cats[i]}</b>?`, [vals[i], ...others].map(String), `La barra de ${cats[i]} llega a ${vals[i]}.`, { pre });
+  },
+  riesgo() {
+    const r = Math.random();
+    if (r < 0.15) return concept("riesgo");
+    if (r < 0.7) {
+      const nR = rnd(1, 3), items = shuffle([...sample(RIESGO.filter(x => x[1]), nR), ...sample(RIESGO.filter(x => !x[1]), 4 - nR)]);
+      return { t: "cls", topic: "riesgo", q: "¿Cada situación es un factor de riesgo para empezar a fumar, o protege?", labels: ["Factor de riesgo", "Protege"], items: items.map(x => esc(x[0])), ans: items.map(x => (x[1] ? 0 : 1)), exp: items.map(x => `${esc(x[0])} → <b>${x[1] ? "factor de riesgo" : "protege"}</b>`).join("<br>") };
+    }
+    const right = pick(RIESGO.filter(x => x[1])), wrong = sample(RIESGO.filter(x => !x[1]), 3);
+    return mcShuffled("riesgo", "¿Cuál de estas situaciones es un <b>factor de riesgo</b> para empezar a fumar?", [right[0], ...wrong.map(w => w[0])].map(esc), `«${esc(right[0])}» aumenta la probabilidad de fumar. Las demás protegen.`, { tall: true });
+  },
+  prev() {
+    const r = Math.random();
+    if (r < 0.55) return concept("prev");
+    if (Math.random() < 0.6) { const ok = pick(LEY.filter(x => x[1])), no = sample(LEY.filter(x => !x[1]), 3); return mcShuffled("prev", "¿Cuál de estas medidas es parte de la <b>Ley Antitabaco</b> de Chile (2013)?", [ok[0], ...no.map(x => x[0])].map(esc), `«${esc(ok[0])}» es parte de la ley. Las otras van contra lo que busca la ley.`, { tall: true }); }
+    const no = pick(LEY.filter(x => !x[1])), ok = sample(LEY.filter(x => x[1]), 3);
+    return mcShuffled("prev", "¿Cuál de estas medidas <b>NO</b> es parte de la Ley Antitabaco de Chile (2013)?", [no[0], ...ok.map(x => x[0])].map(esc), `«${esc(no[0])}» no es parte de la ley: va contra lo que ella busca.`, { tall: true });
+  },
+  amb() {
+    const r = Math.random();
+    if (r < 0.35) return concept("amb");
+    if (r < 0.75) { const c = pick(AMB); return mcShuffled("amb", `¿Qué consecuencia del tabaco en el medioambiente se describe? «${esc(c[1])}»`, [c[0], ...AMB.filter(x => x !== c).map(x => x[0])], `Es la <b>${c[0].toLowerCase()}</b>.`, { tall: true }); }
+    const c = pick(COSTOS), others = COSTOS.filter(x => x !== c).map(x => x[1]);
+    return mcShuffled("amb", `Según tu libro, cada año la industria del tabaco le cuesta al mundo… ¿cuántos(as) <b>${c[0]}</b>?`, [c[1], ...sample(others, 3)].map(cap), `${cap(c[1])} de ${c[0]}. En total: más de 8 millones de vidas, 600 millones de árboles, 200 mil hectáreas de tierra, 22.000 millones de toneladas de agua y 84 millones de toneladas de CO₂.`);
+  }
+};
+function genQ(topic) { const q = G[topic](); q.topic = topic; q.sec = TOPIC_SEC[topic]; return q; }
+
+/* ============ dibujar y corregir una pregunta ============ */
+const LET = "ABCDEF";
+function gradeQ(q, v) {
+  if (v == null) return 0;
+  if (q.t === "mc") return v === q.ans ? 2 : 0;
+  if (q.t === "tap") return v === q.ans ? 2 : 0;
+  if (q.t === "order") { if (!Array.isArray(v) || v.length !== q.ans.length) return 0; const good = v.filter((x, i) => x === q.ans[i]).length; return good === q.ans.length ? 2 : good >= q.ans.length - 2 ? 1 : 0; }
+  if (q.t === "cls") { if (!Array.isArray(v) || v.some(x => x == null)) return 0; const bad = v.filter((x, i) => x !== q.ans[i]).length; return bad === 0 ? 2 : bad === 1 ? 1 : 0; }
+  return 0;
+}
+function isAnswered(q, v) { if (v == null) return false; if (q.t === "order") return Array.isArray(v) && v.length === q.items.length; if (q.t === "cls") return Array.isArray(v) && v.length === q.items.length && v.every(x => x != null); return true; }
+
+/* cfg: { value, instant, locked, onChange(v) } */
+function renderQ(el, q, cfg) {
+  let v = cfg.value == null ? (q.t === "order" ? [] : q.t === "cls" ? q.items.map(() => null) : null) : JSON.parse(JSON.stringify(cfg.value));
+  let locked = !!cfg.locked;
+  const head = `<div class="q-text big-q" style="margin-bottom:10px">${q.q}</div>` + (q.pre ? `<div class="pre">${q.pre}</div>` : "");
+  const fbx = `<div class="fbx"></div>`;
+  const commit = () => { cfg.onChange && cfg.onChange(v); };
+  const finish = () => { locked = true; reveal(); cfg.onDone && cfg.onDone(gradeQ(q, v)); };
+
+  function reveal() {
+    const pts = gradeQ(q, v), cls = pts === 2 ? "ok" : pts ? "part" : "bad";
+    if (q.t === "mc") $$(".opt", el).forEach(b => { const k = +b.dataset.k; b.classList.remove("sel"); if (k === q.ans) b.classList.add("ok"); else if (k === v) b.classList.add("bad"); });
+    if (q.t === "tap") $$("[data-part]", el).forEach(p => { p.classList.remove("hl"); if (p.dataset.part === q.ans) p.classList.add("ok"); else if (p.dataset.part === v) p.classList.add("bad"); });
+    if (q.t === "order") $$(".dest .it", el).forEach((b, i) => b.classList.add(v[i] === q.ans[i] ? "ok" : "bad"));
+    if (q.t === "cls") $$(".crow", el).forEach((row, i) => row.classList.add(v[i] === q.ans[i] ? "ok" : "bad"));
+    $$("[data-check]", el).forEach(b => b.remove());
+    const tag = pts === 2 ? "¡Bien!" : pts ? "Casi." : v == null || (Array.isArray(v) && !v.length) ? "No respondiste." : "Todavía no.";
+    $(".fbx", el).innerHTML = `<div class="fb ${cls}"><span class="score-chip ${cls}">${pts} / 2</span> <b>${tag}</b> ${q.exp}${pts < 2 && q.sec && !cfg.noReview ? ` <a href="#aprender-${q.sec}">Repasar esto →</a>` : ""}</div>`;
+  }
+
+  if (q.t === "mc") {
+    el.innerHTML = head + `<div class="opts ${q.tall || q.opts.length > 4 ? "tall" : ""}">${q.opts.map((o, k) => `<button type="button" class="opt" data-k="${k}"><span class="l">${LET[k]}</span><span>${o}</span></button>`).join("")}</div>` + fbx;
+    $$(".opt", el).forEach(b => b.onclick = () => { if (locked) return; v = +b.dataset.k; $$(".opt", el).forEach(x => x.classList.toggle("sel", x === b)); commit(); if (cfg.instant) finish(); });
+    if (v != null) $(`.opt[data-k="${v}"]`, el)?.classList.add("sel");
+  }
+  if (q.t === "tap") {
+    el.innerHTML = head + fbx;
+    $$("[data-part]", el).forEach(p => p.onclick = () => { if (locked) return; v = p.dataset.part; $$("[data-part]", el).forEach(x => x.classList.toggle("hl", x === p)); commit(); if (cfg.instant) finish(); });
+    if (v != null) $(`[data-part="${v}"]`, el)?.classList.add("hl");
+  }
+  if (q.t === "order") {
+    el.innerHTML = head + `<div class="orderq"><div class="small muted">Toca los hechos en orden. Si te equivocas, toca uno de la lista de abajo para devolverlo.</div><div class="pool"></div><div class="small" style="font-weight:800;margin-top:6px">Tu orden:</div><div class="dest"></div></div>` + fbx;
+    const draw = () => {
+      $(".pool", el).innerHTML = q.items.map((t, i) => `<button type="button" class="it ${v.includes(i) ? "used" : ""}" data-i="${i}"><span class="n">•</span><span>${t}</span></button>`).join("");
+      $(".dest", el).innerHTML = v.length ? v.map((i, k) => `<button type="button" class="it" data-k="${k}"><span class="n">${k + 1}</span><span>${q.items[i]}</span></button>`).join("") : `<div class="small muted">(vacío)</div>`;
+      $$(".pool .it", el).forEach(b => b.onclick = () => { if (locked) return; const i = +b.dataset.i; if (v.includes(i)) return; v.push(i); commit(); draw(); });
+      $$(".dest .it", el).forEach(b => b.onclick = () => { if (locked) return; v.splice(+b.dataset.k, 1); commit(); draw(); });
+      $$("[data-check]", el).forEach(b => b.remove());
+      if (cfg.instant && !locked && v.length === q.items.length) { $(".orderq", el).insertAdjacentHTML("beforeend", `<button type="button" class="btn blue" data-check="1" style="margin-top:6px">Comprobar</button>`); $("[data-check]", el).onclick = finish; }
+    };
+    draw();
+  }
+  if (q.t === "cls") {
+    el.innerHTML = head + `<div class="clsq">${q.items.map((t, i) => `<div class="crow"><span class="tx">${t}</span><span class="seg" data-row="${i}">${q.labels.map((l, k) => `<button type="button" data-k="${k}" class="${v[i] === k ? "sel" : ""}">${l}</button>`).join("")}</span></div>`).join("")}</div>` + fbx;
+    const maybeBtn = () => { $$("[data-check]", el).forEach(b => b.remove()); if (cfg.instant && !locked && v.every(x => x != null)) { $(".clsq", el).insertAdjacentHTML("beforeend", `<button type="button" class="btn blue" data-check="1" style="margin-top:10px">Comprobar</button>`); $("[data-check]", el).onclick = finish; } };
+    $$(".seg", el).forEach(s => $$("button", s).forEach(b => b.onclick = () => { if (locked) return; const i = +s.dataset.row; v[i] = +b.dataset.k; $$("button", s).forEach(x => x.classList.toggle("sel", x === b)); commit(); maybeBtn(); }));
+    maybeBtn();
+  }
+  if (locked) reveal();
+  return { reveal: () => { locked = true; reveal(); }, value: () => v };
+}
+
+/* ============ práctica infinita dentro de cada lección ============ */
+function practiceLoop(el, topics, sec, need) {
+  const draw = () => {
+    const hits = DB.hits[sec] || 0, q = genQ(pick(topics));
+    el.innerHTML = `<div class="counter">${DB.done[sec] ? "<b>✓ Lección lista.</b> Puedes seguir practicando." : `Aciertos: <b>${hits}</b> de ${need} para completar la lección.`}</div><div class="qbox"></div>`;
+    renderQ($(".qbox", el), q, { instant: true, noReview: true, onDone: pts => {
+      if (pts === 2) { DB.hits[sec] = (DB.hits[sec] || 0) + 1; save(); if (DB.hits[sec] >= need) sectionDone(sec); }
+      $(".counter", el).innerHTML = DB.done[sec] ? "<b>✓ Lección lista.</b> Puedes seguir practicando." : `Aciertos: <b>${DB.hits[sec] || 0}</b> de ${need} para completar la lección.`;
+      $(".fbx", el).insertAdjacentHTML("beforeend", `<div class="q-actions"><button type="button" class="btn blue small" data-next="1">Otra pregunta →</button></div>`);
+      $("[data-next]", el).onclick = draw;
+    } });
+  };
+  draw();
+}
+
+/* ============ ensayos autogenerados ============ */
+const PLAN = [["comp", 3], ["exp", 2], ["org", 3], ["tabla", 2], ["chile", 2], ["graf", 3], ["riesgo", 2], ["prev", 1], ["amb", 2]];
+const FOCOS = [
+  ["Componentes del cigarrillo y el experimento", ["comp", "exp"], 1],
+  ["Efectos en el organismo", ["org"], 3],
+  ["Tablas y gráficos", ["tabla", "graf"], 4],
+  ["Chile en cifras", ["chile"], 5],
+  ["Factores de riesgo y prevención", ["riesgo", "prev"], 7],
+  ["Tabaco y medioambiente", ["amb"], 8]
+];
+const MINUTES = 35;
+let TIMER = null;
+const nota = (p, max) => { const c = 0.6 * max; return Math.round((p < c ? 1 + 3 * p / c : 4 + 3 * (p - c) / (max - c)) * 10 + 1e-9) / 10; };
+const sig = q => q.q + "|" + (q.pre || "") + "|" + (q.items ? q.items.join() : "");
+
+function makeEnsayo(mode) {
+  const items = [], seen = new Set();
+  PLAN.forEach(([t, n]) => { for (let i = 0; i < n; i++) { let q, k = 0; do { q = genQ(t); } while (seen.has(sig(q)) && ++k < 25); seen.add(sig(q)); items.push(q); } });
+  return { mode, items, ans: {}, start: mode === "sim" ? Date.now() : null, done: false, created: Date.now() };
+}
+function scoreEns(E) {
+  let pts = 0; const foc = FOCOS.map(() => ({ p: 0, m: 0 }));
+  E.items.forEach((q, i) => { const p = gradeQ(q, E.ans[i]); pts += p; FOCOS.forEach(([, ts], f) => { if (ts.includes(q.topic)) { foc[f].p += p; foc[f].m += 2; } }); });
+  const max = E.items.length * 2; return { pts, max, nota: nota(pts, max), foc };
+}
+function renderEnsayo() {
+  clearInterval(TIMER);
+  const root = $("#v-ensayo"), E = DB.ens;
+  if (!E || E.done && !E.show) {
+    const last = DB.history.slice(-1)[0];
+    root.innerHTML = `<div class="card hero"><h1>Ensayos de Ciencias Naturales</h1>
+      <p>Cada ensayo se arma solo con <b>20 preguntas nuevas</b> (40 puntos) de toda la lección del tabaco, con tablas y gráficos distintos cada vez. La nota usa la escala de siempre: 60% = 4,0.</p>
+      <div class="paths" style="grid-template-columns:1fr 1fr">
+        <div class="path"><div class="step">Modo práctica</div><h3>Te corrige al tiro</h3><p>Después de cada respuesta ves si está bien y por qué. Cuenta tu primera respuesta.</p><button class="btn blue" data-new="guia">Nuevo ensayo de práctica</button></div>
+        <div class="path"><div class="step">Modo simulacro</div><h3>Como la prueba</h3><p>${MINUTES} minutos, sin correcciones hasta que entregas. Al final: nota y corrección.</p><button class="btn" data-new="sim">Nuevo simulacro</button></div>
+      </div>${last ? `<p class="small muted" style="margin:14px 0 0">Último ensayo: ${last.pts} de ${last.max} puntos · nota ${notaTxt(last.nota)}. <a href="#resultados">Ver todos mis resultados</a></p>` : ""}</div>`;
+    $$("[data-new]", root).forEach(b => b.onclick = () => { DB.ens = makeEnsayo(b.dataset.new); save(); renderEnsayo(); window.scrollTo(0, 0); });
+    return;
+  }
+  const guided = E.mode === "guia", total = E.items.length;
+  let h = `<div class="testbar"><b>${guided ? "Ensayo · práctica" : "Ensayo · simulacro"}</b><div class="progress"><i id="pbar"></i></div><span class="small" id="pcount"></span>${!guided && !E.done ? `<span class="timer" id="timer"></span>` : ""}${E.done ? "" : `<button type="button" class="btn small blue" data-fin="1">${guided ? "Ver mi nota" : "Entregar"}</button>`}</div>`;
+  if (E.done) h += resultCard(E);
+  h += E.items.map((q, i) => `<div class="card q" id="eq-${i}"><div class="q-head"><div class="q-num">${i + 1}</div><div style="flex:1"></div><div class="q-pts">2 pts</div></div><div class="qbody"></div></div>`).join("");
+  h += `<div class="row" style="justify-content:space-between;margin-top:10px">${E.done ? `<button class="btn blue" data-close="1">Hacer otro ensayo</button>` : `<button type="button" class="btn blue" data-fin="1">${guided ? "Ver mi nota" : "Entregar el ensayo"}</button>`}<button type="button" class="btn ghost small" data-quit="1">${E.done ? "Volver" : "Abandonar este ensayo"}</button></div>`;
+  root.innerHTML = h;
+  E.items.forEach((q, i) => {
+    const body = $(`#eq-${i} .qbody`), answered = E.ans[i] != null;
+    renderQ(body, q, { value: E.ans[i], instant: guided && !E.done, locked: E.done || (guided && answered && isAnswered(q, E.ans[i]) && E.locked?.[i]),
+      onChange: v => { if (E.done) return; E.ans[i] = v; save(); progress(); },
+      onDone: () => { E.locked = E.locked || {}; E.locked[i] = true; save(); progress(); } });
+  });
+  $$("[data-fin]", root).forEach(b => b.onclick = finishEns);
+  $$("[data-close]", root).forEach(b => b.onclick = () => { DB.ens = null; save(); renderEnsayo(); window.scrollTo(0, 0); });
+  $$("[data-quit]", root).forEach(b => b.onclick = () => { if (E.done || confirm("¿Abandonar este ensayo? Se pierden las respuestas.")) { DB.ens = null; save(); renderEnsayo(); window.scrollTo(0, 0); } });
+  const tick = () => { const el = $("#timer"); if (!el) return; const left = Math.round((E.start + MINUTES * 60000 - Date.now()) / 1000), a = Math.abs(left); el.textContent = (left < 0 ? "+" : "") + `${Math.floor(a / 60)}:${String(a % 60).padStart(2, "0")}`; el.classList.toggle("late", left < 0); };
+  if (!guided && !E.done) { tick(); TIMER = setInterval(tick, 1000); }
+  function progress() { const n = E.items.filter((q, i) => isAnswered(q, E.ans[i])).length; const pb = $("#pbar"); if (pb) { pb.style.width = (100 * n / total) + "%"; $("#pcount").textContent = `${n} de ${total} respondidas`; } }
+  progress();
+}
+function finishEns() {
+  const E = DB.ens, left = E.items.filter((q, i) => !isAnswered(q, E.ans[i])).length;
+  if (left && !confirm(`Te ${left === 1 ? "falta 1 pregunta" : `faltan ${left} preguntas`}. ¿${E.mode === "guia" ? "Ver la nota" : "Entregar"} igual?`)) return;
+  clearInterval(TIMER);
+  E.done = true; E.show = true; E.end = Date.now();
+  const sc = scoreEns(E);
+  DB.history.push({ mode: E.mode, date: new Date().toISOString(), pts: sc.pts, max: sc.max, nota: sc.nota, foc: sc.foc.map(f => [f.p, f.m]), min: E.start ? Math.round((E.end - E.start) / 60000) : null });
+  save(); renderEnsayo(); window.scrollTo(0, 0);
+  if (sc.nota >= 6) confetti();
+}
+function focoRows(foc) {
+  return `<div class="focos">${foc.map((f, i) => { if (!f.m) return ""; const pct = f.p / f.m, col = pct >= 0.8 ? "#23915F" : pct >= 0.5 ? "#E9B325" : "#D64545"; return `<div class="foco"><span>${FOCOS[i][0]} ${pct < 0.8 ? `· <a href="#aprender-${FOCOS[i][2]}">repasar</a>` : ""}</span><div class="meter"><i style="width:${Math.max(4, pct * 100)}%;background:${col}"></i></div><b>${coma(f.p)}/${f.m}</b></div>`; }).join("")}</div>`;
+}
+function resultCard(E) {
+  const sc = scoreEns(E), n = sc.nota;
+  const msg = n >= 6 ? "¡Excelente! Estás muy bien preparada." : n >= 5 ? "¡Muy bien! Revisa abajo lo que quedó marcado." : n >= 4 ? "Aprobado. Repasa los temas en rojo antes de la prueba." : "Todavía falta. Repasa las lecciones de los temas en rojo y vuelve a intentarlo.";
+  const mins = E.start && E.end ? Math.round((E.end - E.start) / 60000) : null;
+  return `<div class="card"><div class="result-top"><div><div class="small muted">Nota</div><div class="nota ${n >= 4 ? "ok" : "bad"}">${notaTxt(n)}</div></div>
+    <div style="flex:1;min-width:220px"><div><b>${sc.pts} de ${sc.max} puntos</b>${mins != null ? ` · ${mins} min` : ""}</div><div class="meter" style="margin:8px 0"><i style="width:${sc.pts / sc.max * 100}%;background:${n >= 4 ? "#23915F" : "#D64545"}"></i></div><p class="small" style="margin:0">${msg}</p></div></div>
+    <h3 style="margin-top:18px">En qué fijarse</h3>${focoRows(sc.foc)}<p class="small muted" style="margin:12px 0 0">Escala: 60% = 4,0. Abajo está la corrección de cada pregunta.</p></div>`;
+}
+function fmtDate(iso) { const d = new Date(iso), p = x => String(x).padStart(2, "0"); return `${p(d.getDate())}-${p(d.getMonth() + 1)}-${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+function renderResults() {
+  const root = $("#v-resultados"), H = DB.history;
+  if (!H.length) { root.innerHTML = `<div class="card"><h2>Mis resultados</h2><p>Todavía no hay resultados. Cuando termines un ensayo, tu nota queda guardada aquí.</p><button class="btn blue" data-go="ensayo">Ir a los ensayos</button></div>`; return; }
+  const last = H.slice(-1)[0];
+  root.innerHTML = `<div class="card"><h2>Mis resultados</h2><div class="tablewrap"><table class="t hist"><tr><th>Fecha</th><th>Modo</th><th>Puntos</th><th>Nota</th></tr>${H.slice().reverse().map(x => `<tr><td>${fmtDate(x.date)}</td><td>${x.mode === "sim" ? "Simulacro" : "Práctica"}</td><td>${x.pts} / ${x.max}</td><td><b style="color:${x.nota >= 4 ? "var(--green)" : "var(--red)"}">${notaTxt(x.nota)}</b></td></tr>`).join("")}</table></div></div>
+    <div class="card"><h3>Último ensayo (${fmtDate(last.date)}): nota ${notaTxt(last.nota)}</h3>${focoRows(last.foc.map(([p, m]) => ({ p, m })))}</div>`;
+}
+
+
+/* ============ piezas de las lecciones ============ */
+function buildCig() {
+  const W = 660, H = 252, x0 = 60, x1 = 560, yc = 124, hh = 26;
+  let s = `<rect width="${W}" height="${H}" fill="#fff"/>`;
+  s += `<rect x="${x0}" y="${yc - hh / 2}" width="90" height="${hh}" rx="4" fill="#E8A55C"/><rect x="${x0 + 90}" y="${yc - hh / 2}" width="${x1 - x0 - 90}" height="${hh}" fill="#F7F4EE" stroke="#D8D1C4"/>`;
+  s += `<rect x="${x1 - 6}" y="${yc - hh / 2}" width="16" height="${hh}" fill="#5B5550"/><circle cx="${x1 + 12}" cy="${yc}" r="12" fill="#F26B2A" opacity=".9"/><circle cx="${x1 + 14}" cy="${yc}" r="6" fill="#FFD27A"/>`;
+  s += `<path d="M${x1 + 18} ${yc - 14} q 16 -18 4 -34 q -12 -16 8 -34" fill="none" stroke="#B9BDC4" stroke-width="5" stroke-linecap="round" opacity=".7"/>`;
+  s += `<text x="${x0 + 45}" y="${yc + 5}" text-anchor="middle" font-size="12" font-weight="700" fill="#7A4A12">filtro</text><text x="${(x0 + x1) / 2 + 40}" y="${yc + 5}" text-anchor="middle" font-size="12" fill="#8A8378">tabaco envuelto en papel</text>`;
+  COMP.forEach((c, i) => {
+    const cx = x0 + c.x * (x1 - x0) - (i === 6 ? 14 : 0), up = i % 2 === 0, cy = up ? 44 : 202;
+    s += `<g class="cig-comp" data-c="${i}"><line x1="${cx}" y1="${up ? cy + 18 : cy - 18}" x2="${cx}" y2="${up ? yc - hh / 2 : yc + hh / 2}" stroke="#2A9D6F" stroke-width="2" stroke-dasharray="4 3"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="18" fill="#DDF3E8" stroke="#2A9D6F" stroke-width="2.5"/><text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="14" font-weight="800" fill="#1D6B4B">${i + 1}</text>`;
+    s += `<text x="${cx}" y="${up ? cy - 24 : cy + 34}" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F2A37">${c.n}</text></g>`;
+  });
+  $("#cigSvg").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="aspect-ratio:${W} / ${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  $$("#cigSvg .cig-comp").forEach(g => g.addEventListener("click", () => {
+    $$("#cigSvg .cig-comp").forEach(x => x.classList.toggle("on", x === g));
+    const c = COMP[+g.dataset.c]; $("#cigInfo").innerHTML = `<b>${+g.dataset.c + 1}. ${c.n}:</b> ${esc(c.d)}`;
+  }));
+  $("#compTable").innerHTML = COMP.map(c => `<tr><td><b>${c.n}</b></td><td>${esc(c.d)}</td></tr>`).join("");
+}
+
+/* experimento de la botella */
+function buildExp() {
+  const COT = ["#FFFFFF", "#FBF3D5", "#F2E2A2", "#DDBE76", "#B98C4E", "#8A6034", "#6B4626"];
+  let step = 0, timer = null;
+  const draw = (sq, puff) => {
+    const cot = COT[Math.min(step, COT.length - 1)], cigLen = 70 - step * 9;
+    const bw = sq ? 78 : 96, bx = 110 - bw / 2;
+    let s = `<rect width="220" height="300" fill="#fff"/>`;
+    s += `<rect x="${110 - 8}" y="${86 - cigLen}" width="16" height="${cigLen}" fill="#F7F4EE" stroke="#CFC8BA"/>` + (step < 6 ? `<circle cx="110" cy="${86 - cigLen}" r="7" fill="#F26B2A"/>` : "");
+    if (puff) s += `<circle cx="120" cy="${60 - cigLen}" r="10" fill="#C9CDD2" opacity=".6"/><circle cx="132" cy="${44 - cigLen}" r="13" fill="#C9CDD2" opacity=".45"/>`;
+    s += `<rect x="94" y="86" width="32" height="18" rx="3" fill="#3A86D6"/>`;
+    s += `<ellipse cx="110" cy="116" rx="17" ry="11" fill="${cot}" stroke="#B8AE9C" stroke-width="1.5"/>`;
+    s += `<path d="M 97 104 L 97 128 Q ${bx} 140 ${bx} 170 L ${bx} 272 Q ${bx} 286 ${bx + 14} 286 L ${bx + bw - 14} 286 Q ${bx + bw} 286 ${bx + bw} 272 L ${bx + bw} 170 Q ${bx + bw} 140 123 128 L 123 104" fill="#EAF4FB" fill-opacity=".6" stroke="#7FA7C9" stroke-width="2.5"/>`;
+    s += `<text x="150" y="120" font-size="11" fill="#5B6675">algodón</text><text x="${bx + bw + 6}" y="220" font-size="11" fill="#5B6675">botella</text>`;
+    $("#expSvg").innerHTML = `<svg viewBox="0 0 220 300" width="220" height="300" style="aspect-ratio:220 / 300;max-width:240px;margin:auto" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  };
+  const txt = ["El algodón está blanco. Aprieta el botón para simular que la botella respira el humo.", "Primeras «respiraciones»: el algodón empieza a ponerse amarillento.", "El algodón se pone amarillo: el humo deja sustancias atrapadas.", "Cada vez más oscuro…", "Café claro y pegajoso: es el alquitrán que se va acumulando.", "Café oscuro…", "¡Listo! El cigarrillo se consumió y el algodón quedó café oscuro y pegajoso. Eso mismo se acumula en los pulmones de quien fuma."];
+  const reset = () => { clearInterval(timer); timer = null; step = 0; draw(false, false); $("#expTxt").textContent = txt[0]; $("#expGo").disabled = false; };
+  $("#expGo").onclick = () => {
+    if (timer) return; $("#expGo").disabled = true; let tick = 0;
+    timer = setInterval(() => { tick++; const sq = tick % 2 === 1; if (!sq) step++; draw(sq, sq); $("#expTxt").textContent = txt[Math.min(step, 6)]; if (step >= 6 && !sq) { clearInterval(timer); timer = null; } }, 420);
+  };
+  $("#expReset").onclick = reset; reset();
+}
+
+/* gráficos de las lecciones */
+function buildCharts() {
+  $("#asmaChart").innerHTML = `<div class="chartwrap" style="max-width:520px">${barChart({ title: "Niños con asma según cigarrillos fumados por los padres", cats: ["0 cigarrillos", "20 cigarrillos", "30 cigarrillos"], series: [{ name: "", color: "#2A9D6F", vals: [3, 10, 16] }], ylab: "Niños con asma", xlab: "Cigarrillos diarios de los padres", step: 4 })}</div>`;
+  $("#enfChart").innerHTML = barChart({ title: "Personas que se enferman cada año por el tabaco", cats: ENF.map(e => e[0]), series: [{ name: "", color: "#2A9D6F", vals: ENF.map(e => e[1]) }], ylab: "Personas", step: 10000 });
+  $("#prevTable").innerHTML = PREV.map(p => `<tr><td>${p[0]}</td><td>${coma(p[1])}</td><td>${coma(p[2])}</td></tr>`).join("");
+}
+
+/* armar el gráfico de la tabla de SENDA */
+function buildBuilder() {
+  const el = $("#builder"), val = PREV.map(() => [0, 0]);
+  const SEL = {
+    tit: ["Fumadores diarios según edad (%), 2018 y 2020", "Colores favoritos del curso", "Estatura de los estudiantes"],
+    hor: ["Grupos de edad", "Porcentaje de fumadores (%)", "Nombres de las personas"],
+    ver: ["Porcentaje de fumadores (%)", "Grupos de edad", "Días de la semana"]
+  };
+  const sel = (id, lab, arr) => `<label class="selrow"><b style="min-width:120px">${lab}</b><select id="${id}"><option value="">Elige…</option>${shuffle(arr.map((t, i) => [t, i])).map(([t, i]) => `<option value="${i}">${t}</option>`).join("")}</select></label>`;
+  el.innerHTML = `<p class="small" style="margin-top:0"><b>1.</b> Elige el título y qué va en cada eje. <b>2.</b> Mueve cada control hasta que la barra tenga la altura de la tabla; para afinar usa − y +.</p>
+    ${sel("bTit", "Título", SEL.tit)}${sel("bHor", "Eje horizontal", SEL.hor)}${sel("bVer", "Eje vertical", SEL.ver)}
+    <div class="chartwrap" id="bChart"></div>
+    <div class="tablewrap"><table class="t tbl-mini"><tr><th>Edad</th><th>Barra 2018</th><th>Barra 2020</th></tr>${PREV.map((p, i) => `<tr><td>${p[0]}</td>${[0, 1].map(k => `<td><div class="brow" style="grid-template-columns:30px 1fr 30px 42px;gap:6px;margin:0"><button type="button" class="btn ghost small" style="padding:2px 0" data-d="-0.1" data-i="${i}" data-k="${k}">−</button><input type="range" min="0" max="30" step="0.1" value="0" data-i="${i}" data-k="${k}"><button type="button" class="btn ghost small" style="padding:2px 0" data-d="0.1" data-i="${i}" data-k="${k}">+</button><span class="bv" id="bv${i}${k}">0</span></div></td>`).join("")}</tr>`).join("")}</table></div>
+    <div class="row"><button class="btn blue" id="bOk">Comprobar mi gráfico</button><button class="btn ghost small" id="bSol">Ver cómo queda</button></div><div id="bFb"></div>`;
+  const chart = () => {
+    const t = $("#bTit").value, h = $("#bHor").value, v = $("#bVer").value;
+    $("#bChart").innerHTML = barChart({ title: t === "" ? "(elige un título)" : SEL.tit[+t], cats: PREV.map(p => p[0].replace(" años", "")), series: [{ name: "2018", color: "#9BC9B4", vals: val.map(x => x[0]) }, { name: "2020", color: "#2A9D6F", vals: val.map(x => x[1]) }], ylab: v === "" ? "(eje vertical)" : SEL.ver[+v], xlab: h === "" ? "(eje horizontal)" : SEL.hor[+h], max: 30, step: 5 });
+  };
+  $$("input[type=range]", el).forEach(r => r.oninput = () => { const i = +r.dataset.i, k = +r.dataset.k; val[i][k] = +(+r.value).toFixed(1); $(`#bv${i}${k}`).textContent = coma(val[i][k]); chart(); });
+  $$("button[data-d]", el).forEach(b => b.onclick = () => { const i = +b.dataset.i, k = +b.dataset.k, r = $(`input[data-i="${i}"][data-k="${k}"]`, el); val[i][k] = Math.max(0, Math.min(30, +(val[i][k] + +b.dataset.d).toFixed(1))); r.value = val[i][k]; $(`#bv${i}${k}`).textContent = coma(val[i][k]); chart(); });
+  ["#bTit", "#bHor", "#bVer"].forEach(s => $(s).onchange = chart);
+  $("#bOk").onclick = () => {
+    const bad = [];
+    if ($("#bTit").value !== "0") bad.push("el título");
+    if ($("#bHor").value !== "0") bad.push("el eje horizontal (ahí van las categorías: los grupos de edad)");
+    if ($("#bVer").value !== "0") bad.push("el eje vertical (ahí van los valores: el porcentaje)");
+    const off = []; PREV.forEach((p, i) => [1, 2].forEach((c, k) => { if (Math.abs(val[i][k] - p[c]) > 0.5) off.push(`${p[0]} ${k ? "2020" : "2018"} (debe ser ${coma(p[c])})`); }));
+    const ok = !bad.length && !off.length;
+    if (ok) sectionDone(6);
+    $("#bFb").innerHTML = `<div class="fb ${ok ? "ok" : "part"}">${ok ? "<b>¡Perfecto!</b> Tu gráfico tiene título, ejes correctos y todas las barras con la altura de la tabla." : `<b>Revisa:</b> ${bad.length ? "falta elegir bien " + bad.join(", ") + ". " : ""}${off.length ? `Barras que no calzan: ${off.slice(0, 4).join("; ")}${off.length > 4 ? ` y ${off.length - 4} más` : ""}.` : ""}`}</div>`;
+  };
+  $("#bSol").onclick = () => {
+    PREV.forEach((p, i) => [1, 2].forEach((c, k) => { val[i][k] = p[c]; const r = $(`input[data-i="${i}"][data-k="${k}"]`, el); r.value = p[c]; $(`#bv${i}${k}`).textContent = coma(p[c]); }));
+    $("#bTit").value = "0"; $("#bHor").value = "0"; $("#bVer").value = "0"; chart();
+    $("#bFb").innerHTML = `<div class="fb part">Así queda el gráfico. Fíjate en las barras de 45 a 64 años: es el único grupo donde la barra de 2020 es más alta que la de 2018.</div>`;
+  };
+  chart();
+}
+
+const LIST = [
+  "Sé qué hace cada componente del cigarrillo, sobre todo la nicotina, el alquitrán y el monóxido de carbono.",
+  "Puedo explicar el experimento de la botella: por qué se oscurece el algodón y qué representa la botella.",
+  "Sé qué es una variable: lo único que se cambia en un experimento.",
+  "Distingo los efectos a corto plazo de los de largo plazo, y sé qué es un fumador pasivo.",
+  "Recuerdo los datos de Chile: 33,33 % fuma, n° 1 en Latinoamérica, inicio a los 14 años, 52 muertes al día.",
+  "Leo una tabla y encuentro la relación («a más…, más…»).",
+  "Sé armar y leer un gráfico de barras: título, eje horizontal, eje vertical y leyenda.",
+  "Conozco los factores de riesgo, la Ley Antitabaco de 2013 y el ODS 3.",
+  "Sé cuatro daños del tabaco al medioambiente: deforestación, agua, aire y colillas."
+];
+function buildChecklist() {
+  $("#checklist").innerHTML = LIST.map((t, i) => `<li><label class="tick"><input type="checkbox" data-i="${i}" ${DB.list[i] ? "checked" : ""}><span>${t}</span></label></li>`).join("");
+  $$("#checklist input").forEach(c => c.onchange = () => { DB.list[c.dataset.i] = c.checked; save(); });
+}
+function renderHome() {
+  const done = Object.keys(DB.done).filter(k => DB.done[k]).length, last = DB.history.slice(-1)[0], E = DB.ens;
+  $("#st-aprender").innerHTML = done ? `<span style="color:var(--green)">${done} de 9 lecciones listas</span>` : `<span class="muted">Sin empezar</span>`;
+  $("#st-ensayo").innerHTML = E && !E.done ? `<span style="color:var(--orange-ink)">Tienes un ensayo en curso</span>` : last ? `<span style="color:${last.nota >= 4 ? "var(--green)" : "var(--red)"}">Último: ${last.pts}/${last.max} pts · nota ${notaTxt(last.nota)}</span>` : `<span class="muted">Sin empezar</span>`;
+}
+
+/* ============ arranque ============ */
+function init() {
+  setHdr();
+  buildLessons(); buildCig(); buildExp(); buildCharts(); buildBuilder(); buildChecklist();
+  $$("[data-practice]").forEach(el => practiceLoop(el, el.dataset.practice.split(","), +el.closest(".lesson").dataset.sec, +el.dataset.need));
+  if (DB.ens && DB.ens.done) DB.ens.show = true;
+  go(location.hash.slice(1) || "inicio", false);
+}
+init();
+</script>
+</body></html>
