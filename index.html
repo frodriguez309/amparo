@@ -39,9 +39,16 @@ a.ramo:active{transform:scale(.98)}
   <h1>Hola, Amparo 👋</h1>
   <p class="sub">Elige el ramo que quieres estudiar. Tu avance queda guardado en este iPad.</p>
   <div class="grid">
+    <a class="ramo mat" href="matematicas-p3/">
+      <div class="ico">📏</div>
+      <h2>Matemáticas · Prueba N°3</h2>
+      <p>Perímetro de polígonos, adición y sustracción de fracciones, y números decimales: escritura y como fracción, orden y comparación, y recta numérica.</p>
+      <div class="st" id="st-mat3"></div>
+      <div class="go">Entrar →</div>
+    </a>
     <a class="ramo mat" href="matematicas/">
       <div class="ico">➗</div>
-      <h2>Matemáticas</h2>
+      <h2>Matemáticas · Prueba N°2</h2>
       <p>Prueba N°2: fracciones equivalentes, impropias y números mixtos, comparación, plano cartesiano y transformaciones isométricas.</p>
       <div class="st" id="st-mat"></div>
       <div class="go">Entrar →</div>
@@ -74,6 +81,7 @@ a.ramo:active{transform:scale(.98)}
     if (h) s += " · último ensayo: nota " + nota(h.nota);
     return '<span style="color:#23915F">' + s + '</span>';
   }
+  document.getElementById("st-mat3").innerHTML = line(read("amparo-mate-p3-v1"), 6);
   document.getElementById("st-mat").innerHTML = line(read("amparo-fracciones-transformaciones-v1"), 12);
   document.getElementById("st-len").innerHTML = line(read("amparo-lenguaje-u3-v1"), 13);
   document.getElementById("st-cie").innerHTML = line(read("amparo-ciencias-tabaco-v1"), 9);

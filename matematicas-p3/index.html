@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amparo · Matemáticas · Prueba N°3</title>
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-title" content="Estudio">
+<meta name="theme-color" content="#FBF7F0">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<style>
+:root{
+  --bg:#FBF7F0; --card:#FFFFFF; --ink:#1F2A37; --muted:#5B6675; --line:#E6DFD3;
+  --blue:#3A86D6; --blue-soft:#DCEBFA; --blue-ink:#1D5FA8;
+  --orange:#F0A43C; --orange-soft:#FDEBD1; --orange-ink:#A4610A;
+  --green:#23915F; --green-soft:#DFF3E9; --red:#D64545; --red-soft:#FBE3E3;
+  --gold:#E9B325; --gold-soft:#FFF4D3;
+  --radius:16px; --shadow:0 1px 2px rgba(31,42,55,.06),0 4px 14px rgba(31,42,55,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+button,.opt,.chip,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em}
+h1{font-size:1.9rem} h2{font-size:1.45rem} h3{font-size:1.15rem;margin-top:1.1em} h4{font-size:1rem}
+p{margin:.4em 0 .8em}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+a{color:var(--blue-ink)}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+.hide{display:none!important}
+
+/* ---------- barra superior ---------- */
+header.top{position:sticky;top:0;z-index:20;background:rgba(251,247,240,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:800;font-size:1.05rem;margin-right:auto;white-space:nowrap}
+.brand span{color:var(--blue)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap}
+nav.tabs button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:.92rem;font-weight:600}
+nav.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media (max-width:900px){.top-in{gap:8px}.brand{font-size:.95rem}nav.tabs{gap:4px}nav.tabs button{padding:5px 10px;font-size:.84rem}}
+
+main{max-width:960px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px;margin:0 0 18px}
+@media (max-width:560px){.card{padding:18px 16px}}
+
+/* ---------- inicio ---------- */
+.hero{padding:28px 26px}
+.hero h1 span{color:var(--blue)}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+@media (max-width:760px){.paths{grid-template-columns:1fr}}
+.path{border:1px solid var(--line);border-radius:14px;padding:16px;background:#FFFDF9;display:flex;flex-direction:column;gap:6px}
+.path .step{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.path h3{margin:0}
+.path p{margin:0 0 6px;font-size:.95rem;color:var(--muted);flex:1}
+.path .state{font-size:.85rem;font-weight:700}
+.temario{margin:6px 0 0;padding-left:20px}
+.temario li{margin:3px 0}
+
+/* ---------- botones ---------- */
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;background:var(--ink);color:#fff}
+.btn.blue{background:var(--blue)} .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:6px 12px;font-size:.9rem;border-radius:10px}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- fracciones ---------- */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .12em;line-height:1.08;font-variant-numeric:tabular-nums;font-weight:700}
+.fr>span{padding:0 .18em;min-width:.9em;text-align:center}
+.fr>.n{border-bottom:2px solid currentColor}
+.mx{display:inline-flex;align-items:center;vertical-align:middle;font-weight:700}
+.big{font-size:1.35em}
+.fin{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;gap:3px;margin:0 .15em}
+.fin .bar{width:100%;height:2px;background:var(--ink);border-radius:2px}
+.inp{font-size:max(16px,1em);width:3.4em;height:2.1em;text-align:center;border:1.5px solid #CFC6B8;border-radius:9px;background:#FFFDF9;font-weight:700;padding:0 2px}
+.inp.dec{width:6.2em}
+.inp:focus{outline:3px solid var(--blue-soft);border-color:var(--blue)}
+.inp.ok{border-color:var(--green);background:var(--green-soft)}
+.inp.bad{border-color:var(--red);background:var(--red-soft)}
+.inp.part{border-color:var(--gold);background:var(--gold-soft)}
+
+/* ---------- módulo ---------- */
+.lesson-nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+.lesson-nav button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 11px;font-size:.88rem;font-weight:600}
+.lesson-nav button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.lesson-nav button.done::after{content:" ✓";color:var(--green)}
+.lesson-nav button.on.done::after{color:#fff}
+.sec-num{display:inline-block;background:var(--blue-soft);color:var(--blue-ink);font-weight:800;border-radius:8px;padding:1px 9px;margin-right:6px}
+.src{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:3px 11px;margin:0 6px 10px 0;background:#FDEBD1;color:#8A5210}
+.box{border-radius:12px;padding:12px 16px;margin:12px 0}
+.box.tip{background:var(--blue-soft)}
+.box.warn{background:var(--red-soft)}
+.box.gold{background:var(--gold-soft)}
+.box.green{background:var(--green-soft)}
+.box h4{margin:0 0 4px}
+.lab{border:1px dashed #CFC6B8;border-radius:14px;padding:14px;margin:14px 0;background:#FFFDF9}
+.lab-title{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--orange-ink);margin-bottom:8px}
+.eq{font-size:1.2em;margin:8px 0;display:flex;align-items:center;gap:.35em;flex-wrap:wrap;min-height:1.6em}
+table.t{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95rem}
+table.t th,table.t td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.t th{background:#F4EFE6}
+.tablewrap{overflow-x:auto}
+.check{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.pager{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+svg{max-width:100%;height:auto;display:block}
+.figbox{display:inline-block;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;margin:4px 0}
+.figrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.figrow .lbl{min-width:84px;font-size:1.2em;text-align:right}
+ul.clean{list-style:none;padding:0;margin:0}
+.tick{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.tick input{width:22px;height:22px;margin-top:3px;flex:none}
+.steps>div{padding:10px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);margin:8px 0}
+.steps>div.last{border-color:var(--blue);background:var(--blue-soft)}
+table.pv{border-collapse:separate;border-spacing:4px;margin:10px 0}
+table.pv th{font-size:.78rem;font-weight:800;color:var(--muted);padding:2px 6px;text-align:center}
+table.pv td{min-width:46px;height:44px;text-align:center;font-weight:800;font-size:1.25rem;border-radius:10px;background:#F4EFE6}
+table.pv td.cm{background:transparent;min-width:12px;font-size:1.5rem}
+table.pv td.pad{color:#A8A095}
+table.pv td.hl{background:var(--gold);color:#fff}
+table.pv td.lab{background:transparent;font-size:1rem;text-align:right;padding-right:6px}
+.recta .tz{cursor:pointer}
+.cell{cursor:pointer}
+.hit{cursor:pointer}
+
+/* ---------- preguntas ---------- */
+.q{position:relative}
+.q-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.q-num{flex:none;min-width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;padding:0 6px}
+.q-text{flex:1;padding-top:3px}
+.q-pts{flex:none;font-size:.82rem;color:var(--muted);font-weight:700;padding-top:6px;white-space:nowrap}
+.q-tag{font-size:.78rem;color:var(--muted);font-weight:700;padding-top:7px}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.opts.tall{grid-template-columns:1fr 1fr}
+.opts.cmp{grid-template-columns:repeat(3,minmax(0,130px))}
+.opts.cmp .opt{justify-content:center}
+.opts.cmp .opt span:last-child{font-size:1.7rem;font-weight:900}
+@media (max-width:640px){.opts{grid-template-columns:1fr 1fr}.opts.tall{grid-template-columns:1fr}}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;text-align:left;min-height:58px}
+.opt .l{flex:none;width:28px;height:28px;border-radius:8px;background:#F1ECE3;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .l{background:var(--blue);color:#fff}
+.opt.ok{border-color:var(--green);background:var(--green-soft)}
+.opt.ok .l{background:var(--green);color:#fff}
+.opt.bad{border-color:var(--red);background:var(--red-soft)}
+.opt.bad .l{background:var(--red);color:#fff}
+.line{display:flex;align-items:center;gap:.45em;flex-wrap:wrap;margin:8px 0;font-size:1.1em}
+.fb{border-radius:12px;padding:10px 14px;margin-top:12px;font-size:.95rem}
+.fb.ok{background:var(--green-soft)} .fb.bad{background:var(--red-soft)} .fb.part{background:var(--gold-soft)}
+.fb a{font-weight:700}
+.q-actions{margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.score-chip{font-weight:800;font-size:.9rem;border-radius:999px;padding:3px 10px;background:#F1ECE3}
+.score-chip.ok{background:var(--green-soft);color:var(--green)}
+.score-chip.bad{background:var(--red-soft);color:var(--red)}
+.score-chip.part{background:var(--gold-soft);color:#8A6A0A}
+.pre{margin:4px 0 12px}
+.big-q{font-size:1.05rem}
+.counter{font-size:.85rem;font-weight:700;color:var(--muted);margin-bottom:8px}
+.counter b{color:var(--green)}
+.orderq .pool,.orderq .dest{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+.orderq .it{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;display:flex;gap:8px;align-items:center;font-size:1.15rem;font-weight:700}
+.orderq .it .n{flex:none;width:24px;height:24px;border-radius:7px;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.8rem}
+.orderq .it.used{opacity:.35}
+.orderq .dest .it{border-color:var(--blue);background:var(--blue-soft)}
+.orderq .dest .it.ok{border-color:var(--green);background:var(--green-soft)}
+.orderq .dest .it.bad{border-color:var(--red);background:var(--red-soft)}
+.orderq .dest .it.ok .n{background:var(--green)} .orderq .dest .it.bad .n{background:var(--red)}
+
+/* ---------- barra del ensayo ---------- */
+.testbar{position:sticky;top:calc(var(--hdr,58px) + 8px);z-index:10;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:14px;padding:10px 16px;margin-bottom:16px}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.2rem}
+.timer.late{color:#FF9A9A}
+.progress{height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;min-width:120px;flex:1}
+.progress i{display:block;height:100%;background:var(--gold);width:0}
+
+/* ---------- resultados ---------- */
+.result-top{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.nota{font-size:3rem;font-weight:900;line-height:1}
+.nota.ok{color:var(--green)} .nota.bad{color:var(--red)}
+.meter{height:12px;background:#F1ECE3;border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%}
+.focos{display:grid;gap:10px;margin-top:10px}
+.foco{display:grid;grid-template-columns:1fr 150px 64px;gap:12px;align-items:center;font-size:.95rem}
+@media (max-width:640px){.foco{grid-template-columns:1fr 70px}.foco .meter{grid-column:1/-1}}
+.foco b{font-variant-numeric:tabular-nums;text-align:right}
+.hist td,.hist th{font-size:.92rem}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../" style="text-decoration:none;color:inherit">← Ramos · <span>Matemáticas · Prueba N°3</span></a>
+  <nav class="tabs" id="tabs">
+    <button data-go="inicio">Inicio</button>
+    <button data-go="aprender">1 · Aprender</button>
+    <button data-go="ensayo">2 · Ensayos</button>
+    <button data-go="resultados">Mis resultados</button>
+  </nav>
+</div></header>
+
+<main id="app">
+
+<!-- ================= INICIO ================= -->
+<section id="v-inicio" class="view">
+  <div class="card hero">
+    <p class="muted small" style="margin:0 0 6px">Matemáticas 5°A · Prueba N°3</p>
+    <h1>Hola, Amparo. Vamos a preparar la <span>Prueba N°3</span>.</h1>
+    <p>Primero repasas cada tema con explicaciones, dibujos que puedes tocar y ejercicios que no se acaban. Después haces ensayos que se arman solos: cada vez que empiezas uno, las preguntas son distintas.</p>
+    <div class="paths">
+      <div class="path"><div class="step">Paso 1</div><h3>Aprender</h3><p>Una lección por cada tema de la prueba y un cuadro resumen al final.</p><div class="state" id="st-aprender"></div><button class="btn blue" data-go="aprender">Empezar a repasar</button></div>
+      <div class="path"><div class="step">Paso 2</div><h3>Ensayos</h3><p>30 preguntas nuevas cada vez (60 puntos). Modo práctica (te corrige al tiro) o simulacro (con tiempo y nota).</p><div class="state" id="st-ensayo"></div><button class="btn" data-go="ensayo">Ir a los ensayos</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Lo que entra en la prueba</h3>
+    <p class="small muted" style="margin:0">Temario publicado por la miss Bernardita en Classroom:</p>
+    <ul class="temario">
+      <li>Perímetro de polígonos</li>
+      <li>Adición y sustracción de fracciones</li>
+      <li>Representación de números decimales, escritura y como fracción</li>
+      <li>Orden y comparación de números decimales</li>
+      <li>Números decimales en la recta numérica</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= APRENDER ================= -->
+<section id="v-aprender" class="view hide">
+  <div class="lesson-nav" id="lessonNav"></div>
+
+  <!-- 1 -->
+  <div class="card lesson" data-sec="1" data-title="Perímetro">
+    <span class="src">📋 Temario: «Perímetro de polígonos»</span>
+    <h2><span class="sec-num">1</span>Perímetro de polígonos</h2>
+    <p>Un <b>polígono</b> es una figura plana y cerrada, formada por lados rectos. El <b>perímetro</b> es la medida de su contorno: la <b>suma de las medidas de todos sus lados</b>. Es como medir cuánta cinta necesitas para dar la vuelta completa a la figura.</p>
+    <div class="lab"><div class="lab-title">Pruébalo · recorre el borde</div>
+      <p class="small" style="margin-top:0">Toca cada lado del polígono. Cada lado que tocas se suma.</p>
+      <div id="perFig"></div>
+      <div id="perSum" class="eq"></div>
+      <div id="perMsg"></div>
+      <div class="row" style="margin-top:8px"><button class="btn ghost small" id="perNew">Otro polígono</button></div>
+    </div>
+    <h3>Cuadro comparativo</h3>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Polígono</th><th>Qué sabemos de sus lados</th><th>Cómo se calcula el perímetro</th><th>Ejemplo</th></tr>
+      <tr><td><b>Cualquier polígono</b></td><td>Cada lado puede medir distinto.</td><td>Se suman todos los lados.</td><td>5 + 4 + 6 + 3 + 7 = <b>25 cm</b></td></tr>
+      <tr><td><b>Rectángulo</b></td><td>Los lados opuestos miden lo mismo: dos miden el largo y dos el ancho.</td><td>largo + ancho + largo + ancho</td><td>8 cm y 5 cm: 8 + 5 + 8 + 5 = <b>26 cm</b></td></tr>
+      <tr><td><b>Cuadrado</b></td><td>Sus 4 lados miden lo mismo.</td><td>4 · medida del lado</td><td>lado de 6 cm: 4 · 6 = <b>24 cm</b></td></tr>
+      <tr><td><b>Polígono regular</b></td><td>Todos sus lados miden lo mismo.</td><td>número de lados · medida del lado</td><td>hexágono regular de 7 cm: 6 · 7 = <b>42 cm</b></td></tr>
+    </table></div>
+    <h3>Al revés: el lado que falta</h3>
+    <p>Si conoces el perímetro y todos los lados menos uno, al perímetro le <b>restas</b> los lados que conoces. Por ejemplo, un triángulo tiene un perímetro de 30 cm y dos de sus lados miden 12 cm y 8 cm: 30 − 12 − 8 = <b>10 cm</b>. En un cuadrado se divide por 4: si el perímetro es 36 cm, cada lado mide 36 : 4 = <b>9 cm</b>.</p>
+    <div class="box warn"><h4>Ojo</h4>En un rectángulo te dan solo <b>dos</b> medidas, pero tiene <b>cuatro</b> lados. El perímetro es una <b>suma</b>: no se multiplica el largo por el ancho. Y siempre se escribe la unidad (cm, m).</div>
+    <div class="lab"><div class="lab-title">Practica · perímetro</div><div data-practice="per" data-need="5"></div></div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card lesson" data-sec="2" data-title="Fracciones">
+    <span class="src">📋 Temario: «Adición y sustracción de fracciones»</span>
+    <h2><span class="sec-num">2</span>Adición y sustracción de fracciones</h2>
+    <p>El <b>denominador</b> dice en cuántas partes iguales se dividió el entero, es decir, el tamaño de cada parte. El <b>numerador</b> dice cuántas de esas partes se toman.</p>
+    <h3>Con igual denominador</h3>
+    <p>Las partes son del mismo tamaño, así que solo hay que contarlas: se suman (o se restan) los <b>numeradores</b> y el <b>denominador se mantiene</b>.</p>
+    <div id="figIgual"></div>
+    <h3>Con distinto denominador</h3>
+    <p>Las partes son de distinto tamaño y no se pueden juntar así no más. Primero se <b>amplifican</b> las fracciones hasta que tengan el <b>mismo denominador</b>; después se suman o se restan los numeradores.</p>
+    <div id="figDistinto"></div>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Paso</th><th>Qué se hace</th><th>Ejemplo: [[1/2]] + [[1/3]]</th></tr>
+      <tr><td>1</td><td>Buscar un denominador común: un número que esté en la tabla de los dos denominadores.</td><td>Tabla del 2: 2, 4, <b>6</b>… · tabla del 3: 3, <b>6</b>… → <b>6</b></td></tr>
+      <tr><td>2</td><td>Amplificar cada fracción hasta ese denominador.</td><td>[[1/2]] = [[3/6]] · [[1/3]] = [[2/6]]</td></tr>
+      <tr><td>3</td><td>Sumar o restar los numeradores; el denominador se mantiene.</td><td>[[3/6]] + [[2/6]] = [[5/6]]</td></tr>
+      <tr><td>4</td><td>Simplificar, si se puede.</td><td>[[5/6]] ya no se puede simplificar.</td></tr>
+    </table></div>
+    <div class="box warn"><h4>Nunca sumes los denominadores</h4>[[1/2]] + [[1/3]] no es [[2/5]]. Fíjate: [[2/5]] es <b>menos</b> que [[1/2]], y a [[1/2]] le estamos sumando algo. No puede dar menos.</div>
+    <div class="box gold"><h4>Simplificar</h4>Se dividen el numerador y el denominador por el mismo número, hasta que ya no se pueda: [[4/6]] = [[2/3]] (se dividió por 2).</div>
+    <div class="lab"><div class="lab-title">Pruébalo · paso a paso</div><div id="pasoBox"></div></div>
+    <div class="lab"><div class="lab-title">Practica · adición y sustracción</div><div data-practice="fra" data-need="5"></div></div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card lesson" data-sec="3" data-title="Decimales">
+    <span class="src">📋 Temario: «Representación de números decimales, escritura y como fracción»</span>
+    <h2><span class="sec-num">3</span>Representación de números decimales, escritura y como fracción</h2>
+    <p>Si un entero se divide en <b>10</b> partes iguales, cada parte es un <b>décimo</b>: [[1/10]] = 0,1. Si se divide en <b>100</b> partes iguales, cada parte es un <b>centésimo</b>: [[1/100]] = 0,01. Si se divide en <b>1.000</b> partes iguales, cada parte es un <b>milésimo</b>: [[1/1.000]] = 0,001.</p>
+    <div class="lab"><div class="lab-title">Pruébalo · pinta la cuadrícula</div>
+      <p class="small" style="margin-top:0">La cuadrícula completa es <b>un entero</b>: 100 cuadraditos. Cada columna tiene 10 cuadraditos, es decir, es un <b>décimo</b>. Toca un cuadradito para pintar hasta ahí, o usa − y +.</p>
+      <div class="row" style="align-items:flex-start"><div id="gridBox" style="width:300px;max-width:100%"></div>
+        <div style="flex:1;min-width:220px"><div class="row" style="margin-bottom:8px"><button class="btn ghost small" id="gridMinus">−</button><button class="btn ghost small" id="gridPlus">+</button></div><div id="gridOut"></div></div></div>
+    </div>
+    <h3>La tabla de valor posicional</h3>
+    <p>La <b>coma</b> separa la <b>parte entera</b> (a la izquierda) de la <b>parte decimal</b> (a la derecha). Después de la coma vienen los décimos, los centésimos y los milésimos.</p>
+    <div class="tablewrap"><table class="pv">
+      <tr><th>Unidades</th><th></th><th>Décimos</th><th>Centésimos</th><th>Milésimos</th></tr>
+      <tr><td>4</td><td class="cm">,</td><td>3</td><td>8</td><td>2</td></tr>
+      <tr><td class="lab" style="text-align:center">4</td><td class="cm"></td><td class="lab" style="text-align:center">0,3</td><td class="lab" style="text-align:center">0,08</td><td class="lab" style="text-align:center">0,002</td></tr>
+    </table></div>
+    <p>4,382 = 4 + 0,3 + 0,08 + 0,002: <b>4 unidades, 3 décimos, 8 centésimos y 2 milésimos</b>.</p>
+    <h3>Escritura: cómo se lee</h3>
+    <p>Se lee la parte entera con la palabra «enteros». Después, la parte decimal como un número, con el nombre de la <b>última</b> posición que tiene una cifra.</p>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Número</th><th>Se lee</th><th>Como fracción</th></tr>
+      <tr><td><b>0,7</b></td><td>siete décimos</td><td>[[7/10]]</td></tr>
+      <tr><td><b>0,45</b></td><td>cuarenta y cinco centésimos</td><td>[[45/100]]</td></tr>
+      <tr><td><b>2,45</b></td><td>dos enteros cuarenta y cinco centésimos</td><td>[[245/100]], o 2 enteros y [[45/100]]</td></tr>
+      <tr><td><b>3,08</b></td><td>tres enteros ocho centésimos</td><td>[[308/100]], o 3 enteros y [[8/100]]</td></tr>
+      <tr><td><b>0,125</b></td><td>ciento veinticinco milésimos</td><td>[[125/1.000]]</td></tr>
+    </table></div>
+    <h3>Como fracción, y al revés</h3>
+    <p>La cantidad de cifras después de la coma es la cantidad de ceros del denominador: <b>una cifra → 10</b>, <b>dos cifras → 100</b>, <b>tres cifras → 1.000</b>. Por ejemplo, 0,51 tiene dos cifras decimales: 0,51 = [[51/100]].</p>
+    <p>Al revés, de fracción a decimal: [[4/100]] son cuatro centésimos, así que el 4 va en los centésimos y en los décimos se pone un 0: [[4/100]] = <b>0,04</b>.</p>
+    <div class="box warn"><h4>Ojo con el cero</h4>[[4/100]] no es 0,4. El número 0,4 son cuatro <b>décimos</b>: 0,4 = [[4/10]].</div>
+    <div class="lab"><div class="lab-title">Practica · representación y escritura</div><div data-practice="rep" data-need="6"></div></div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card lesson" data-sec="4" data-title="Orden">
+    <span class="src">📋 Temario: «Orden y comparación de números decimales»</span>
+    <h2><span class="sec-num">4</span>Orden y comparación de números decimales</h2>
+    <p>Para comparar dos números decimales se comparan sus cifras <b>posición por posición</b>, de izquierda a derecha:</p>
+    <ol>
+      <li>Primero la <b>parte entera</b>. Si una es mayor, ese número es el mayor.</li>
+      <li>Si la parte entera es igual, se comparan los <b>décimos</b>.</li>
+      <li>Si también son iguales, los <b>centésimos</b>, y después los <b>milésimos</b>.</li>
+    </ol>
+    <p>Para no perderse, se escriben los números uno debajo del otro, con las <b>comas alineadas</b>, y se completan con <b>ceros</b> al final para que tengan la misma cantidad de cifras. Un cero al final no cambia el número: 0,8 = 0,80 = 0,800.</p>
+    <div class="lab"><div class="lab-title">Pruébalo · el comparador</div><div id="cmpBox"></div><div class="row" style="margin-top:8px"><button class="btn ghost small" id="cmpNew">Otro par</button></div></div>
+    <div class="box warn"><h4>Más cifras no es un número mayor</h4>0,8 es <b>mayor</b> que 0,75, aunque 0,75 tenga más cifras: 8 décimos es más que 7 décimos (0,80 &gt; 0,75).</div>
+    <h3>Ordenar varios números</h3>
+    <p>Se alinean todos por la coma y se comparan igual. «De <b>menor a mayor</b>» empieza por el más chico; «de <b>mayor a menor</b>», por el más grande. Los signos son <b>&lt;</b> (menor que), <b>&gt;</b> (mayor que) y <b>=</b> (igual a).</p>
+    <div class="tablewrap"><table class="t" style="max-width:520px">
+      <tr><th>Números</th><th>Con ceros al final</th></tr>
+      <tr><td>1,2</td><td>1,2<b>0</b></td></tr><tr><td>1,02</td><td>1,02</td></tr><tr><td>1,22</td><td>1,22</td></tr><tr><td>1,12</td><td>1,12</td></tr>
+    </table></div>
+    <p>De menor a mayor: <b>1,02 &lt; 1,12 &lt; 1,2 &lt; 1,22</b>.</p>
+    <div class="lab"><div class="lab-title">Practica · orden y comparación</div><div data-practice="ord" data-need="5"></div></div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card lesson" data-sec="5" data-title="Recta numérica">
+    <span class="src">📋 Temario: «Números decimales en la recta numérica»</span>
+    <h2><span class="sec-num">5</span>Números decimales en la recta numérica</h2>
+    <p>En la recta numérica cada número tiene su lugar. Para leer o ubicar un número decimal:</p>
+    <ol>
+      <li>Mira <b>un entero</b>: cuenta en cuántas partes iguales está dividido el espacio <b>entre 0 y 1</b>. Si son 10 partes, cada parte es <b>un décimo</b> (0,1).</li>
+      <li>Cuenta las partes desde el 0, o desde el último entero que pasaste.</li>
+    </ol>
+    <div class="lab"><div class="lab-title">Pruébalo · toca la recta</div><div id="rlBox"></div><div id="rlOut" class="eq"></div><div class="row"><button class="btn ghost small" id="rlZoom"></button></div></div>
+    <div class="box gold"><h4>Lo más importante</h4>Cuando la recta tiene <b>más de un entero</b>, no cuentes todas las partes de la recta como si fueran un solo entero.<div id="figFoco"></div>P no es [[13/20]]. Entre 0 y 1 hay <b>10</b> partes, así que cada parte es 0,1. P está <b>3 partes después del 1</b>: P = <b>1,3</b>.</div>
+    <h3>Más de cerca: los centésimos</h3>
+    <p>Si se mira de cerca el espacio entre 0,4 y 0,5 y se divide en 10 partes iguales, cada parte es <b>un centésimo</b> (0,01). Las marcas son 0,41; 0,42; 0,43… hasta 0,49.</p>
+    <div id="figZoom"></div>
+    <div class="lab"><div class="lab-title">Practica · la recta numérica</div><div data-practice="rec" data-need="5"></div></div>
+  </div>
+
+  <!-- 6 -->
+  <div class="card lesson" data-sec="6" data-title="Cuadro resumen">
+    <h2><span class="sec-num">6</span>Cuadro resumen</h2>
+    <div class="tablewrap"><table class="t">
+      <tr><th>Tema</th><th>Qué te pueden pedir</th><th>Cómo se hace</th><th>Ejemplo</th><th>Ojo con…</th></tr>
+      <tr><td><b>Perímetro de polígonos</b></td><td>Calcular el perímetro. Encontrar un lado que falta.</td><td>Sumar todos los lados. Si falta uno, restar al perímetro los que conoces.</td><td>Rectángulo de 8 cm y 5 cm: 8 + 5 + 8 + 5 = 26 cm</td><td>Sumar solo los dos lados que tienen medida, o multiplicar.</td></tr>
+      <tr><td><b>Adición y sustracción de fracciones</b></td><td>Sumar o restar fracciones y simplificar.</td><td>Igual denominador: operar los numeradores. Distinto denominador: amplificar primero.</td><td>[[1/2]] + [[1/3]] = [[3/6]] + [[2/6]] = [[5/6]]</td><td>Sumar los denominadores.</td></tr>
+      <tr><td><b>Representación de números decimales, escritura y como fracción</b></td><td>Pasar de fracción a decimal y al revés. Leer y escribir decimales.</td><td>Décimos: 10. Centésimos: 100. Milésimos: 1.000.</td><td>0,45 = [[45/100]]: cuarenta y cinco centésimos</td><td>[[4/100]] = 0,04, no 0,4.</td></tr>
+      <tr><td><b>Orden y comparación de números decimales</b></td><td>Usar &lt;, &gt; o =. Ordenar.</td><td>Comparar la parte entera, después los décimos, los centésimos y los milésimos.</td><td>0,8 &gt; 0,75</td><td>Creer que el número con más cifras es el mayor.</td></tr>
+      <tr><td><b>Números decimales en la recta numérica</b></td><td>Leer un punto. Ubicar un número.</td><td>Contar las partes de UN entero; contar desde el 0 o desde el último entero.</td><td>3 partes después del 1, en décimos: 1,3</td><td>Contar las partes de toda la recta ([[13/20]]).</td></tr>
+    </table></div>
+    <h3>Antes de la prueba, revisa que puedes…</h3>
+    <ul class="clean" id="checklist"></ul>
+    <div class="box green" style="margin-top:16px">Cuando marques todo, haz un ensayo en modo simulacro. Si sacas más de 6,0, ¡estás lista!</div>
+  </div>
+
+  <div class="pager"><button class="btn ghost" id="prevSec">← Anterior</button><button class="btn blue" id="nextSec">Siguiente →</button></div>
+</section>
+
+<!-- ================= ENSAYOS ================= -->
+<section id="v-ensayo" class="view hide"></section>
+
+<!-- ================= RESULTADOS ================= -->
+<section id="v-resultados" class="view hide"></section>
+</main>
+
+<script>
+"use strict";
+/* ============ utilidades ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const notaTxt = n => n.toFixed(1).replace(".", ",");
+const sum = a => a.reduce((s, x) => s + x, 0);
+const gcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) [a, b] = [b, a % b]; return a || 1; };
+const lcm = (a, b) => a / gcd(a, b) * b;
+const red = (n, d) => { const g = gcd(n, d); return [n / g, d / g]; };
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const NAMES = ["Sofía", "Josefa", "Emilia", "Florencia", "Martina", "Isidora", "Antonia", "Catalina", "Trinidad", "Agustina"];
+
+/* fracciones apiladas; los miles del denominador van con punto (1.000) */
+const thou = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+function F(n, d) { return `<span class="fr"><span class="n">${thou(n)}</span><span class="d">${thou(d)}</span></span>`; }
+function M(w, n, d) { return `<span class="mx">${w}&nbsp;${F(n, d)}</span>`; }
+/* [[n/d]] en el HTML de las lecciones */
+function fx(s) { return String(s).replace(/\[\[(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\]\]/g, (m, n, d) => F(n.replace(".", ""), d.replace(".", ""))); }
+
+/* ============ decimales: se trabaja en milésimos enteros, para no tener errores de redondeo ============ */
+/* fmtD(2450) = "2,45"; fmtD(2400, 2) = "2,40" (con al menos 2 cifras decimales) */
+function fmtD(m, minP = 0) {
+  const e = Math.floor(m / 1000), r = m % 1000;
+  let d = String(r).padStart(3, "0").replace(/0+$/, "");
+  while (d.length < minP) d += "0";
+  return e + (d ? "," + d : "");
+}
+const places = m => m % 1000 === 0 ? 0 : m % 100 === 0 ? 1 : m % 10 === 0 ? 2 : 3;
+/* lo que escribe Amparo: acepta coma o punto, y la unidad al final */
+function parseNum(s) {
+  s = String(s ?? "").trim().toLowerCase().replace(/\s*(cm|mm|km|m)\.?$/, "").replace(/\s+/g, "").replace(",", ".");
+  if (!/^(\d+(\.\d*)?|\.\d+)$/.test(s)) return null;
+  const x = Number(s), m = Math.round(x * 1000);
+  return Math.abs(m - x * 1000) > 1e-6 ? null : m;
+}
+
+/* números en palabras (0 a 999), con «un» delante de entero, décimo, etc. */
+const U = ["cero", "un", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte", "veintiún", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"];
+const T = { 3: "treinta", 4: "cuarenta", 5: "cincuenta", 6: "sesenta", 7: "setenta", 8: "ochenta", 9: "noventa" };
+const H = { 1: "ciento", 2: "doscientos", 3: "trescientos", 4: "cuatrocientos", 5: "quinientos", 6: "seiscientos", 7: "setecientos", 8: "ochocientos", 9: "novecientos" };
+function words(n) {
+  if (n < 30) return U[n];
+  if (n < 100) { const u = n % 10; return T[Math.floor(n / 10)] + (u ? " y " + U[u] : ""); }
+  if (n === 100) return "cien";
+  const r = n % 100; return H[Math.floor(n / 100)] + (r ? " " + words(r) : "");
+}
+const PLACE = ["", "décimo", "centésimo", "milésimo"];
+/* cómo se lee un decimal escrito con p cifras decimales */
+function decWords(m, p) {
+  const e = Math.floor(m / 1000), r = Math.round((m % 1000) / Math.pow(10, 3 - p)), out = [];
+  if (e > 0) out.push(words(e) + (e === 1 ? " entero" : " enteros"));
+  if (p > 0 && (r > 0 || e === 0)) out.push(words(r) + " " + PLACE[p] + (r === 1 ? "" : "s"));
+  return out.join(" ");
+}
+
+/* ============ guardado local ============ */
+const STORE = "amparo-mate-p3-v1";
+let DB = (() => { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } })();
+DB.done = DB.done || {}; DB.hits = DB.hits || {}; DB.history = DB.history || []; DB.list = DB.list || {};
+function save() { try { localStorage.setItem(STORE, JSON.stringify(DB)); } catch (e) { } }
+
+/* ============ dibujos (SVG) ============ */
+function svgWrap(w, h, body, attrs = "", style = "") {
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="aspect-ratio:${w} / ${h};${style}" xmlns="http://www.w3.org/2000/svg" ${attrs}>${body}</svg>`;
+}
+const fig = s => `<div class="figbox">${s}</div>`;
+
+/* recta numérica: n espacios; major = cada cuántas marcas va una marca larga; labels y pts = {marca: texto} */
+function recta(o) {
+  const W = o.w || 660, L = 34, R = 58, y = 64, H = 112, n = o.n, st = (W - L - R) / n;
+  let s = `<rect width="${W}" height="${H}" fill="#fff"/>`;
+  s += `<line x1="${L - 18}" y1="${y}" x2="${W - R + 34}" y2="${y}" stroke="#1F2A37" stroke-width="3"/><path d="M${W - R + 48} ${y} l-15 -8 v16 z" fill="#1F2A37"/>`;
+  for (let k = 0; k <= n; k++) {
+    const x = L + k * st, big = o.major && k % o.major === 0;
+    s += `<line x1="${x}" y1="${y - (big ? 15 : 9)}" x2="${x}" y2="${y + (big ? 15 : 9)}" stroke="#1F2A37" stroke-width="${big ? 3 : 2}"/>`;
+    if (o.labels && o.labels[k] != null) s += `<text x="${x}" y="${y + 40}" text-anchor="middle" font-size="19" font-weight="800" fill="#1F2A37">${o.labels[k]}</text>`;
+  }
+  for (const [k, t] of Object.entries(o.pts || {})) { const x = L + k * st; s += `<circle cx="${x}" cy="${y}" r="8" fill="#D64545"/><text x="${x}" y="${y - 20}" text-anchor="middle" font-size="19" font-weight="800" fill="#D64545">${t}</text>`; }
+  s += `<g class="mark"></g>`;
+  if (o.tap) for (let k = 0; k <= n; k++) s += `<rect class="tz" data-k="${k}" x="${L + k * st - st / 2}" y="${y - 44}" width="${st}" height="88" fill="#fff" fill-opacity="0"/>`;
+  return svgWrap(W, H, s, `class="recta" data-l="${L}" data-st="${st}" data-y="${y}"`);
+}
+/* marca puntos en una recta tocable: list = [[marca, color, texto?]] */
+function setMarks(svgEl, list) {
+  const L = +svgEl.dataset.l, st = +svgEl.dataset.st, y = +svgEl.dataset.y;
+  $(".mark", svgEl).innerHTML = list.filter(m => m[0] != null).map(([k, c, t]) => `<circle cx="${L + k * st}" cy="${y}" r="10" fill="${c}"/>${t ? `<text x="${L + k * st}" y="${y - 22}" text-anchor="middle" font-size="19" font-weight="800" fill="${c}">${t}</text>` : ""}`).join("");
+}
+
+/* cuadrícula de 10 x 10 (un entero); se pinta por columnas */
+function grid(p, tap) {
+  const c = 26, W = c * 10 + 6;
+  let s = `<rect width="${W}" height="${W}" fill="#fff"/>`;
+  for (let i = 0; i < 100; i++) { const col = Math.floor(i / 10), row = i % 10; s += `<rect ${tap ? `class="cell" data-i="${i}"` : ""} x="${3 + col * c}" y="${3 + row * c}" width="${c}" height="${c}" fill="${i < p ? "#9DC3E6" : "#fff"}" stroke="#1F2A37" stroke-width="1"/>`; }
+  s += `<rect x="3" y="3" width="${c * 10}" height="${c * 10}" fill="none" stroke="#1F2A37" stroke-width="3"/>`;
+  return svgWrap(W, W, s, "", `max-width:min(100%,${tap ? 300 : 200}px)`);
+}
+
+/* barra dividida en d partes; pinta p1 partes en celeste y, si se pide, p2 más en naranjo */
+function barra(d, p1, p2 = 0, w = 300) {
+  const h = 34, cw = w / d; let s = "";
+  for (let i = 0; i < d; i++) s += `<rect x="${2 + i * cw}" y="2" width="${cw}" height="${h}" fill="${i < p1 ? "#9DC3E6" : i < p1 + p2 ? "#F6C77E" : "#fff"}" stroke="#1F2A37" stroke-width="1.5"/>`;
+  s += `<rect x="2" y="2" width="${w}" height="${h}" fill="none" stroke="#1F2A37" stroke-width="2.5"/>`;
+  return svgWrap(w + 4, h + 4, s, "", `max-width:min(100%,${w + 4}px)`);
+}
+const barRow = (lbl, svg) => `<div class="figrow"><div class="lbl">${lbl}</div>${svg}</div>`;
+
+/* polígono con la medida escrita en cada lado; tap = se pueden tocar los lados */
+function poly(V, labs, o = {}) {
+  const xs = V.map(v => v[0]), ys = V.map(v => v[1]), x0 = Math.min(...xs), y1 = Math.max(...ys);
+  const w = Math.max(...xs) - x0, h = y1 - Math.min(...ys);
+  const sc = Math.min((o.maxW || 300) / w, (o.maxH || 190) / h), Mg = 62;
+  const P = V.map(([x, y]) => [Mg + (x - x0) * sc, Mg + (y1 - y) * sc]);
+  const W = Math.round(w * sc + 2 * Mg), Hh = Math.round(h * sc + 2 * Mg);
+  const cx = sum(P.map(p => p[0])) / P.length, cy = sum(P.map(p => p[1])) / P.length;
+  let s = `<rect width="${W}" height="${Hh}" fill="#fff"/><polygon points="${P.map(p => p.map(c => c.toFixed(1)).join(",")).join(" ")}" fill="#EAF2FB"/>`;
+  P.forEach((a, i) => {
+    const b = P[(i + 1) % P.length];
+    s += `<line class="sd" data-i="${i}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="#1F2A37" stroke-width="3.5" stroke-linecap="round"/>`;
+    if (!labs[i]) return;
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    let nx = b[1] - a[1], ny = -(b[0] - a[0]); const L = Math.hypot(nx, ny); nx /= L; ny /= L;
+    if ((mx + nx - cx) ** 2 + (my + ny - cy) ** 2 < (mx - cx) ** 2 + (my - cy) ** 2) { nx = -nx; ny = -ny; }
+    const tw = String(labs[i]).length * 9.6, d = 12 + Math.abs(nx) * tw / 2 + Math.abs(ny) * 11;
+    s += `<text x="${(mx + nx * d).toFixed(1)}" y="${(my + ny * d + 6).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="700" fill="#1F2A37">${labs[i]}</text>`;
+  });
+  if (o.tap) P.forEach((a, i) => { const b = P[(i + 1) % P.length]; s += `<line class="hit" data-i="${i}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="#000" stroke-opacity="0" stroke-width="28"/>`; });
+  return svgWrap(W, Hh, s, "", `max-width:min(100%,${W}px)`);
+}
+/* polígono convexo al azar con medidas enteras en cm, más o menos a escala */
+function randPoly(n) {
+  const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  for (let t = 0; t < 500; t++) {
+    const base = 2 * Math.PI / n, off = Math.random() * 2 * Math.PI, rx = 1 + Math.random() * 0.5;
+    const V = Array.from({ length: n }, (_, i) => { const a = off + i * base + (Math.random() - 0.5) * base * 0.5, r = 0.85 + Math.random() * 0.3; return [rx * r * Math.cos(a), r * Math.sin(a)]; });
+    const len = V.map((a, i) => Math.hypot(V[(i + 1) % n][0] - a[0], V[(i + 1) % n][1] - a[1]));
+    const sc = rnd(7, 12) / Math.max(...len), labs = len.map(l => Math.round(l * sc));
+    const convex = V.every((_, i) => cross(V[i], V[(i + 1) % n], V[(i + 2) % n]) > 0);
+    if (convex && Math.min(...labs) >= 2) return { verts: V, labs };
+  }
+  return { verts: [[0, 0], [5, 0], [5, 3], [0, 3]], labs: [5, 3, 5, 3] };
+}
+function rectSVG(a, b, u) { const bb = Math.max(b, a * 0.38); return poly([[0, 0], [a, 0], [a, bb], [0, bb]], [`${a} ${u}`, `${b} ${u}`, "", ""]); }
+
+/* ============ navegación ============ */
+const VIEWS = ["inicio", "aprender", "ensayo", "resultados"];
+function go(v, push = true) {
+  let sec = null;
+  if (v && v.startsWith("aprender-")) { sec = +v.split("-")[1]; v = "aprender"; }
+  if (!VIEWS.includes(v)) v = "inicio";
+  VIEWS.forEach(x => $("#v-" + x).classList.toggle("hide", x !== v));
+  $$("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.go === v));
+  if (v === "inicio") renderHome();
+  if (v === "aprender") showSec(sec || DB.cur || 1);
+  if (v === "ensayo") renderEnsayo();
+  if (v === "resultados") renderResults();
+  const h = "#" + (sec ? "aprender-" + sec : v);
+  if (push && location.hash !== h) history.pushState(null, "", h);
+  window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); go(g.dataset.go); return; }
+  const a = e.target.closest('a[href^="#"]'); if (a) { e.preventDefault(); go(a.getAttribute("href").slice(1)); }
+});
+window.addEventListener("popstate", () => go(location.hash.slice(1), false));
+function setHdr() { document.documentElement.style.setProperty("--hdr", $("header.top").offsetHeight + "px"); }
+window.addEventListener("resize", setHdr);
+
+/* ============ lecciones ============ */
+let SECS = [];
+function buildLessons() {
+  SECS = $$(".lesson").map(el => ({ n: +el.dataset.sec, t: el.dataset.title, el }));
+  $("#lessonNav").innerHTML = SECS.map(s => `<button data-sec="${s.n}">${s.n} · ${s.t}</button>`).join("");
+  $$("#lessonNav button").forEach(b => b.onclick = () => { showSec(+b.dataset.sec); history.pushState(null, "", "#aprender-" + b.dataset.sec); });
+  $("#prevSec").onclick = () => { showSec(DB.cur - 1); history.pushState(null, "", "#aprender-" + DB.cur); };
+  $("#nextSec").onclick = () => { if (DB.cur >= SECS.length) go("ensayo"); else { showSec(DB.cur + 1); history.pushState(null, "", "#aprender-" + DB.cur); } };
+}
+function showSec(n) {
+  n = Math.max(1, Math.min(SECS.length, n));
+  SECS.forEach(s => s.el.classList.toggle("hide", s.n !== n));
+  DB.cur = n; if (n === SECS.length) DB.done[n] = true; save();
+  $$("#lessonNav button").forEach(b => { const k = +b.dataset.sec; b.classList.toggle("on", k === n); b.classList.toggle("done", !!DB.done[k]); });
+  $("#prevSec").disabled = n === 1;
+  $("#nextSec").textContent = n === SECS.length ? "Ir a los ensayos →" : "Siguiente →";
+  window.scrollTo(0, 0);
+}
+function sectionDone(n) { if (DB.done[n]) return; DB.done[n] = true; save(); $$("#lessonNav button").forEach(b => { if (+b.dataset.sec === n) b.classList.add("done"); }); }
+
+/* ============ generadores de preguntas ============ */
+/* opts[0] es la correcta; se barajan */
+function mc(q, opts, exp, extra = {}) {
+  const idx = shuffle(opts.map((_, i) => i));
+  return { t: "mc", q, opts: idx.map(i => opts[i]), ans: idx.indexOf(0), exp, ...extra };
+}
+/* la correcta y tres distractores sin repetir (compara por clave) */
+function four(correct, cands, key = x => String(x)) {
+  const out = [correct], seen = new Set([key(correct)]);
+  for (const c of cands) { if (out.length === 4) break; const k = key(c); if (!seen.has(k)) { seen.add(k); out.push(c); } }
+  return out;
+}
+const fval = ([n, d]) => (n / d).toFixed(9);
+const pickVar = (n, v) => v == null ? rnd(1, n) : v;
+
+/* ---- perímetro ---- */
+function genPer(v) {
+  v = pickVar(6, v);
+  if (v === 1) {
+    const a = rnd(6, 15), b = rnd(2, a - 2), u = pick(["cm", "m"]), P = 2 * (a + b);
+    return { t: "num", unit: u, q: "Calcula el perímetro del rectángulo.", pre: fig(rectSVG(a, b, u)), ans: P * 1000,
+      traps: [[(a + b) * 1000, "Sumaste solo los dos lados que tienen medida, pero el rectángulo tiene <b>cuatro</b> lados."], [a * b * 1000, "Multiplicaste el largo por el ancho. El perímetro es una <b>suma</b> de lados."]],
+      exp: `Los lados opuestos del rectángulo miden lo mismo: ${a} + ${b} + ${a} + ${b} = <b>${P} ${u}</b>.` };
+  }
+  if (v === 2) {
+    const { verts, labs } = randPoly(pick([3, 4, 5, 5, 6])), P = sum(labs);
+    return { t: "num", unit: "cm", q: "Calcula el perímetro del polígono.", pre: fig(poly(verts, labs.map(x => x + " cm"))), ans: P * 1000, traps: [],
+      exp: `Se suman las medidas de todos sus lados: ${labs.join(" + ")} = <b>${P} cm</b>.` };
+  }
+  if (v === 3) {
+    const [n, name] = pick([[3, "triángulo equilátero"], [4, "cuadrado"], [5, "pentágono regular"], [6, "hexágono regular"]]);
+    const l = rnd(3, 12), u = pick(["cm", "m"]), P = n * l;
+    const o = four(P, [(n - 1) * l, l * l, (n + 1) * l, n + l, 2 * l, P + 1]);
+    return mc(`Un ${name} tiene lados de ${l} ${u} cada uno. ¿Cuál es su perímetro?`, o.map(x => `${x} ${u}`),
+      `El ${name} tiene ${n} lados iguales: ${Array(n).fill(l).join(" + ")} = ${n} · ${l} = <b>${P} ${u}</b>.`);
+  }
+  if (v === 4) {
+    let a, b, c;
+    do { a = rnd(5, 15); b = rnd(4, 14); c = rnd(3, 14); } while (a >= b + c || b >= a + c || c >= a + b);
+    const P = a + b + c;
+    return { t: "num", unit: "cm", q: `Un triángulo tiene un perímetro de ${P} cm. Dos de sus lados miden ${a} cm y ${b} cm. ¿Cuánto mide el tercer lado?`, ans: c * 1000,
+      traps: [[(a + b) * 1000, "Sumaste los dos lados que conoces. Falta <b>restarlos</b> del perímetro."], [(P + a + b) * 1000, "Sumaste todo. Al perímetro hay que <b>restarle</b> los lados que conoces."]],
+      exp: `Al perímetro se le restan los lados que conoces: ${P} − ${a} − ${b} = <b>${c} cm</b>. Comprobación: ${a} + ${b} + ${c} = ${P}.` };
+  }
+  if (v === 5) {
+    const l = rnd(3, 15), P = 4 * l, u = pick(["cm", "m"]);
+    return { t: "num", unit: u, q: `Un cuadrado tiene un perímetro de ${P} ${u}. ¿Cuánto mide cada lado?`, ans: l * 1000,
+      traps: [[P * 500, "Dividiste por 2, pero el cuadrado tiene <b>4</b> lados iguales."]],
+      exp: `Los 4 lados del cuadrado miden lo mismo: ${P} : 4 = <b>${l} ${u}</b>.` };
+  }
+  const a = rnd(8, 30), b = rnd(4, a - 2), P = 2 * (a + b), N = pick(NAMES);
+  const [txt, u] = pick([
+    [`Un terreno rectangular mide ${a} m de largo y ${b} m de ancho. ¿Cuántos metros de reja se necesitan para rodearlo completo?`, "m"],
+    [`${N} quiere pegar cinta alrededor de un cuadro rectangular de ${a} cm de largo y ${b} cm de ancho. ¿Cuántos centímetros de cinta necesita?`, "cm"]]);
+  return { t: "num", unit: u, q: txt, ans: P * 1000,
+    traps: [[(a + b) * 1000, "Sumaste solo dos lados. Para rodear el rectángulo se recorren sus <b>cuatro</b> lados."], [a * b * 1000, "Multiplicaste. Rodear la figura es calcular su <b>perímetro</b>, que es una suma."]],
+    exp: `Rodear la figura es calcular su perímetro: ${a} + ${b} + ${a} + ${b} = <b>${P} ${u}</b>.` };
+}
+
+/* ---- adición y sustracción de fracciones ---- */
+const MULT_PAIRS = [[2, 4], [2, 6], [2, 8], [2, 10], [3, 6], [3, 9], [3, 12], [4, 8], [4, 12], [5, 10], [6, 12], [2, 12]];
+const COP_PAIRS = [[2, 3], [3, 4], [2, 5], [4, 6], [6, 4], [3, 2], [4, 3], [5, 2]];
+/* a/d1 op b/d2, propias, con resultado mayor que 0 y menor que 1 */
+function pairFr(dens, op) {
+  for (;;) {
+    const [d1, d2] = Math.random() < 0.5 ? dens : [dens[1], dens[0]];
+    const a = rnd(1, d1 - 1), b = rnd(1, d2 - 1), L = lcm(d1, d2), A = a * L / d1, B = b * L / d2, R = op === "+" ? A + B : A - B;
+    if (R > 0 && R < L) return { a, d1, b, d2, L, A, B, R, op };
+  }
+}
+/* desarrollo escrito de la operación */
+function fraSteps(p) {
+  const [rn, rd] = red(p.R, p.L), g = p.L / rd;
+  let s = p.d1 === p.d2 ? `${F(p.a, p.d1)} ${p.op} ${F(p.b, p.d2)} = ${F(p.R, p.L)}` : `${F(p.a, p.d1)} ${p.op} ${F(p.b, p.d2)} = ${F(p.A, p.L)} ${p.op} ${F(p.B, p.L)} = ${F(p.R, p.L)}`;
+  if (g > 1) s += ` = ${F(rn, rd)}`;
+  return s + (p.d1 === p.d2 ? ". Con igual denominador se operan los numeradores." : `. Primero se amplifica a ${p.L}.`) + (g > 1 ? ` Al final se simplifica por ${g}.` : "");
+}
+function fraOpTxt(p) { return `<span class="big">${F(p.a, p.d1)} ${p.op} ${F(p.b, p.d2)}</span>`; }
+function genFra(v) {
+  v = pickVar(7, v);
+  if (v <= 4) {
+    const op = v === 2 ? "−" : v === 1 ? "+" : pick(["+", "−"]);
+    let p;
+    if (v <= 2) { const d = rnd(5, 12); p = pairFr([d, d], op); }
+    else p = pairFr(pick(v === 3 ? MULT_PAIRS : COP_PAIRS), op);
+    return { t: "frac", simp: true, q: `Calcula. Simplifica el resultado si se puede.`, pre: fraOpTxt(p), ans: red(p.R, p.L),
+      traps: [[p.op === "+" ? p.a + p.b : p.a - p.b, p.op === "+" ? p.d1 + p.d2 : p.d1 - p.d2, "Operaste también los denominadores. El denominador no se suma ni se resta."]],
+      exp: fraSteps(p) };
+  }
+  if (v === 5) {
+    const N1 = pick(NAMES), N2 = pick(NAMES.filter(x => x !== N1));
+    const ctx = pick([
+      [p => `De una pizza, ${N1} comió ${F(p.a, p.d1)} y ${N2} comió ${F(p.b, p.d2)}. ¿Qué fracción de la pizza comieron entre las dos?`, "+"],
+      [p => `${N1} leyó ${F(p.a, p.d1)} de un libro el lunes y ${F(p.b, p.d2)} el martes. ¿Qué fracción del libro leyó en total?`, "+"],
+      [p => `Una cinta mide ${F(p.a, p.d1)} de metro. Se cortan ${F(p.b, p.d2)} de metro. ¿Qué fracción de metro queda?`, "−"],
+      [p => `Una botella tiene ${F(p.a, p.d1)} de litro de jugo. ${N1} se toma ${F(p.b, p.d2)} de litro. ¿Qué fracción de litro queda?`, "−"]]);
+    const p = pairFr(pick([...MULT_PAIRS, ...COP_PAIRS]), ctx[1]);
+    return { t: "frac", simp: true, q: ctx[0](p) + " Simplifica el resultado si se puede.", ans: red(p.R, p.L),
+      traps: [[p.op === "+" ? p.a + p.b : p.a - p.b, p.op === "+" ? p.d1 + p.d2 : p.d1 - p.d2, "Operaste también los denominadores."]],
+      exp: `Es una ${p.op === "+" ? "adición" : "sustracción"}: ${fraSteps(p)}` };
+  }
+  if (v === 6) {
+    const op = pick(["+", "−"]), p = pairFr(pick([...MULT_PAIRS, ...COP_PAIRS]), op), [rn, rd] = red(p.R, p.L);
+    const cands = [[op === "+" ? p.a + p.b : p.a - p.b, op === "+" ? p.d1 + p.d2 : p.d1 - p.d2], [op === "+" ? p.a + p.b : p.a - p.b, Math.max(p.d1, p.d2)], [op === "+" ? p.A - p.B : p.A + p.B, p.L], [p.R + 1, p.L], [p.R, p.L + 1]]
+      .filter(([n, d]) => n > 0 && d > 0);
+    const o = four([rn, rd], cands, fval);
+    return mc(`El resultado de ${fraOpTxt(p)}, simplificado, es:`, o.map(([n, d]) => F(n, d)), fraSteps(p));
+  }
+  /* 7: suma en una recta con dos enteros: el error de contar las partes de toda la recta */
+  const d = pick([3, 4, 4, 5]); /* con medios no se puede pasar del 1 sumando dos fracciones propias */
+  let a, b; do { a = rnd(1, d - 1); b = rnd(1, d - 1); } while (a + b <= d);
+  const line = { n: 2 * d, major: d, labels: { 0: "0", [d]: "1", [2 * d]: "2" } }, k = a + b;
+  const exp = `Entre 0 y 1 hay <b>${d}</b> partes, así que cada parte es ${F(1, d)}. Desde ${F(a, d)} avanzas ${b} ${b === 1 ? "parte" : "partes"} y llegas a <b>${F(k, d)}</b> (es decir, ${M(1, k - d, d)}). No es ${F(k, 2 * d)}: el denominador es el número de partes de <b>un</b> entero.`;
+  if (Math.random() < 0.5) {
+    const o = four([k, d], [[k, 2 * d], [k - d, d], [b, d], [k + 1, d]], fval);
+    return mc(`En la recta, cada entero está dividido en ${d} partes iguales. Si partes en ${F(a, d)} y avanzas ${F(b, d)}, ¿a qué fracción llegas?`, o.map(([n, dd]) => F(n, dd)), exp, { pre: fig(recta({ ...line, pts: { [a]: "" } })), multi: true });
+  }
+  return { t: "line", q: `Marca en la recta el resultado de ${F(a, d)} + ${F(b, d)}.`, line, ans: k, multi: true, exp };
+}
+
+/* ---- representación de números decimales ---- */
+function randDec(p, e) { /* número con p cifras decimales (la última no es 0) y parte entera e */
+  let r; do { r = rnd(1, Math.pow(10, p) - 1); } while (r % 10 === 0);
+  return e * 1000 + r * Math.pow(10, 3 - p);
+}
+function genRep(v) {
+  v = pickVar(7, v);
+  if (v === 1) {
+    const p = pick([1, 1, 2, 2, 2, 3]), den = Math.pow(10, p);
+    let n; do { n = pick([rnd(1, 9), rnd(1, den - 1), rnd(1, den - 1), rnd(den + 1, 5 * den - 1)]); } while (n % 10 === 0);
+    const m = n * 1000 / den, traps = [];
+    if (p > 1) traps.push([n * 1000 / (den / 10), "La cifra quedó un lugar más a la izquierda. Cuenta los ceros del denominador: son las cifras que van después de la coma."]);
+    if (p < 3) traps.push([n * 100 / den, "Quedaron demasiadas cifras después de la coma. Cuenta los ceros del denominador."]);
+    return { t: "num", q: "Escribe como número decimal:", pre: `<span class="big">${F(n, den)}</span>`, ans: m, traps,
+      exp: `El denominador ${thou(den)} tiene ${p} ${p === 1 ? "cero" : "ceros"}, así que hay ${p} ${p === 1 ? "cifra" : "cifras"} después de la coma: ${F(n, den)} = <b>${fmtD(m)}</b> (${decWords(m, p)}).${String(n).length < p ? " Se completa con ceros para que cada cifra quede en su lugar." : ""}` };
+  }
+  if (v === 2) {
+    const p = pick([1, 2, 2, 3]), m = randDec(p, pick([0, 0, 0, 1, 2, 3])), den = Math.pow(10, p), n = m / Math.pow(10, 3 - p), [rn, rd] = red(n, den);
+    return { t: "frac", q: `Escribe <b>${fmtD(m)}</b> como fracción.`, ans: [n, den],
+      exp: `${fmtD(m)} tiene ${p} ${p === 1 ? "cifra decimal" : "cifras decimales"}, así que el denominador es ${thou(den)}: ${fmtD(m)} = <b>${F(n, den)}</b>.${rd !== den ? ` También vale ${F(rn, rd)}, que es la misma fracción simplificada.` : ""}` };
+  }
+  if (v === 3) {
+    let k; do { k = rnd(1, 99); } while (k % 10 === 0);
+    return mc("La cuadrícula representa un entero. ¿Qué número decimal representa la parte pintada?", [fmtD(k * 10), fmtD(k * 100), String(k), fmtD(k)],
+      `Hay ${k} cuadraditos pintados de 100: ${F(k, 100)} = <b>${fmtD(k * 10)}</b> (${decWords(k * 10, 2)}).`, { pre: fig(grid(k)) });
+  }
+  if (v === 4) {
+    const p = rnd(1, 3), m = randDec(p, pick([0, 1, 2, 3, 4, 5, 7, 9])), cands = [];
+    for (const q of [1, 2, 3]) if (q !== p) { const e = Math.floor(m / 1000), r = Math.round(m % 1000 / Math.pow(10, 3 - p)); cands.push((e ? words(e) + (e === 1 ? " entero " : " enteros ") : "") + words(r) + " " + PLACE[q] + (r === 1 ? "" : "s")); }
+    if (p >= 2) cands.push(decWords(m * 10, p - 1));
+    if (p <= 2 && m % 10 === 0) cands.push(decWords(m / 10, p + 1));
+    const whole = Math.round(m / Math.pow(10, 3 - p)); /* leer todas las cifras como si no hubiera coma */
+    if (whole < 1000) cands.push(words(whole) + (whole === 1 ? " entero" : " enteros"));
+    const o = four(decWords(m, p), cands);
+    return mc(`¿Cómo se lee el número <b>${fmtD(m)}</b>?`, o.map(cap), `${fmtD(m)} tiene ${p} ${p === 1 ? "cifra decimal" : "cifras decimales"}: la última está en los <b>${PLACE[p]}s</b>. Se lee «${decWords(m, p)}».`, { tall: true });
+  }
+  if (v === 5) {
+    const p = rnd(1, 3), m = randDec(p, pick([0, 1, 2, 3, 5, 8])), e = Math.floor(m / 1000), r = Math.round(m % 1000 / Math.pow(10, 3 - p)), traps = [];
+    for (const q of [1, 2, 3]) if (q !== p && r < Math.pow(10, q)) traps.push([e * 1000 + r * Math.pow(10, 3 - q), `Fíjate en la última palabra: «${PLACE[p]}s» dice que hay ${p} ${p === 1 ? "cifra" : "cifras"} después de la coma.`]);
+    return { t: "num", q: `Escribe con cifras el número «${decWords(m, p)}».`, ans: m, traps,
+      exp: `«${cap(PLACE[p])}s» quiere decir ${p} ${p === 1 ? "cifra" : "cifras"} después de la coma: <b>${fmtD(m, p)}</b>.` };
+  }
+  if (v === 6) {
+    let dg; do { dg = [rnd(1, 9), rnd(1, 9), rnd(1, 9), rnd(1, 9)]; } while (new Set(dg).size < 4);
+    const m = dg[0] * 1000 + dg[1] * 100 + dg[2] * 10 + dg[3], pos = pick([0, 1, 1, 2, 2, 3]), D = dg[pos];
+    const NAME = [D === 1 ? "unidad" : "unidades", D === 1 ? "décimo" : "décimos", D === 1 ? "centésimo" : "centésimos", D === 1 ? "milésimo" : "milésimos"];
+    const VAL = [String(D), "0," + D, "0,0" + D, "0,00" + D];
+    return { t: "mc", q: `En el número <b>${fmtD(m)}</b>, ¿qué valor tiene el dígito ${D}?`, opts: [0, 1, 2, 3].map(i => `${D} ${NAME[i]} (${VAL[i]})`), ans: pos, tall: true,
+      exp: `${fmtD(m)} = ${dg[0]} unidades, ${dg[1]} décimos, ${dg[2]} centésimos y ${dg[3]} milésimos. El ${D} está en ${["las unidades", "los décimos", "los centésimos", "los milésimos"][pos]}: vale <b>${VAL[pos]}</b>.` };
+  }
+  const e = rnd(1, 9), a = rnd(0, 9), b = rnd(1, 9), c = pick([0, rnd(1, 9)]), m = e * 1000 + a * 100 + b * 10 + c;
+  const parts = [String(e)]; if (a) parts.push(fmtD(a * 100)); parts.push(fmtD(b * 10)); if (c) parts.push(fmtD(c));
+  return { t: "num", q: `¿Qué número es <b>${parts.join(" + ")}</b>?`, ans: m,
+    traps: a ? [] : [[e * 1000 + b * 100 + c * 10, "Falta el 0 de los décimos: aquí no hay décimos, así que en ese lugar va un 0."]],
+    exp: `${parts.join(" + ")} = <b>${fmtD(m)}</b>: ${e} unidades, ${a} décimos, ${b} centésimos${c ? ` y ${c} milésimos` : ""}.` };
+}
+
+/* ---- orden y comparación ---- */
+const POSN = ["la parte entera", "los décimos", "los centésimos", "los milésimos"];
+const digs = m => [Math.floor(m / 1000), Math.floor(m % 1000 / 100), Math.floor(m % 100 / 10), m % 10];
+function cmpText(x, y, ax, by) {
+  const s = x > y ? "&gt;" : x < y ? "&lt;" : "=";
+  if (x === y) return `${ax} = ${by}: un cero al final no cambia el número.`;
+  const X = digs(x), Y = digs(y), i = X.findIndex((v, k) => v !== Y[k]);
+  return i === 0 ? `La parte entera de ${ax} es ${X[0]} y la de ${by} es ${Y[0]}, entonces <b>${ax} ${s} ${by}</b>.`
+    : `${i === 1 ? "La parte entera es igual" : `La parte entera y ${POSN.slice(1, i).join(" y ")} son iguales`}. En ${POSN[i]}: ${X[i]} ${s} ${Y[i]}, entonces <b>${ax} ${s} ${by}</b>.`;
+}
+/* pares que ponen a prueba los errores típicos */
+function cmpPair() {
+  const e = rnd(0, 9), a = rnd(2, 9);
+  let x, y, ax, by;
+  switch (rnd(1, 6)) {
+    case 1: x = e * 1000 + a * 100; y = e * 1000 + (a - 1) * 100 + rnd(1, 9) * 10; break;
+    case 2: x = e * 1000 + a * 100; y = x; break;
+    case 3: x = e * 1000 + a * 100; y = x - 10; break;
+    case 4: x = e * 1000 + a * 100; y = e * 1000 + a * 10; break;
+    case 5: x = e * 1000 + rnd(1, 9) * 100 + rnd(1, 9) * 10; y = (e + 1) * 1000 + rnd(0, 9) * 10 + rnd(1, 9); break;
+    default: x = randDec(rnd(2, 3), e); do { y = randDec(rnd(1, 3), e); } while (y === x);
+  }
+  ax = fmtD(x); by = x === y ? fmtD(y, places(x) + 1) : fmtD(y);
+  return Math.random() < 0.5 ? { x, y, ax, by } : { x: y, y: x, ax: by, by: ax };
+}
+function genOrd(v) {
+  v = pickVar(5, v);
+  if (v === 1) {
+    const { x, y, ax, by } = cmpPair();
+    return { t: "mc", cmp: true, q: "Elige el signo que corresponde:", pre: `<span class="big">${ax} &nbsp;___&nbsp; ${by}</span>`, opts: ["&lt;", "&gt;", "="], ans: x < y ? 0 : x > y ? 1 : 2, exp: cmpText(x, y, ax, by) };
+  }
+  if (v === 2) {
+    const e = rnd(0, 9), want = pick(["mayor", "menor"]);
+    let vals;
+    if (Math.random() < 0.5) { const a = rnd(5, 9); vals = [e * 1000 + a * 100, e * 1000 + (a - 1) * 100 + rnd(1, 9) * 10 + rnd(1, 9), e * 1000 + rnd(1, a - 2) * 100 + rnd(1, 9) * 10, e * 1000 + rnd(1, 9) * 10 + rnd(1, 9)]; }
+    else { vals = []; while (vals.length < 4) { const m = randDec(rnd(1, 3), e); if (!vals.includes(m)) vals.push(m); } }
+    const best = want === "mayor" ? Math.max(...vals) : Math.min(...vals);
+    return mc(`¿Cuál de estos números es el <b>${want}</b>?`, [best, ...vals.filter(x => x !== best)].map(x => fmtD(x)),
+      `Se comparan con las comas alineadas: ${vals.slice().sort((p, q) => q - p).map(x => fmtD(x, 3)).join(" &gt; ")}. El ${want} es <b>${fmtD(best)}</b>.${want === "mayor" ? " Tener más cifras no lo hace mayor." : ""}`);
+  }
+  if (v === 3) {
+    const e = rnd(0, 5);
+    let vals;
+    if (Math.random() < 0.6) { const yy = rnd(2, 9), xx = rnd(1, yy - 1); vals = [e * 1000 + yy * 100, e * 1000 + yy * 10, e * 1000 + yy * 100 + yy * 10, e * 1000 + xx * 100 + yy * 10]; }
+    else { vals = []; while (vals.length < 4) { const m = randDec(rnd(1, 3), e); if (!vals.includes(m)) vals.push(m); } }
+    const up = Math.random() < 0.5, items = shuffle(vals), sorted = items.slice().sort((p, q) => up ? p - q : q - p);
+    return { t: "order", q: `Ordena los números de <b>${up ? "menor a mayor" : "mayor a menor"}</b>.`, items: items.map(x => fmtD(x)), ans: sorted.map(x => items.indexOf(x)),
+      exp: `Con ceros al final: ${items.map(x => fmtD(x, 3)).join("; ")}. ${up ? "De menor a mayor" : "De mayor a menor"}: <b>${sorted.map(x => fmtD(x)).join(up ? " &lt; " : " &gt; ")}</b>.` };
+  }
+  if (v === 4) {
+    const names = shuffle(NAMES).slice(0, 4), run = Math.random() < 0.5, e = run ? rnd(14, 17) : rnd(1, 3), a = rnd(4, 8);
+    const vals = shuffle([e * 1000 + a * 100, e * 1000 + (a - 1) * 100 + rnd(1, 9) * 10, e * 1000 + rnd(1, 9) * 10, e * 1000 + (a + 1) * 100]);
+    const unit = run ? "s" : "m", best = run ? Math.min(...vals) : Math.max(...vals), who = names[vals.indexOf(best)];
+    const table = `<div class="tablewrap"><table class="t" style="max-width:340px"><tr><th>Niña</th><th>${run ? "Tiempo" : "Distancia"}</th></tr>${names.map((n, i) => `<tr><td>${n}</td><td>${fmtD(vals[i])} ${unit}</td></tr>`).join("")}</table></div>`;
+    return mc(run ? "En una carrera, cuatro niñas hicieron estos tiempos. ¿Quién llegó primero, es decir, hizo el <b>menor</b> tiempo?" : "En salto largo, cuatro niñas saltaron estas distancias. ¿Quién saltó <b>más lejos</b>?",
+      [who, ...names.filter(n => n !== who)], `Con las comas alineadas: ${vals.slice().sort((p, q) => p - q).map(x => fmtD(x, 2)).join(" &lt; ")}. ${run ? "El menor tiempo" : "La mayor distancia"} es ${fmtD(best)} ${unit}: <b>${who}</b>.`, { pre: table });
+  }
+  const e = rnd(0, 5), a = rnd(1, 7), x = e * 1000 + a * 100, ok = x + rnd(1, 9) * 10;
+  const o = four(ok, [e * 1000 + a * 10 + rnd(1, 9), x + 200, (e + 1) * 1000 + a * 100 + 50, x + 100, x]);
+  return mc(`¿Qué número está entre <b>${fmtD(x)}</b> y <b>${fmtD(x + 100)}</b>?`, o.map(m => fmtD(m)),
+    `${fmtD(x)} = ${fmtD(x, 2)} y ${fmtD(x + 100)} = ${fmtD(x + 100, 2)}. Entre ellos están ${fmtD(x + 10)}, ${fmtD(x + 20)}… hasta ${fmtD(x + 90)}. La respuesta es <b>${fmtD(ok)}</b>.`);
+}
+
+/* ---- la recta numérica ---- */
+const R01 = { n: 10, major: 10, labels: { 0: "0", 10: "1" } };
+const R02 = { n: 20, major: 10, labels: { 0: "0", 10: "1", 20: "2" } };
+function genRec(v) {
+  v = pickVar(6, v);
+  if (v === 1) {
+    const k = rnd(1, 9);
+    return { t: "num", q: "¿Qué número decimal representa el punto P?", pre: fig(recta({ ...R01, pts: { [k]: "P" } })), ans: k * 100,
+      traps: [[k * 10, "Cada parte es un <b>décimo</b> (0,1), no un centésimo."], [(k + 1) * 100, "Contaste las marcas y no los espacios. Cuenta los saltos desde el 0."], [(k - 1) * 100, "Cuenta los espacios desde el 0: el primero llega a 0,1."]],
+      exp: `Entre 0 y 1 hay 10 partes: cada parte es 0,1. P está ${k} ${k === 1 ? "parte" : "partes"} después del 0: <b>${fmtD(k * 100)}</b>.` };
+  }
+  if (v === 2) {
+    const k = rnd(11, 19), pre = fig(recta({ ...R02, pts: { [k]: "P" } }));
+    const exp = `Entre 0 y 1 hay <b>10</b> partes, así que cada parte es 0,1. P está ${k - 10} ${k === 11 ? "parte" : "partes"} después del 1: <b>${fmtD(k * 100)}</b>. No es ${F(k, 20)}: el denominador es el número de partes de <b>un</b> entero, no de toda la recta.`;
+    if (Math.random() < 0.5) return mc("¿Qué número representa el punto P?", [fmtD(k * 100), F(k, 20), fmtD(k * 10), fmtD(1000 + (k - 10) * 10)], exp, { pre, multi: true });
+    return { t: "num", q: "¿Qué número decimal representa el punto P?", pre, ans: k * 100, multi: true,
+      traps: [[k * 50, "Tomaste las 20 partes de toda la recta como si fueran un solo entero. Cuenta las partes de <b>un</b> entero."], [k * 10, "Pasaste el 1: P es mayor que 1."], [(k - 10) * 100, "Olvidaste el entero que ya pasaste."]], exp };
+  }
+  if (v === 3) {
+    const a = rnd(1, 8), k = rnd(1, 9);
+    return { t: "num", q: "¿Qué número decimal representa el punto P?", pre: fig(recta({ n: 10, major: 10, labels: { 0: String(a), 10: String(a + 1) }, pts: { [k]: "P" } })), ans: a * 1000 + k * 100,
+      traps: [[k * 100, `Olvidaste la parte entera: la recta empieza en ${a}, no en 0.`]],
+      exp: `Entre ${a} y ${a + 1} hay 10 partes: cada parte es 0,1. P está ${k} ${k === 1 ? "parte" : "partes"} después del ${a}: <b>${fmtD(a * 1000 + k * 100)}</b>.` };
+  }
+  if (v === 4) {
+    const x = rnd(0, 3) * 1000 + rnd(1, 8) * 100, k = rnd(1, 9);
+    return { t: "num", q: "¿Qué número decimal representa el punto R?", pre: fig(recta({ n: 10, major: 10, labels: { 0: fmtD(x), 10: fmtD(x + 100) }, pts: { [k]: "R" } })), ans: x + k * 10,
+      traps: [[x + k * 100, "Aquí el espacio entre las dos marcas largas es solo 0,1. Cada parte es un <b>centésimo</b> (0,01)."], [k * 10, `Olvidaste que la recta parte en ${fmtD(x)}.`]],
+      exp: `Entre ${fmtD(x)} y ${fmtD(x + 100)} hay 10 partes: cada parte es un centésimo (0,01). R está ${k} ${k === 1 ? "parte" : "partes"} después de ${fmtD(x)}: <b>${fmtD(x + k * 10)}</b>.` };
+  }
+  if (v === 5) {
+    const two = Math.random() < 0.6, k = two ? rnd(11, 19) : rnd(1, 9), line = two ? R02 : R01;
+    return { t: "line", q: `Marca en la recta el número <b>${fmtD(k * 100)}</b>.`, line, ans: k, multi: two,
+      exp: two ? `Cada entero tiene 10 partes, así que cada parte es 0,1. ${fmtD(k * 100)} está ${k - 10} ${k === 11 ? "parte" : "partes"} después del 1.` : `Cada parte es 0,1. ${fmtD(k * 100)} está ${k} ${k === 1 ? "parte" : "partes"} después del 0.` };
+  }
+  const x = rnd(0, 4) * 1000 + rnd(1, 8) * 100;
+  return { t: "num", q: `Escribe un número decimal que esté entre <b>${fmtD(x)}</b> y <b>${fmtD(x + 100)}</b>.`, range: [x, x + 100], ans: x + 50,
+    traps: [[x, "Ese es uno de los extremos; tiene que estar <b>entre</b> los dos."], [x + 100, "Ese es uno de los extremos; tiene que estar <b>entre</b> los dos."]],
+    exp: `${fmtD(x)} = ${fmtD(x, 2)} y ${fmtD(x + 100)} = ${fmtD(x + 100, 2)}. Entre ellos están ${fmtD(x + 10)}, ${fmtD(x + 20)}… ${fmtD(x + 90)}. Por ejemplo, <b>${fmtD(x + 50)}</b>.` };
+}
+
+const G = { per: genPer, fra: genFra, rep: genRep, ord: genOrd, rec: genRec };
+const NVAR = { per: 6, fra: 7, rep: 7, ord: 5, rec: 6 };
+const TOPIC_SEC = { per: 1, fra: 2, rep: 3, ord: 4, rec: 5 };
+function genQ(topic, v) {
+  const q = G[topic](v); q.topic = topic; q.sec = TOPIC_SEC[topic];
+  /* un error típico que da lo mismo que la respuesta (6 · 3 = 6 + 3 + 6 + 3) no es error */
+  if (q.t === "num" && q.traps) q.traps = q.traps.filter(x => x[0] !== q.ans && !(q.range && x[0] > q.range[0] && x[0] < q.range[1]));
+  return q;
+}
+
+/* ============ dibujar y corregir una pregunta ============ */
+const LET = "ABCDEF";
+function gradeQ(q, v) {
+  if (v == null) return 0;
+  if (q.t === "mc") return v === q.ans ? 2 : 0;
+  if (q.t === "line") return v === q.ans ? 2 : 0;
+  if (q.t === "num") { const m = parseNum(v); if (m == null) return 0; if (q.range) return m > q.range[0] && m < q.range[1] ? 2 : 0; return m === q.ans ? 2 : 0; }
+  if (q.t === "frac") {
+    if (!Array.isArray(v) || !/^\d+$/.test(String(v[0]).trim()) || !/^\d+$/.test(String(v[1]).trim())) return 0;
+    const n = +v[0], d = +v[1]; if (!d || n * q.ans[1] !== d * q.ans[0]) return 0;
+    return q.simp && gcd(n, d) !== 1 ? 1 : 2;
+  }
+  if (q.t === "order") { if (!Array.isArray(v) || v.length !== q.ans.length) return 0; const good = v.filter((x, i) => x === q.ans[i]).length; return good === q.ans.length ? 2 : good >= q.ans.length - 2 ? 1 : 0; }
+  return 0;
+}
+function isAnswered(q, v) {
+  if (v == null) return false;
+  if (q.t === "order") return Array.isArray(v) && v.length === q.items.length;
+  if (q.t === "num") return String(v).trim() !== "";
+  if (q.t === "frac") return Array.isArray(v) && String(v[0] ?? "").trim() !== "" && String(v[1] ?? "").trim() !== "";
+  return true;
+}
+/* mensaje para un error típico, si la respuesta calza con uno */
+function trapMsg(q, v) {
+  if (q.t === "num" && q.traps) { const m = parseNum(v); const t = q.traps.find(x => x[0] === m); return t ? t[1] : ""; }
+  if (q.t === "frac" && q.traps && Array.isArray(v)) { const n = +v[0], d = +v[1]; const t = d && q.traps.find(x => x[1] && n * x[1] === d * x[0]); return t ? t[2] : ""; }
+  return "";
+}
+function rightAnswer(q) {
+  if (q.t === "num") return q.range ? "" : `La respuesta es <b>${fmtD(q.ans)}${q.unit ? " " + q.unit : ""}</b>. `;
+  if (q.t === "frac") return `La respuesta es ${F(q.ans[0], q.ans[1])}. `;
+  return "";
+}
+
+/* cfg: { value, instant, locked, onChange(v), onDone(pts), noReview } */
+function renderQ(el, q, cfg) {
+  let v = cfg.value == null ? (q.t === "order" ? [] : q.t === "frac" ? ["", ""] : null) : JSON.parse(JSON.stringify(cfg.value));
+  let locked = !!cfg.locked;
+  const head = `<div class="q-text big-q" style="margin-bottom:10px">${q.q}</div>` + (q.pre ? `<div class="pre">${q.pre}</div>` : "");
+  const fbx = `<div class="fbx"></div>`;
+  const commit = () => { cfg.onChange && cfg.onChange(v); };
+  const finish = () => { locked = true; reveal(); cfg.onDone && cfg.onDone(gradeQ(q, v)); };
+  const checkBtn = host => { $$("[data-check]", el).forEach(b => b.remove()); if (cfg.instant && !locked && isAnswered(q, v)) { host.insertAdjacentHTML("beforeend", `<button type="button" class="btn blue small" data-check="1" style="margin-left:6px">Comprobar</button>`); $("[data-check]", el).onclick = finish; } };
+
+  function reveal() {
+    const pts = gradeQ(q, v), cls = pts === 2 ? "ok" : pts ? "part" : "bad";
+    if (q.t === "mc") $$(".opt", el).forEach(b => { const k = +b.dataset.k; b.classList.remove("sel"); if (k === q.ans) b.classList.add("ok"); else if (k === v) b.classList.add("bad"); });
+    if (q.t === "order") $$(".dest .it", el).forEach((b, i) => b.classList.add(v[i] === q.ans[i] ? "ok" : "bad"));
+    if (q.t === "num" || q.t === "frac") $$("input", el).forEach(i => { i.disabled = true; i.classList.add(cls); });
+    if (q.t === "line") setMarks($("svg.recta", el), [[q.ans, "#23915F"], ...(v != null && v !== q.ans ? [[v, "#D64545"]] : [])]);
+    $$("[data-check]", el).forEach(b => b.remove());
+    const empty = !isAnswered(q, v);
+    const tag = pts === 2 ? "¡Bien!" : pts ? "Casi: está bien calculado, pero falta simplificar." : empty ? "No respondiste." : "Todavía no.";
+    const trap = pts < 2 && !empty ? trapMsg(q, v) : "";
+    $(".fbx", el).innerHTML = `<div class="fb ${cls}"><span class="score-chip ${cls}">${pts} / 2</span> <b>${tag}</b> ${trap ? trap + " " : ""}${pts < 2 ? rightAnswer(q) : ""}${q.exp}${pts < 2 && q.sec && !cfg.noReview ? ` <a href="#aprender-${q.sec}">Repasar esto →</a>` : ""}</div>`;
+  }
+
+  if (q.t === "mc") {
+    el.innerHTML = head + `<div class="opts ${q.cmp ? "cmp" : q.tall ? "tall" : ""}">${q.opts.map((o, k) => `<button type="button" class="opt" data-k="${k}">${q.cmp ? "" : `<span class="l">${LET[k]}</span>`}<span>${o}</span></button>`).join("")}</div>` + fbx;
+    $$(".opt", el).forEach(b => b.onclick = () => { if (locked) return; v = +b.dataset.k; $$(".opt", el).forEach(x => x.classList.toggle("sel", x === b)); commit(); if (cfg.instant) finish(); });
+    if (v != null) $(`.opt[data-k="${v}"]`, el)?.classList.add("sel");
+  }
+  if (q.t === "num") {
+    el.innerHTML = head + `<div class="line"><span class="small muted">Respuesta:</span> <input class="inp dec" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="${esc(v ?? "")}"> ${q.unit || ""}<span class="chk"></span></div>` + fbx;
+    const inp = $("input", el);
+    inp.oninput = () => { if (locked) return; v = inp.value; commit(); checkBtn($(".chk", el)); };
+    inp.onkeydown = e => { if (e.key === "Enter" && cfg.instant && !locked && isAnswered(q, v)) finish(); };
+    checkBtn($(".chk", el));
+  }
+  if (q.t === "frac") {
+    el.innerHTML = head + `<div class="line"><span class="small muted">Respuesta:</span> <span class="fin"><input class="inp" data-p="0" inputmode="numeric" autocomplete="off" value="${esc(v[0])}"><span class="bar"></span><input class="inp" data-p="1" inputmode="numeric" autocomplete="off" value="${esc(v[1])}"></span><span class="chk"></span></div>` + fbx;
+    $$("input", el).forEach(inp => inp.oninput = () => { if (locked) return; v[+inp.dataset.p] = inp.value.trim(); commit(); checkBtn($(".chk", el)); });
+    checkBtn($(".chk", el));
+  }
+  if (q.t === "line") {
+    el.innerHTML = head + `<div class="figbox">${recta({ ...q.line, tap: true })}</div><div class="small muted">Toca la recta para marcar el punto.<span class="chk"></span></div>` + fbx;
+    const s = $("svg.recta", el);
+    const put = () => setMarks(s, [[v, "#3A86D6"]]);
+    $$(".tz", el).forEach(z => z.addEventListener("click", () => { if (locked) return; v = +z.dataset.k; put(); commit(); checkBtn($(".chk", el)); }));
+    put(); checkBtn($(".chk", el));
+  }
+  if (q.t === "order") {
+    el.innerHTML = head + `<div class="orderq"><div class="small muted">Toca los números en orden. Si te equivocas, toca uno de tu orden para devolverlo.</div><div class="pool"></div><div class="small" style="font-weight:800;margin-top:6px">Tu orden:</div><div class="dest"></div><span class="chk"></span></div>` + fbx;
+    const draw = () => {
+      $(".pool", el).innerHTML = q.items.map((t, i) => `<button type="button" class="it ${v.includes(i) ? "used" : ""}" data-i="${i}">${t}</button>`).join("");
+      $(".dest", el).innerHTML = v.length ? v.map((i, k) => `<button type="button" class="it" data-k="${k}"><span class="n">${k + 1}</span>${q.items[i]}</button>`).join("") : `<div class="small muted">(vacío)</div>`;
+      $$(".pool .it", el).forEach(b => b.onclick = () => { if (locked) return; const i = +b.dataset.i; if (v.includes(i)) return; v.push(i); commit(); draw(); });
+      $$(".dest .it", el).forEach(b => b.onclick = () => { if (locked) return; v.splice(+b.dataset.k, 1); commit(); draw(); });
+      checkBtn($(".chk", el));
+    };
+    draw();
+  }
+  if (locked) reveal();
+  return { reveal: () => { locked = true; reveal(); }, value: () => v };
+}
+
+/* ============ práctica infinita dentro de cada lección ============ */
+function practiceLoop(el, topic, sec, need) {
+  const draw = () => {
+    const hits = DB.hits[sec] || 0, q = genQ(topic);
+    el.innerHTML = `<div class="counter">${DB.done[sec] ? "<b>✓ Lección lista.</b> Puedes seguir practicando." : `Aciertos: <b>${hits}</b> de ${need} para completar la lección.`}</div><div class="qbox"></div>`;
+    renderQ($(".qbox", el), q, { instant: true, noReview: true, onDone: pts => {
+      if (pts === 2) { DB.hits[sec] = (DB.hits[sec] || 0) + 1; save(); if (DB.hits[sec] >= need) sectionDone(sec); }
+      $(".counter", el).innerHTML = DB.done[sec] ? "<b>✓ Lección lista.</b> Puedes seguir practicando." : `Aciertos: <b>${DB.hits[sec] || 0}</b> de ${need} para completar la lección.`;
+      $(".fbx", el).insertAdjacentHTML("beforeend", `<div class="q-actions"><button type="button" class="btn blue small" data-next="1">Otra pregunta →</button></div>`);
+      $("[data-next]", el).onclick = draw;
+    } });
+  };
+  draw();
+}
+
+/* ============ ensayos autogenerados ============ */
+/* 30 preguntas de 2 puntos = 60 puntos; perímetro 10, fracciones 14, representación 16, orden 10, recta 10 */
+const PLAN = [["per", 5], ["fra", 7], ["rep", 8], ["ord", 5], ["rec", 5]];
+/* variantes que siempre entran: la recta con dos enteros (fra 7 y rec 2) */
+const MUST = { fra: [7], rec: [2] };
+const FOCOS = [
+  ["Perímetro de polígonos", q => q.topic === "per", 1],
+  ["Adición y sustracción de fracciones", q => q.topic === "fra", 2],
+  ["Representación de números decimales, escritura y como fracción", q => q.topic === "rep", 3],
+  ["Orden y comparación de números decimales", q => q.topic === "ord", 4],
+  ["Números decimales en la recta numérica", q => q.topic === "rec", 5],
+  ["Rectas con más de un entero: contar las partes de UN entero", q => !!q.multi, 5]
+];
+const MINUTES = 60;
+let TIMER = null;
+const nota = (p, max) => { const c = 0.6 * max; return Math.round((p < c ? 1 + 3 * p / c : 4 + 3 * (p - c) / (max - c)) * 10 + 1e-9) / 10; };
+const sig = q => q.q + "|" + (q.pre || "") + "|" + (q.items ? q.items.join() : "") + "|" + (q.line ? q.ans : "");
+/* reparte las variantes de cada tema para que no se repitan */
+function variants(topic, n) {
+  const must = MUST[topic] || [], rest = shuffle(Array.from({ length: NVAR[topic] }, (_, i) => i + 1).filter(x => !must.includes(x)));
+  const out = [...must]; while (out.length < n) out.push(...rest); return shuffle(out.slice(0, n));
+}
+function makeEnsayo(mode) {
+  const items = [], seen = new Set();
+  PLAN.forEach(([t, n]) => variants(t, n).forEach(vr => { let q, k = 0; do { q = genQ(t, vr); } while (seen.has(sig(q)) && ++k < 25); seen.add(sig(q)); items.push(q); }));
+  return { mode, items, ans: {}, start: mode === "sim" ? Date.now() : null, done: false, created: Date.now() };
+}
+function scoreEns(E) {
+  let pts = 0; const foc = FOCOS.map(() => ({ p: 0, m: 0 }));
+  E.items.forEach((q, i) => { const p = gradeQ(q, E.ans[i]); pts += p; FOCOS.forEach(([, f], k) => { if (f(q)) { foc[k].p += p; foc[k].m += 2; } }); });
+  const max = E.items.length * 2; return { pts, max, nota: nota(pts, max), foc };
+}
+function renderEnsayo() {
+  clearInterval(TIMER);
+  const root = $("#v-ensayo"), E = DB.ens;
+  if (!E || E.done && !E.show) {
+    const last = DB.history.slice(-1)[0];
+    root.innerHTML = `<div class="card hero"><h1>Ensayos de la Prueba N°3</h1>
+      <p>Cada ensayo se arma solo con <b>30 preguntas nuevas</b> (60 puntos) de los cinco temas de la prueba. Con cada ensayo cambian los números, las figuras y las rectas. La nota usa la escala de siempre: 60 % = 4,0.</p>
+      <div class="paths">
+        <div class="path"><div class="step">Modo práctica</div><h3>Te corrige al tiro</h3><p>Después de cada respuesta ves si está bien y por qué. Cuenta tu primera respuesta.</p><button class="btn blue" data-new="guia">Nuevo ensayo de práctica</button></div>
+        <div class="path"><div class="step">Modo simulacro</div><h3>Como la prueba</h3><p>${MINUTES} minutos, sin correcciones hasta que entregas. Al final: nota y corrección.</p><button class="btn" data-new="sim">Nuevo simulacro</button></div>
+      </div>${last ? `<p class="small muted" style="margin:14px 0 0">Último ensayo: ${last.pts} de ${last.max} puntos · nota ${notaTxt(last.nota)}. <a href="#resultados">Ver todos mis resultados</a></p>` : ""}</div>`;
+    $$("[data-new]", root).forEach(b => b.onclick = () => { DB.ens = makeEnsayo(b.dataset.new); save(); renderEnsayo(); window.scrollTo(0, 0); });
+    return;
+  }
+  const guided = E.mode === "guia", total = E.items.length;
+  let h = `<div class="testbar"><b>${guided ? "Ensayo · práctica" : "Ensayo · simulacro"}</b><div class="progress"><i id="pbar"></i></div><span class="small" id="pcount"></span>${!guided && !E.done ? `<span class="timer" id="timer"></span>` : ""}${E.done ? "" : `<button type="button" class="btn small blue" data-fin="1">${guided ? "Ver mi nota" : "Entregar"}</button>`}</div>`;
+  if (E.done) h += resultCard(E);
+  h += E.items.map((q, i) => `<div class="card q" id="eq-${i}"><div class="q-head"><div class="q-num">${i + 1}</div><div class="q-tag" style="flex:1">${FOCOS[q.sec - 1][0]}</div><div class="q-pts">2 pts</div></div><div class="qbody"></div></div>`).join("");
+  h += `<div class="row" style="justify-content:space-between;margin-top:10px">${E.done ? `<button class="btn blue" data-close="1">Hacer otro ensayo</button>` : `<button type="button" class="btn blue" data-fin="1">${guided ? "Ver mi nota" : "Entregar el ensayo"}</button>`}<button type="button" class="btn ghost small" data-quit="1">${E.done ? "Volver" : "Abandonar este ensayo"}</button></div>`;
+  root.innerHTML = h;
+  E.items.forEach((q, i) => {
+    const body = $(`#eq-${i} .qbody`), answered = E.ans[i] != null;
+    renderQ(body, q, { value: E.ans[i], instant: guided && !E.done, locked: E.done || (guided && answered && isAnswered(q, E.ans[i]) && E.locked?.[i]),
+      onChange: v => { if (E.done) return; E.ans[i] = v; save(); progress(); },
+      onDone: () => { E.locked = E.locked || {}; E.locked[i] = true; save(); progress(); } });
+  });
+  $$("[data-fin]", root).forEach(b => b.onclick = finishEns);
+  $$("[data-close]", root).forEach(b => b.onclick = () => { DB.ens = null; save(); renderEnsayo(); window.scrollTo(0, 0); });
+  $$("[data-quit]", root).forEach(b => b.onclick = () => { if (E.done || confirm("¿Abandonar este ensayo? Se pierden las respuestas.")) { DB.ens = null; save(); renderEnsayo(); window.scrollTo(0, 0); } });
+  const tick = () => { const el = $("#timer"); if (!el) return; const left = Math.round((E.start + MINUTES * 60000 - Date.now()) / 1000), a = Math.abs(left); el.textContent = (left < 0 ? "+" : "") + `${Math.floor(a / 60)}:${String(a % 60).padStart(2, "0")}`; el.classList.toggle("late", left < 0); };
+  if (!guided && !E.done) { tick(); TIMER = setInterval(tick, 1000); }
+  function progress() { const n = E.items.filter((q, i) => isAnswered(q, E.ans[i])).length; const pb = $("#pbar"); if (pb) { pb.style.width = (100 * n / total) + "%"; $("#pcount").textContent = `${n} de ${total} respondidas`; } }
+  progress();
+}
+function finishEns() {
+  const E = DB.ens, left = E.items.filter((q, i) => !isAnswered(q, E.ans[i])).length;
+  if (left && !confirm(`Te ${left === 1 ? "falta 1 pregunta" : `faltan ${left} preguntas`}. ¿${E.mode === "guia" ? "Ver la nota" : "Entregar"} igual?`)) return;
+  clearInterval(TIMER);
+  E.done = true; E.show = true; E.end = Date.now();
+  const sc = scoreEns(E);
+  DB.history.push({ mode: E.mode, date: new Date().toISOString(), pts: sc.pts, max: sc.max, nota: sc.nota, foc: sc.foc.map(f => [f.p, f.m]), min: E.start ? Math.round((E.end - E.start) / 60000) : null });
+  save(); renderEnsayo(); window.scrollTo(0, 0);
+  if (sc.nota >= 6) confetti();
+}
+function focoRows(foc) {
+  return `<div class="focos">${foc.map((f, i) => { if (!f.m) return ""; const pct = f.p / f.m, col = pct >= 0.8 ? "#23915F" : pct >= 0.5 ? "#E9B325" : "#D64545"; return `<div class="foco"><span>${FOCOS[i][0]} ${pct < 0.8 ? `· <a href="#aprender-${FOCOS[i][2]}">repasar</a>` : ""}</span><div class="meter"><i style="width:${Math.max(4, pct * 100)}%;background:${col}"></i></div><b>${f.p}/${f.m}</b></div>`; }).join("")}</div>`;
+}
+function resultCard(E) {
+  const sc = scoreEns(E), n = sc.nota;
+  const msg = n >= 6 ? "¡Excelente! Estás muy bien preparada." : n >= 5 ? "¡Muy bien! Revisa abajo lo que quedó marcado." : n >= 4 ? "Aprobado. Repasa los temas en rojo antes de la prueba." : "Todavía falta. Repasa las lecciones de los temas en rojo y vuelve a intentarlo.";
+  const mins = E.start && E.end ? Math.round((E.end - E.start) / 60000) : null;
+  return `<div class="card"><div class="result-top"><div><div class="small muted">Nota</div><div class="nota ${n >= 4 ? "ok" : "bad"}">${notaTxt(n)}</div></div>
+    <div style="flex:1;min-width:220px"><div><b>${sc.pts} de ${sc.max} puntos</b>${mins != null ? ` · ${mins} min` : ""}</div><div class="meter" style="margin:8px 0"><i style="width:${sc.pts / sc.max * 100}%;background:${n >= 4 ? "#23915F" : "#D64545"}"></i></div><p class="small" style="margin:0">${msg}</p></div></div>
+    <h3 style="margin-top:18px">En qué fijarse</h3>${focoRows(sc.foc)}<p class="small muted" style="margin:12px 0 0">Escala: 60 % = 4,0. Abajo está la corrección de cada pregunta.</p></div>`;
+}
+function fmtDate(iso) { const d = new Date(iso), p = x => String(x).padStart(2, "0"); return `${p(d.getDate())}-${p(d.getMonth() + 1)}-${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+function renderResults() {
+  const root = $("#v-resultados"), H = DB.history;
+  if (!H.length) { root.innerHTML = `<div class="card"><h2>Mis resultados</h2><p>Todavía no hay resultados. Cuando termines un ensayo, tu nota queda guardada aquí.</p><button class="btn blue" data-go="ensayo">Ir a los ensayos</button></div>`; return; }
+  const last = H.slice(-1)[0];
+  root.innerHTML = `<div class="card"><h2>Mis resultados</h2><div class="tablewrap"><table class="t hist"><tr><th>Fecha</th><th>Modo</th><th>Puntos</th><th>Nota</th></tr>${H.slice().reverse().map(x => `<tr><td>${fmtDate(x.date)}</td><td>${x.mode === "sim" ? "Simulacro" : "Práctica"}</td><td>${x.pts} / ${x.max}</td><td><b style="color:${x.nota >= 4 ? "var(--green)" : "var(--red)"}">${notaTxt(x.nota)}</b></td></tr>`).join("")}</table></div></div>
+    <div class="card"><h3>Último ensayo (${fmtDate(last.date)}): nota ${notaTxt(last.nota)}</h3>${focoRows(last.foc.map(([p, m]) => ({ p, m })))}</div>`;
+}
+function confetti() {
+  const c = document.createElement("canvas"); c.className = "confetti"; document.body.appendChild(c);
+  const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+  const cols = ["#3A86D6", "#F0A43C", "#23915F", "#E9B325", "#E88AAE"];
+  const P = Array.from({ length: 140 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height * 0.4, vx: -2 + Math.random() * 4, vy: 2 + Math.random() * 4, r: 4 + Math.random() * 5, c: pick(cols), a: Math.random() * 6 }));
+  let t = 0; (function f() { x.clearRect(0, 0, c.width, c.height); P.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.a += 0.1; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r, -p.r / 2, 2 * p.r, p.r); x.restore(); }); if (++t < 200) requestAnimationFrame(f); else c.remove(); })();
+}
+
+/* ============ piezas de las lecciones ============ */
+/* 1 · recorrer el borde */
+function labPer() {
+  let st;
+  const upd = () => {
+    const done = st.on.length === st.labs.length, s = sum(st.on.map(i => st.labs[i]));
+    $("#perSum").innerHTML = st.on.length ? `${st.on.map(i => st.labs[i]).join(" + ")} = <b>${s} cm</b>` : `<span class="muted small">Toca un lado.</span>`;
+    $("#perMsg").innerHTML = done ? `<div class="fb ok">¡Recorriste todo el borde! El perímetro es <b>${s} cm</b>.</div>` : "";
+  };
+  const draw = () => {
+    const P = randPoly(pick([4, 5, 6]));
+    st = { labs: P.labs, on: [] };
+    $("#perFig").innerHTML = fig(poly(P.verts, P.labs.map(x => x + " cm"), { tap: true }));
+    $$("#perFig .hit").forEach(h => h.addEventListener("click", () => {
+      const i = +h.dataset.i; if (st.on.includes(i)) return; st.on.push(i);
+      const sd = $(`#perFig .sd[data-i="${i}"]`); sd.setAttribute("stroke", "#F0A43C"); sd.setAttribute("stroke-width", "8"); upd();
+    }));
+    upd();
+  };
+  $("#perNew").onclick = draw; draw();
+}
+/* 2 · figuras y paso a paso */
+function figsFra() {
+  $("#figIgual").innerHTML = barRow(F(2, 7), barra(7, 2)) + barRow("+ " + F(3, 7), barra(7, 0, 3)) + barRow("= " + F(5, 7), barra(7, 2, 3));
+  $("#figDistinto").innerHTML = barRow(F(1, 2), barra(2, 1)) + barRow("= " + F(3, 6), barra(6, 3)) + `<div style="height:8px"></div>`
+    + barRow(F(1, 3), barra(3, 0, 1)) + barRow("= " + F(2, 6), barra(6, 0, 2)) + `<div style="height:8px"></div>`
+    + barRow(F(3, 6) + " + " + F(2, 6) + " = " + F(5, 6), "") + barRow("", barra(6, 3, 2));
+}
+function labPaso() {
+  let p, step;
+  const make = () => {
+    const op = pick(["+", "−"]), r = Math.random(), d = rnd(5, 12);
+    p = pairFr(r < 0.25 ? [d, d] : pick(r < 0.6 ? MULT_PAIRS : COP_PAIRS), op);
+    step = 0; render();
+  };
+  const render = () => {
+    const [rn, rd] = red(p.R, p.L), g = p.L / rd, same = p.d1 === p.d2, verb = p.op === "+" ? "Sumamos" : "Restamos", S = [];
+    S.push(`<b>Ejercicio:</b> ${fraOpTxt(p)}`);
+    S.push(same ? `<b>Paso 1.</b> Tienen el <b>mismo denominador</b> (${p.d1}). No hay que amplificar.`
+      : `<b>Paso 1.</b> Tienen <b>distinto denominador</b> (${p.d1} y ${p.d2}). Buscamos un número que esté en la tabla del ${p.d1} y en la del ${p.d2}: <b>${p.L}</b>.`);
+    const amp = (n, d, N) => d === p.L ? `${F(n, d)} ya tiene denominador ${p.L}` : `${F(n, d)} = ${F(N, p.L)} (por ${p.L / d})`;
+    if (!same) S.push(`<b>Paso 2.</b> Amplificamos: ${amp(p.a, p.d1, p.A)}; ${amp(p.b, p.d2, p.B)}.` + barRow(F(p.A, p.L), barra(p.L, p.A)) + barRow(F(p.B, p.L), barra(p.L, 0, p.B)));
+    S.push(`<b>Paso ${same ? 2 : 3}.</b> ${verb} los numeradores y el denominador se mantiene: ${F(p.A, p.L)} ${p.op} ${F(p.B, p.L)} = <b>${F(p.R, p.L)}</b>.` + (p.op === "+" ? barRow(F(p.R, p.L), barra(p.L, p.A, p.B)) : barRow(F(p.R, p.L), barra(p.L, p.R))));
+    S.push(`<b>Paso ${same ? 3 : 4}.</b> ` + (g > 1 ? `Simplificamos dividiendo por ${g}: ${F(p.R, p.L)} = <b>${F(rn, rd)}</b>.` : `${F(p.R, p.L)} no se puede simplificar. El resultado es <b>${F(p.R, p.L)}</b>.`));
+    const last = step >= S.length - 1;
+    $("#pasoBox").innerHTML = `<div class="steps">${S.slice(0, step + 1).map((x, i) => `<div class="${i === step ? "last" : ""}">${x}</div>`).join("")}</div><div class="row">${last ? `<button class="btn blue small" id="pasoNew">Otro ejercicio</button>` : `<button class="btn blue small" id="pasoNext">Siguiente paso →</button>`}</div>`;
+    if (last) $("#pasoNew").onclick = make; else $("#pasoNext").onclick = () => { step++; render(); };
+  };
+  make();
+}
+/* 3 · la cuadrícula */
+function labGrid() {
+  let p = 37;
+  const upd = () => {
+    $("#gridBox").innerHTML = grid(p, true);
+    $$("#gridBox .cell").forEach(c => c.addEventListener("click", () => { const i = +c.dataset.i + 1; p = p === i ? i - 1 : i; upd(); }));
+    const col = Math.floor(p / 10), un = p % 10;
+    $("#gridOut").innerHTML = `<div>Pintaste <b>${p}</b> de 100 cuadraditos.</div><div class="eq"><span class="big">${F(p, 100)}</span> = <b class="big">${fmtD(p * 10)}</b></div>
+      <div class="small">Se lee: «${decWords(p * 10, p % 10 === 0 && p % 100 ? 1 : 2)}»${p % 10 === 0 && p % 100 ? ` (también ${decWords(p * 10, 2)})` : ""}.</div>
+      <div class="small muted" style="margin-top:6px">${p === 0 ? "" : [col ? `${col} ${col === 1 ? "columna completa" : "columnas completas"} (${col} ${col === 1 ? "décimo" : "décimos"})` : "", un ? `${un} ${un === 1 ? "cuadradito suelto" : "cuadraditos sueltos"} (${un} ${un === 1 ? "centésimo" : "centésimos"})` : ""].filter(Boolean).join(" y ") + "."}</div>`;
+  };
+  $("#gridMinus").onclick = () => { p = Math.max(0, p - 1); upd(); };
+  $("#gridPlus").onclick = () => { p = Math.min(100, p + 1); upd(); };
+  upd();
+}
+/* 4 · el comparador */
+function labCmp() {
+  const draw = () => {
+    let pr; do { pr = cmpPair(); } while (pr.x === pr.y && Math.random() < 0.5);
+    const realP = s => (s.split(",")[1] || "").length;
+    const { x, y, ax, by } = pr, P = Math.max(realP(ax), realP(by), 1), X = digs(x), Y = digs(y);
+    const i = X.findIndex((d, k) => d !== Y[k]);
+    const row = (lbl, D, shown) => `<tr><td class="lab">${lbl}</td><td class="${i === 0 ? "hl" : ""}">${D[0]}</td><td class="cm">,</td>${[1, 2, 3].slice(0, P).map(k => `<td class="${k > shown ? "pad" : ""} ${i === k ? "hl" : ""}">${D[k]}</td>`).join("")}</tr>`;
+    $("#cmpBox").innerHTML = `<div class="eq"><span class="big">${ax} &nbsp;¿?&nbsp; ${by}</span></div>
+      <div class="tablewrap"><table class="pv"><tr><th></th><th>Parte entera</th><th></th>${["Décimos", "Centésimos", "Milésimos"].slice(0, P).map(t => `<th>${t}</th>`).join("")}</tr>${row(ax, X, realP(ax))}${row(by, Y, realP(by))}</table></div>
+      <div class="box tip" style="margin-bottom:0">${cmpText(x, y, ax, by)}${P > Math.min(realP(ax), realP(by)) ? ' <span class="small muted">Las cifras grises son ceros agregados al final: no cambian el número.</span>' : ""}</div>`;
+  };
+  $("#cmpNew").onclick = draw; draw();
+}
+/* 5 · la recta */
+function labRecta() {
+  let zoom = null, k = 13, j = 5;
+  const draw = () => {
+    if (zoom == null) {
+      $("#rlBox").innerHTML = fig(recta({ ...R02, tap: true }));
+      const s = $("#rlBox svg");
+      $$("#rlBox .tz").forEach(z => z.addEventListener("click", () => { k = +z.dataset.k; draw(); }));
+      setMarks(s, [[k, "#3A86D6", fmtD(k * 100)]]);
+      $("#rlOut").innerHTML = `<span><b>${fmtD(k * 100)}</b>: ${k === 0 ? "es el 0" : k < 10 ? `${k} ${k === 1 ? "parte" : "partes"} después del 0 (${k} ${k === 1 ? "décimo" : "décimos"})` : k === 10 ? "un entero" : k === 20 ? "dos enteros" : `${k - 10} ${k === 11 ? "parte" : "partes"} después del 1 (un entero y ${k - 10} ${k === 11 ? "décimo" : "décimos"})`}.</span>`;
+      $("#rlZoom").textContent = k < 20 ? `Mirar de cerca entre ${fmtD(k * 100)} y ${fmtD(k * 100 + 100)} →` : "";
+      $("#rlZoom").classList.toggle("hide", k >= 20);
+    } else {
+      const x = zoom;
+      $("#rlBox").innerHTML = fig(recta({ n: 10, major: 10, labels: { 0: fmtD(x), 10: fmtD(x + 100) }, tap: true }));
+      $$("#rlBox .tz").forEach(z => z.addEventListener("click", () => { j = +z.dataset.k; draw(); }));
+      setMarks($("#rlBox svg"), [[j, "#3A86D6", fmtD(x + j * 10)]]);
+      $("#rlOut").innerHTML = `<span>Entre ${fmtD(x)} y ${fmtD(x + 100)} hay 10 partes: cada una es un centésimo (0,01). Este punto es <b>${fmtD(x + j * 10)}</b>.</span>`;
+      $("#rlZoom").textContent = "← Volver a la recta de 0 a 2"; $("#rlZoom").classList.remove("hide");
+    }
+  };
+  $("#rlZoom").onclick = () => { zoom = zoom == null ? k * 100 : null; j = 5; draw(); };
+  draw();
+  $("#figFoco").innerHTML = fig(recta({ ...R02, pts: { 13: "P" } }));
+  $("#figZoom").innerHTML = fig(recta({ n: 10, major: 10, labels: { 0: "0,4", 3: "0,43", 10: "0,5" } }));
+}
+
+const LIST = [
+  "El perímetro es la suma de las medidas de todos los lados, y lleva su unidad (cm, m).",
+  "En el rectángulo sumo los cuatro lados: largo + ancho + largo + ancho.",
+  "Sé encontrar el lado que falta restando al perímetro los lados que conozco.",
+  "Para sumar o restar fracciones con distinto denominador, primero amplifico. Nunca sumo los denominadores.",
+  "Simplifico el resultado cuando se puede.",
+  "Paso de fracción a número decimal y al revés: el denominador tiene tantos ceros como cifras hay después de la coma.",
+  "Sé leer y escribir decimales con décimos, centésimos y milésimos.",
+  "Comparo decimales posición por posición. Más cifras no significa que el número sea mayor.",
+  "En la recta numérica, primero cuento cuántas partes tiene UN entero (entre 0 y 1)."
+];
+function buildChecklist() {
+  $("#checklist").innerHTML = LIST.map((t, i) => `<li><label class="tick"><input type="checkbox" data-i="${i}" ${DB.list[i] ? "checked" : ""}><span>${t}</span></label></li>`).join("");
+  $$("#checklist input").forEach(c => c.onchange = () => { DB.list[c.dataset.i] = c.checked; save(); });
+}
+function renderHome() {
+  const done = Object.keys(DB.done).filter(k => DB.done[k]).length, last = DB.history.slice(-1)[0], E = DB.ens;
+  $("#st-aprender").innerHTML = done ? `<span style="color:var(--green)">${done} de ${SECS.length} lecciones listas</span>` : `<span class="muted">Sin empezar</span>`;
+  $("#st-ensayo").innerHTML = E && !E.done ? `<span style="color:var(--orange-ink)">Tienes un ensayo en curso</span>` : last ? `<span style="color:${last.nota >= 4 ? "var(--green)" : "var(--red)"}">Último: ${last.pts}/${last.max} pts · nota ${notaTxt(last.nota)}</span>` : `<span class="muted">Sin empezar</span>`;
+}
+
+/* ============ arranque ============ */
+function init() {
+  setHdr();
+  $$(".lesson").forEach(el => { el.innerHTML = fx(el.innerHTML); });
+  buildLessons(); labPer(); figsFra(); labPaso(); labGrid(); labCmp(); labRecta(); buildChecklist();
+  $$("[data-practice]").forEach(el => practiceLoop(el, el.dataset.practice, +el.closest(".lesson").dataset.sec, +el.dataset.need));
+  if (DB.ens && DB.ens.done) DB.ens.show = true;
+  go(location.hash.slice(1) || "inicio", false);
+}
+init();
+</script>
+</body></html>
